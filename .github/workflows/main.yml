@@ -23,13 +23,13 @@ jobs:
         working-directory: ./stn # Specify the working directory where Cargo.toml is located
 
       - name: Create Release Directory
-        run: mkdir -p release
+        run: mkdir -p ${{ github.workspace }}/release
 
       - name: Copy Binary to Release Directory
-        run: cp stn/target/release/stn ../release/${{ matrix.binary_name }}
+        run: cp stn/target/release/stn ${{ github.workspace }}/release/${{ matrix.binary_name }}
 
       - name: Upload Release as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.binary_name }} # Include the platform in the artifact name
-          path: release/
+          path: ${{ github.workspace }}/release
