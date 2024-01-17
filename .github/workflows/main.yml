@@ -24,6 +24,9 @@ jobs:
             exit 1
           fi
 
+      - name: Navigate to stn directory
+        run: cd stn
+
       - name: Build Rust binary
         run: cargo build --release
 
@@ -31,7 +34,7 @@ jobs:
         run: mkdir -p release
 
       - name: Copy Binary to Release Directory
-        run: cp target/release/stn release/ # Use the binary name "stn"
+        run: cp target/release/stn ../release/ # Use the binary name "stn"
 
       - name: Upload Release as Artifact
         uses: actions/upload-artifact@v2
