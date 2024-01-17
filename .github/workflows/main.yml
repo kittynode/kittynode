@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Check Rust and Cargo
         run: |
@@ -35,7 +35,7 @@ jobs:
         run: cp stn/target/release/stn release/ # Use the binary name "stn"
 
       - name: Upload Release as Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: stn # Name of the artifact
           path: release/
