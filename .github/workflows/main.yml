@@ -18,17 +18,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Check Rust and Cargo
-        run: |
-          if ! rustc --version &> /dev/null; then
-            echo "Rust is not installed"
-            exit 1
-          fi
-          if ! cargo --version &> /dev/null; then
-            echo "Cargo is not installed"
-            exit 1
-          fi
-
       - name: Build Rust binary
         run: cargo build --release
         working-directory: ./stn # Specify the working directory where Cargo.toml is located
