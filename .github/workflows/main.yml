@@ -1,4 +1,4 @@
-name: Rust Build Check
+name: Rust Build and Release
 
 on:
   push:
@@ -15,17 +15,17 @@ jobs:
 
       - name: Check Rust and Cargo
         run: |
-          if ! command -v rustc &> /dev/null; then
+          if ! rustc --version &> /dev/null; then
             echo "Rust is not installed"
             exit 1
           fi
-          if ! command -v cargo &> /dev/null; then
+          if ! cargo --version &> /dev/null; then
             echo "Cargo is not installed"
             exit 1
           fi
 
-          - name: Build Rust binary
-          run: cargo build --release
+      - name: Build Rust binary
+        run: cargo build --release
 
       - name: Create Release Directory
         run: mkdir -p release
