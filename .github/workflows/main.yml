@@ -26,10 +26,10 @@ jobs:
         run: mkdir -p ${{ github.workspace }}/release
 
       - name: Copy Binary to Release Directory
-        run: cp stn/target/release/stn ${{ github.workspace }}/release/${{ matrix.binary_name }}
+        run: cp stn/target/release/stn ${{ github.workspace }}/release/${{ github.run_number }}-${{ matrix.binary_name }}
 
       - name: Upload Release as Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.binary_name }} # Include the platform in the artifact name
+          name: stn-${{ github.run_number }}-${{ matrix.binary_name }}
           path: ${{ github.workspace }}/release
