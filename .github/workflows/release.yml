@@ -1,0 +1,28 @@
+name: Rust Build Check
+
+on:
+  push:
+    branches:
+      - main  # Change this to your main branch name
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Check Rust and Cargo
+      run: |
+        if ! command -v rustc &> /dev/null; then
+          echo "Rust is not installed"
+          exit 1
+        fi
+        if ! command -v cargo &> /dev/null; then
+          echo "Cargo is not installed"
+          exit 1
+        fi
+
+    - name: Run Dummy Script
+      run: echo "Running a dummy script"
