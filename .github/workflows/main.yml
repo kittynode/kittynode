@@ -31,10 +31,10 @@ jobs:
         run: mkdir -p release
 
       - name: Copy Binary to Release Directory
-        run: cp target/release/your_binary_name release/
+        run: cp target/release/stn release/ # Use the binary name "stn"
 
       - name: Upload Release as Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: your-binary-name
+          name: stn # Name of the artifact
           path: release/
