@@ -5,10 +5,10 @@ permissions:
 
 on:
   push:
-    # tags:
-    #   - v[0-9]+.*
-    branches:
-      - main
+    tags:
+      - v[0-9]+.*
+    # branches:
+    #   - main
 
 jobs:
   create-release:
@@ -18,7 +18,7 @@ jobs:
       - uses: taiki-e/create-gh-release-action@v1
         with:
           # (optional) Path to changelog.
-          # changelog: CHANGELOG.md
+          changelog: CHANGELOG.md
           # (required) GitHub token for creating GitHub Releases.
           token: ${{ secrets.GITHUB_TOKEN }}
 
