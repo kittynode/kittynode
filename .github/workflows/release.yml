@@ -46,6 +46,9 @@ jobs:
           args: "--locked --release"
           strip: true
 
+      - name: Ls stuff
+        run: ls -la ${{ github.workspace }} && ls -la ${{ github.workspace }}/target && ls -la ${{ github.workspace }}/target/release
+
       - name: Create Release Directory
         run: mkdir -p ${{ github.workspace }}/release
 
