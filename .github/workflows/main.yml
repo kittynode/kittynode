@@ -20,13 +20,12 @@ jobs:
 
       - name: Build Rust binary
         run: cargo build --release
-        working-directory: ./stn # Specify the working directory where Cargo.toml is located
 
       - name: Create Release Directory
         run: mkdir -p ${{ github.workspace }}/release
 
       - name: Copy Binary to Release Directory
-        run: cp stn/target/release/stn ${{ github.workspace }}/release/${{ github.run_number }}-${{ matrix.binary_name }}
+        run: cp target/release/stn ${{ github.workspace }}/release/${{ github.run_number }}-${{ matrix.binary_name }}
 
       - name: Upload Release as Artifact
         uses: actions/upload-artifact@v4
