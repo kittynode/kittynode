@@ -24,6 +24,9 @@ jobs:
       - name: Create Release Directory
         run: mkdir -p ${{ github.workspace }}/release
 
+      - name: Ls stuff
+        run: ls -la ${{ github.workspace }}
+
       - name: Copy Binary to Release Directory
         run: cp target/release/stn ${{ github.workspace }}/release/${{ github.run_number }}-${{ matrix.binary_name }}
 
