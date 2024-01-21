@@ -47,7 +47,7 @@ jobs:
           strip: true
 
       - name: Ls stuff
-        run: ls -la ${{ github.workspace }} && ls -la ${{ github.workspace }}/target && ls -la ${{ github.workspace }}/target/release
+        run: ls -la ${{ github.workspace }} && ls -la ${{ github.workspace }}/target && ls -la ${{ github.workspace }}/target/x86_64-apple-darwin
 
       - name: Create Release Directory
         run: mkdir -p ${{ github.workspace }}/release
