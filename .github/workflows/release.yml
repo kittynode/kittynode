@@ -55,8 +55,13 @@ jobs:
           target: ${{ matrix.platform.target }}
           args: "--locked --release"
           strip: true
+
+      - name: List files in release directory (Debug)
+        run: ls -la ${{ github.workspace }}/target/${{ matrix.platform.target }}/release/
+
       - name: Create tarball
         run: |
+          mkdir -p ${{ github.workspace }}/assets  # Ensure the assets directory exists
           cd ${{ github.workspace }}/target
           tar -czvf ${{ github.workspace }}/assets/${{ matrix.platform.name }} ./${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}
 
