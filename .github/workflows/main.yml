@@ -3,7 +3,7 @@ name: Rust Build and Release
 on:
   push:
     branches:
-      - main # Change this to your main branch name
+      - disable # Change this to your main branch name
 
 jobs:
   build:
