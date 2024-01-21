@@ -59,4 +59,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: stn-${{ github.run_number }}-${{ matrix.binary_name }}
-          path: ${{ github.workspace }}/release/target/{{ matrix.platform.target }}/release/{{ matrix.platform.bin }}
+          path: ${{ github.workspace }}/release/target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}
