@@ -2,8 +2,8 @@ name: Another release job
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v*'  # Trigger on tag push that matches v* (e.g., v1.0.0)
 
 jobs:
   release:
@@ -56,8 +56,14 @@ jobs:
           cd ${{ github.workspace }}/target
           tar -czvf ${{ matrix.platform.name }} ./${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}
 
-      - name: Upload Release as Artifact
-        uses: actions/upload-artifact@v4
+      - name: Create Release and Upload Binary
+        uses: softprops/action-gh-release@v1
         with:
-          name: ${{ github.run_number }}-${{ matrix.platform.target }}-${{ matrix.platform.bin }}
-          path: ${{ github.workspace }}/target/${{ matrix.platform.name }}
+          files: ${{ github.workspace }}/target/${{ matrix.platform.name }}
+          draft: false  # Set to true if you want to create a draft release
+          prerelease: false  # Set to true if you want to create a prerelease
+          tag_name: ${{ github.ref }}
+          name: Release ${{ github.ref }}
+          body: 'Description and changelog for the release'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Provided by Actions, no need to create a token
