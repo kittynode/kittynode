@@ -3,45 +3,29 @@ name: Another release job
 on:
   push:
     tags:
-      - "v*" # Trigger on tag push that matches v* (e.g., v1.0.0)
+      - "v*"
 
 permissions:
-  contents: write # This line gives the GITHUB_TOKEN permission to create releases
+  contents: write
 
 jobs:
-  release:
-    name: Release - ${{ matrix.platform.release_for }}
+  build:
+    name: Build - ${{ matrix.platform.release_for }}
     strategy:
       matrix:
         platform:
-          # - release_for: FreeBSD-x86_64
-          #   os: ubuntu-20.04
-          #   target: x86_64-unknown-freebsd
-          #   bin: stn
-          #   name: stn-FreeBSD-x86_64.tar.gz
-          #   command: build
-
-          # - release_for: Windows-x86_64
-          #   os: windows-latest
-          #   target: x86_64-pc-windows-msvc
-          #   bin: stn.exe
-          #   name: stn-Windows-x86_64.zip
-          #   command: build
-
           - release_for: macOS-x86_64
             os: macOS-latest
             target: x86_64-apple-darwin
             bin: stn
             name: stn-Darwin-x86_64.tar.gz
             command: build
-
           - release_for: macOS-aarch64
             os: macOS-latest
             target: aarch64-apple-darwin
             bin: stn
             name: stn-Darwin-aarch64.tar.gz
             command: build
-
     runs-on: ${{ matrix.platform.os }}
     steps:
       - name: Checkout
@@ -53,20 +37,34 @@ jobs:
           target: ${{ matrix.platform.target }}
           args: "--locked --release"
           strip: true
-
       - name: Create tarball
         run: |
           cd ${{ github.workspace }}/target
           tar -czvf ${{ matrix.platform.name }} ./${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}
 
-      - name: Create Release and Upload Binary
+      - name: Upload Release as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.platform.name }}
+          path: ${{ github.workspace }}/target/${{ matrix.platform.name }}
+
+  create-release:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all assets
+        uses: actions/download-artifact@v2
+
+      - name: Create Release and Upload Binaries
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ github.workspace }}/target/${{ matrix.platform.name }}
-          draft: false # Set to true if you want to create a draft release
-          prerelease: false # Set to true if you want to create a prerelease
-          tag_name: ${{ github.ref }}
-          name: Release ${{ github.ref }}
+          files: |
+            ${{ github.workspace }}/stn-Darwin-x86_64.tar.gz
+            ${{ github.workspace }}/stn-Darwin-aarch64.tar.gz
+          draft: false
+          prerelease: false
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
           body: "Description and changelog for the release"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided by Actions, no need to create a token
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
