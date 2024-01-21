@@ -32,7 +32,7 @@ jobs:
             name: stn-Darwin-x86_64.tar.gz
             command: build
 
-          - os_name: macOS-aarch64
+          - release_for: macOS-aarch64
             os: macOS-latest
             target: aarch64-apple-darwin
             bin: stn
@@ -57,5 +57,5 @@ jobs:
       - name: Upload Release as Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: stn-${{ github.run_number }}-${{ matrix.bin }}
+          name: ${{ github.run_number }}-${{ matrix.target }}-${{ matrix.bin }}
           path: ${{ github.workspace }}/target/${{ matrix.platform.name }}
