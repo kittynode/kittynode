@@ -52,16 +52,9 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     steps:
-      - name: Download macOS-x86_64 binary
+      - name: Download all artifacts
         uses: actions/download-artifact@v2
         with:
-          name: stn-Darwin-x86_64.tar.gz
-          path: ${{ github.workspace }}/assets
-
-      - name: Download macOS-aarch64 binary
-        uses: actions/download-artifact@v2
-        with:
-          name: stn-Darwin-aarch64.tar.gz
           path: ${{ github.workspace }}/assets
 
       - name: Create Release and Upload Binaries
