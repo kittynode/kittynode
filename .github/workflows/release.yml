@@ -52,15 +52,24 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     steps:
-      - name: Download all assets
+      - name: Download macOS-x86_64 binary
         uses: actions/download-artifact@v2
+        with:
+          name: stn-Darwin-x86_64.tar.gz
+          path: ${{ github.workspace }}/assets
+
+      - name: Download macOS-aarch64 binary
+        uses: actions/download-artifact@v2
+        with:
+          name: stn-Darwin-aarch64.tar.gz
+          path: ${{ github.workspace }}/assets
 
       - name: Create Release and Upload Binaries
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ${{ github.workspace }}/stn-Darwin-x86_64.tar.gz
-            ${{ github.workspace }}/stn-Darwin-aarch64.tar.gz
+            ${{ github.workspace }}/assets/stn-Darwin-x86_64.tar.gz
+            ${{ github.workspace }}/assets/stn-Darwin-aarch64.tar.gz
           draft: false
           prerelease: false
           tag_name: ${{ github.ref_name }}
