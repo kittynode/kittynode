@@ -1,6 +1,6 @@
 [package]
 name = "stn"
-version = "0.1.0"
+version = "0.1.13"
 edition = "2021"
 repository = "https://github.com/d1onys1us/simple-taiko-node-v2"
 
