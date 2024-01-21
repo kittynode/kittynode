@@ -3,7 +3,10 @@ name: Another release job
 on:
   push:
     tags:
-      - 'v*'  # Trigger on tag push that matches v* (e.g., v1.0.0)
+      - "v*" # Trigger on tag push that matches v* (e.g., v1.0.0)
+
+permissions:
+  contents: write # This line gives the GITHUB_TOKEN permission to create releases
 
 jobs:
   release:
@@ -60,10 +63,10 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ github.workspace }}/target/${{ matrix.platform.name }}
-          draft: false  # Set to true if you want to create a draft release
-          prerelease: false  # Set to true if you want to create a prerelease
+          draft: false # Set to true if you want to create a draft release
+          prerelease: false # Set to true if you want to create a prerelease
           tag_name: ${{ github.ref }}
           name: Release ${{ github.ref }}
-          body: 'Description and changelog for the release'
+          body: "Description and changelog for the release"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Provided by Actions, no need to create a token
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided by Actions, no need to create a token
