@@ -1,28 +1,49 @@
-name: Rust Build Check
+name: Another release job
 
 on:
   push:
     branches:
-      - main  # Change this to your main branch name
+      - main
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  release:
+    name: Release - ${{ matrix.platform.release_for }}
+    strategy:
+      matrix:
+        platform:
+          - release_for: FreeBSD-x86_64
+            os: ubuntu-20.04
+            target: x86_64-unknown-freebsd
+            bin: stn
+            name: stn-FreeBSD-x86_64.tar.gz
+            command: build
 
+          - release_for: Windows-x86_64
+            os: windows-latest
+            target: x86_64-pc-windows-msvc
+            bin: stn.exe
+            name: stn-Windows-x86_64.zip
+            command: both
+
+          - release_for: macOS-x86_64
+            os: macOS-latest
+            target: x86_64-apple-darwin
+            bin: stn
+            name: stn-Darwin-x86_64.tar.gz
+            command: both
+
+            # more release targets here ...
+
+    runs-on: ${{ matrix.platform.os }}
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build binary
+        uses: houseabsolute/actions-rust-cross@v0
+        with:
+          command: ${{ matrix.platform.command }}
+          target: ${{ matrix.platform.target }}
+          args: "--locked --release"
+          strip: true
 
-    - name: Check Rust and Cargo
-      run: |
-        if ! command -v rustc &> /dev/null; then
-          echo "Rust is not installed"
-          exit 1
-        fi
-        if ! command -v cargo &> /dev/null; then
-          echo "Cargo is not installed"
-          exit 1
-        fi
-
-    - name: Run Dummy Script
-      run: echo "Running a dummy script"
+    # more packaging stuff goes here ...
