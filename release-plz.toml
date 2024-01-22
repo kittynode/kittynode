@@ -25,5 +25,3 @@ publish_allow_dirty = false
 
 # disable running `cargo-semver-checks`
 semver_check = false
-
-publish = false # disable `cargo publish` for `package_a`
