@@ -9,6 +9,14 @@ A command line tool for managing Taiko nodes.
 
 Head over to releases for a copy paste install command.
 
+# Quickstart
+
+1. Head over to releases for a copy paste install command.
+2. Make and cd into a directory for your Taiko node: `mkdir my-taiko-node && cd my-taiko-node`.
+3. Install a Taiko node: `stn install`.
+4. Configure your Taiko node: `stn config`.
+5. Run your Taiko node: `stn up`.
+
 # Usage
 
 Execute `stn help` for the full list of commands.

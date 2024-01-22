@@ -1,4 +1,10 @@
 use clap::{Parser, Subcommand};
+use std::env;
+use std::fs;
+use std::fs::{File, OpenOptions};
+use std::io;
+use std::io::{Read, Write};
+use std::path::Path;
 use std::process::{Command, Stdio};
 
 #[derive(Parser)]
@@ -11,6 +17,10 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
+    /// Install a simple-taiko-node instance
+    Install,
+    /// Configs a simple-taiko-node instance
+    Config,
     /// Starts up simple-taiko-node in the background
     Up,
     /// Stops simple-taiko-node
@@ -21,10 +31,19 @@ enum Commands {
     Terminate,
 }
 
+// Constant for simple-taiko-node repo url
+const SIMPLE_TAIKO_NODE_REPO_URL: &str = "https://github.com/taikoxyz/simple-taiko-node";
+
 fn main() {
     let cli = Cli::parse();
 
     match &cli.command {
+        Commands::Install => {
+            install();
+        }
+        Commands::Config => {
+            config();
+        }
         Commands::Up => {
             up();
         }
@@ -38,6 +57,87 @@ fn main() {
             terminate();
         }
     }
+}
+
+fn install() {
+    // Check we are inside an empty directory
+    let cwd = env::current_dir().expect("Failed to get current directory");
+    if !is_directory_empty(&cwd).expect("Failed to read the current directory") {
+        stn_log("The current directory is not empty. Please run this in an empty directory.");
+        return;
+    }
+
+    // Pull latest simple-taiko-node from GitHub
+    let mut git_clone = Command::new("git")
+        .arg("clone")
+        .arg(SIMPLE_TAIKO_NODE_REPO_URL)
+        .arg(".")
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .spawn()
+        .expect("Failed to execute git clone command.");
+
+    let git_clone_status = git_clone
+        .wait()
+        .expect("Failed to wait for git clone to complete.");
+
+    if git_clone_status.success() {
+        stn_log("Git clone successful.");
+    } else {
+        stn_log("Git clone failed.");
+    }
+
+    // Copy .env.sample to .env
+    let sample_path = Path::new(".env.sample");
+    let env_path: &Path = Path::new(".env");
+    std::fs::copy(sample_path, env_path).expect("Failed to copy .env.sample to .env");
+}
+
+fn config() {
+    // Prompt for L1_ENDPOINT_HTTP and L1_ENDPOINT_WS
+    let mut l1_endpoint_http = String::new();
+    let mut l1_endpoint_ws = String::new();
+
+    println!("Please enter your L1_ENDPOINT_HTTP:");
+    std::io::stdin()
+        .read_line(&mut l1_endpoint_http)
+        .expect("Failed to read L1_ENDPOINT_HTTP");
+
+    println!("Please enter your L1_ENDPOINT_WS:");
+    std::io::stdin()
+        .read_line(&mut l1_endpoint_ws)
+        .expect("Failed to read L1_ENDPOINT_WS");
+
+    l1_endpoint_http = l1_endpoint_http.trim().to_string();
+    l1_endpoint_ws = l1_endpoint_ws.trim().to_string();
+
+    // Update .env with L1_ENDPOINT_HTTP and L1_ENDPOINT_WS
+    let env_path: &Path = Path::new(".env");
+    let mut file = File::open(env_path).expect("Failed to open .env file");
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)
+        .expect("Failed to read .env file");
+
+    let new_contents = contents
+        .lines()
+        .map(|line| {
+            if line.starts_with("L1_ENDPOINT_HTTP") {
+                return format!("L1_ENDPOINT_HTTP={}", l1_endpoint_http);
+            } else if line.starts_with("L1_ENDPOINT_WS") {
+                return format!("L1_ENDPOINT_WS={}", l1_endpoint_ws);
+            }
+            line.to_string()
+        })
+        .collect::<Vec<_>>()
+        .join("\n");
+
+    let mut file = OpenOptions::new()
+        .write(true)
+        .truncate(true)
+        .open(env_path)
+        .expect("Failed to open .env file");
+    file.write_all(new_contents.as_bytes())
+        .expect("Failed to write to .env file");
 }
 
 fn up() {
@@ -157,6 +257,12 @@ fn check_docker_daemon() -> Result<(), String> {
         Ok(output) if output.status.success() => Ok(()),
         _ => Err("Docker daemon is not running. Please start Docker!".to_string()),
     }
+}
+
+// Helper to check if directory is empty
+fn is_directory_empty(dir: &Path) -> io::Result<bool> {
+    let mut entries = fs::read_dir(dir)?.peekable();
+    Ok(entries.peek().is_none())
 }
 
 // Utility logging function for stn
