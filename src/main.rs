@@ -29,6 +29,24 @@ enum Commands {
     Upgrade,
     /// Deletes simple-taiko-node instance
     Terminate,
+    /// Handles logs operations
+    Logs(Logs),
+}
+
+#[derive(Parser)]
+struct Logs {
+    #[command(subcommand)]
+    subcommands: LogsSubcommands,
+}
+
+#[derive(Subcommand)]
+enum LogsSubcommands {
+    /// Shows all logs
+    All,
+    /// Shows execution logs
+    Execution,
+    /// Shows driver logs
+    Driver,
 }
 
 // Constant for simple-taiko-node repo url
@@ -56,7 +74,28 @@ fn main() {
         Commands::Terminate => {
             terminate();
         }
+        Commands::Logs(logs) => {
+            handle_docker_logs(&logs.subcommands);
+        }
     }
+}
+
+fn handle_docker_logs(log_type: &LogsSubcommands) {
+    let mut args = vec!["compose", "logs", "-f"];
+
+    match log_type {
+        LogsSubcommands::All => {
+            // Do nothing, no other args needed
+        }
+        LogsSubcommands::Execution => {
+            args.push("l2_execution_engine");
+        }
+        LogsSubcommands::Driver => {
+            args.push("taiko_client_driver");
+        }
+    }
+
+    execute_docker_command(&args);
 }
 
 fn install() {
