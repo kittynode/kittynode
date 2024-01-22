@@ -31,6 +31,8 @@ enum Commands {
     Terminate,
     /// Handles logs operations
     Logs(Logs),
+    /// Status of Taiko nodes
+    Status,
 }
 
 #[derive(Parser)]
@@ -77,7 +79,15 @@ fn main() {
         Commands::Logs(logs) => {
             handle_docker_logs(&logs.subcommands);
         }
+        Commands::Status => {
+            status();
+        }
     }
+}
+
+fn status() {
+    // Perform a docker ps
+    execute_docker_command(&["ps"]);
 }
 
 fn handle_docker_logs(log_type: &LogsSubcommands) {
