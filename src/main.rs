@@ -45,8 +45,8 @@ enum LogsSubcommands {
     All,
     /// Shows execution logs
     Execution,
-    /// Shows consensus logs
-    Consensus,
+    /// Shows driver logs
+    Driver,
 }
 
 // Constant for simple-taiko-node repo url
@@ -74,24 +74,28 @@ fn main() {
         Commands::Terminate => {
             terminate();
         }
-        Commands::Logs(logs) => match logs.subcommands {
-            LogsSubcommands::All => handle_all_logs(),
-            LogsSubcommands::Execution => handle_execution_logs(),
-            LogsSubcommands::Consensus => handle_consensus_logs(),
-        },
+        Commands::Logs(logs) => {
+            handle_docker_logs(&logs.subcommands);
+        }
     }
 }
 
-fn handle_all_logs() {
-    stn_log("Showing all logs...");
-}
+fn handle_docker_logs(log_type: &LogsSubcommands) {
+    let mut args = vec!["compose", "logs", "-f"];
 
-fn handle_execution_logs() {
-    stn_log("Showing execution logs...");
-}
+    match log_type {
+        LogsSubcommands::All => {
+            // Do nothing, no other args needed
+        }
+        LogsSubcommands::Execution => {
+            args.push("l2_execution_engine");
+        }
+        LogsSubcommands::Driver => {
+            args.push("taiko_client_driver");
+        }
+    }
 
-fn handle_consensus_logs() {
-    stn_log("Showing consensus logs...");
+    execute_docker_command(&args);
 }
 
 fn install() {
