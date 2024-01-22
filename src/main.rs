@@ -2,7 +2,6 @@ use clap::{Parser, Subcommand};
 use std::env;
 use std::fs;
 use std::fs::{File, OpenOptions};
-use std::io;
 use std::io::{Read, Write};
 use std::path::Path;
 use std::process::{Command, Stdio};
@@ -31,6 +30,8 @@ enum Commands {
     Terminate,
     /// Handles logs operations
     Logs(Logs),
+    /// Status of Taiko nodes
+    Status,
 }
 
 #[derive(Parser)]
@@ -49,8 +50,9 @@ enum LogsSubcommands {
     Driver,
 }
 
-// Constant for simple-taiko-node repo url
+// CONSTANTS
 const SIMPLE_TAIKO_NODE_REPO_URL: &str = "https://github.com/taikoxyz/simple-taiko-node";
+const TAIKO_NODE_PATH: &str = ".stn/taiko-node";
 
 fn main() {
     let cli = Cli::parse();
@@ -77,7 +79,15 @@ fn main() {
         Commands::Logs(logs) => {
             handle_docker_logs(&logs.subcommands);
         }
+        Commands::Status => {
+            status();
+        }
     }
+}
+
+fn status() {
+    // Perform a docker ps
+    execute_docker_command(&["ps"]);
 }
 
 fn handle_docker_logs(log_type: &LogsSubcommands) {
@@ -99,18 +109,28 @@ fn handle_docker_logs(log_type: &LogsSubcommands) {
 }
 
 fn install() {
-    // Check we are inside an empty directory
-    let cwd = env::current_dir().expect("Failed to get current directory");
-    if !is_directory_empty(&cwd).expect("Failed to read the current directory") {
-        stn_log("The current directory is not empty. Please run this in an empty directory.");
+    // Check if Taiko node is already installed
+    let home_dir = env::var("HOME").expect("Failed to get home directory");
+    let stn_dir_path = Path::new(&home_dir).join(TAIKO_NODE_PATH);
+
+    if stn_dir_path.exists() {
+        stn_log("simple-taiko-node is already installed.");
         return;
     }
+
+    stn_log(&format!(
+        "Installing simple-taiko-node to {}",
+        stn_dir_path.to_str().unwrap()
+    ));
+
+    // Create home directory if it doesn't exist
+    fs::create_dir_all(&stn_dir_path).expect("Failed to create .stn directory");
 
     // Pull latest simple-taiko-node from GitHub
     let mut git_clone = Command::new("git")
         .arg("clone")
         .arg(SIMPLE_TAIKO_NODE_REPO_URL)
-        .arg(".")
+        .arg(stn_dir_path.to_str().unwrap())
         .stdout(Stdio::null())
         .stderr(Stdio::null())
         .spawn()
@@ -127,9 +147,13 @@ fn install() {
     }
 
     // Copy .env.sample to .env
-    let sample_path = Path::new(".env.sample");
-    let env_path: &Path = Path::new(".env");
-    std::fs::copy(sample_path, env_path).expect("Failed to copy .env.sample to .env");
+    std::fs::copy(
+        Path::new(&stn_dir_path).join(".env.sample"),
+        Path::new(&stn_dir_path).join(".env"),
+    )
+    .expect("Failed to copy .env.sample to .env");
+
+    stn_log("simple-taiko-node successfully installed");
 }
 
 fn config() {
@@ -149,6 +173,9 @@ fn config() {
 
     l1_endpoint_http = l1_endpoint_http.trim().to_string();
     l1_endpoint_ws = l1_endpoint_ws.trim().to_string();
+
+    // cd into taiko-node directory
+    cd_taiko_node_dir();
 
     // Update .env with L1_ENDPOINT_HTTP and L1_ENDPOINT_WS
     let env_path: &Path = Path::new(".env");
@@ -195,6 +222,9 @@ fn upgrade() {
         stn_log(&error_msg);
         return;
     }
+
+    // cd into taiko-node directory
+    cd_taiko_node_dir();
 
     // Pull latest simple-taiko-node from GitHub
     let mut git_pull = Command::new("git")
@@ -251,6 +281,9 @@ fn execute_docker_command(args: &[&str]) {
         return;
     }
 
+    // cd into taiko-node directory
+    cd_taiko_node_dir();
+
     // Prepend sudo for linux
     let mut child = if cfg!(target_os = "linux") {
         Command::new("sudo")
@@ -298,13 +331,15 @@ fn check_docker_daemon() -> Result<(), String> {
     }
 }
 
-// Helper to check if directory is empty
-fn is_directory_empty(dir: &Path) -> io::Result<bool> {
-    let mut entries = fs::read_dir(dir)?.peekable();
-    Ok(entries.peek().is_none())
-}
-
 // Utility logging function for stn
 fn stn_log(msg: &str) {
     println!("stn_log: {}", msg);
+}
+
+// Utility function to cd into taiko-node directory
+fn cd_taiko_node_dir() {
+    let home_dir = env::var("HOME").expect("Failed to get home directory");
+    let stn_dir_path = Path::new(&home_dir).join(TAIKO_NODE_PATH);
+
+    env::set_current_dir(stn_dir_path).expect("Failed to cd into taiko-node directory");
 }
