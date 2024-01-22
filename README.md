@@ -1,5 +1,5 @@
 > [!WARNING]
-> The v0.1.\* API is not stable and is expected to undergo breaking changes.
+> The `v0.1.*` version means this is considered alpha software and the API will probably undergo breaking changes.
 
 # stn
 
