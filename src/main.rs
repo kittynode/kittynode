@@ -37,7 +37,7 @@ fn main() {
 }
 
 fn up() {
-    println!("up");
+    println!("up monkey");
 }
 
 fn down() {
