@@ -29,6 +29,24 @@ enum Commands {
     Upgrade,
     /// Deletes simple-taiko-node instance
     Terminate,
+    /// Handles logs operations
+    Logs(Logs),
+}
+
+#[derive(Parser)]
+struct Logs {
+    #[command(subcommand)]
+    subcommands: LogsSubcommands,
+}
+
+#[derive(Subcommand)]
+enum LogsSubcommands {
+    /// Shows all logs
+    All,
+    /// Shows execution logs
+    Execution,
+    /// Shows consensus logs
+    Consensus,
 }
 
 // Constant for simple-taiko-node repo url
@@ -56,7 +74,24 @@ fn main() {
         Commands::Terminate => {
             terminate();
         }
+        Commands::Logs(logs) => match logs.subcommands {
+            LogsSubcommands::All => handle_all_logs(),
+            LogsSubcommands::Execution => handle_execution_logs(),
+            LogsSubcommands::Consensus => handle_consensus_logs(),
+        },
     }
+}
+
+fn handle_all_logs() {
+    stn_log("Showing all logs...");
+}
+
+fn handle_execution_logs() {
+    stn_log("Showing execution logs...");
+}
+
+fn handle_consensus_logs() {
+    stn_log("Showing consensus logs...");
 }
 
 fn install() {
