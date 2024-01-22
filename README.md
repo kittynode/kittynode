@@ -18,7 +18,7 @@ Execute `stn help` for the full list of commands.
 Some cool stuff planned ahead:
 
 - Adding support for a "setup wizard" / "config" command
-- Managing node configs somewhere in ~/.stn/config (even aliasing eth-docker and managing those nodes, something like a kubectl namespace, assigning names to nodes)
+- Managing node configs somewhere in ~/.stn/config (even aliasing eth-docker and managing those nodes, making stn something like a kubectl)
 - Adding support for Taiko proposers / provers
 - Adding support for other L2 nodes
 
