@@ -11,10 +11,14 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
+    /// Starts up simple-taiko-node in the background
     Up,
+    /// Stops simple-taiko-node
     Down,
-    Terminate,
+    /// Upgrades simple-taiko-node to the latest version
     Upgrade,
+    /// Deletes simple-taiko-node instance
+    Terminate,
 }
 
 fn main() {
@@ -27,33 +31,29 @@ fn main() {
         Commands::Down => {
             down();
         }
-        Commands::Terminate => {
-            terminate();
-        }
         Commands::Upgrade => {
             upgrade();
+        }
+        Commands::Terminate => {
+            terminate();
         }
     }
 }
 
 fn up() {
-    println!("up monkey");
+    execute_docker_command(&["compose", "up", "-d"]);
+    stn_log("simple-taiko-node successfully started");
 }
 
 fn down() {
-    println!("down");
-}
-
-fn terminate() {
-    println!("terminate");
+    execute_docker_command(&["compose", "down"]);
+    stn_log("simple-taiko-node successfully stopped");
 }
 
 fn upgrade() {
-    // Check if Docker daemon is running
-    let docker_daemon_running = check_docker_daemon();
-
-    if !docker_daemon_running {
-        stn_log("Docker daemon is not running. Please start Docker!");
+    // Check docker daemon
+    if let Err(error_msg) = check_docker_daemon() {
+        stn_log(&error_msg);
         return;
     }
 
@@ -77,23 +77,8 @@ fn upgrade() {
         stn_log("Git pull failed.");
     }
 
-    // Update docker images
-    let mut docker_compose_pull = Command::new("docker-compose")
-        .arg("pull")
-        .stdout(Stdio::inherit())
-        .stderr(Stdio::inherit())
-        .spawn()
-        .expect("Failed to execute docker-compose pull command.");
-
-    let docker_compose_pull_status = docker_compose_pull
-        .wait()
-        .expect("Failed to wait for docker-compose pull to complete.");
-
-    if docker_compose_pull_status.success() {
-        stn_log("Docker compose pull successful.");
-    } else {
-        stn_log("Docker compose pull failed.");
-    }
+    // Pull latest docker images
+    execute_docker_command(&["compose", "pull"]);
 
     // Execute a script with bash: in ./scripts/util/update-env.sh
     let mut update_env = Command::new("bash")
@@ -114,15 +99,67 @@ fn upgrade() {
     }
 }
 
-fn check_docker_daemon() -> bool {
-    let docker_version = Command::new("docker")
-        .arg("version")
-        .output()
-        .expect("Failed to execute docker version command.");
-
-    docker_version.status.success()
+fn terminate() {
+    execute_docker_command(&["compose", "down", "-v"]);
+    stn_log("simple-taiko-node removed from system");
 }
 
+// Helper to execute docker commands
+fn execute_docker_command(args: &[&str]) {
+    // Check docker daemon
+    if let Err(error_msg) = check_docker_daemon() {
+        stn_log(&error_msg);
+        return;
+    }
+
+    // Prepend sudo for linux
+    let mut child = if cfg!(target_os = "linux") {
+        Command::new("sudo")
+            .args(["docker"].iter().chain(args))
+            .spawn()
+            .expect(&format!(
+                "Failed to execute sudo docker command: {:?}",
+                args
+            ))
+    } else {
+        Command::new("docker")
+            .args(args)
+            .spawn()
+            .expect(&format!("Failed to execute docker command: {:?}", args))
+    };
+
+    // Wait for the command to complete
+    let result = child.wait();
+    match result {
+        Ok(status) if status.success() => {
+            stn_log(&format!("Successfully executed command: {:?}", args));
+        }
+        _ => {
+            stn_log(&format!(
+                "Failed to wait for command to complete: {:?}",
+                args
+            ));
+        }
+    }
+}
+
+// Helper to check if Docker daemon is running and handle error logging
+fn check_docker_daemon() -> Result<(), String> {
+    let (command, args) = if cfg!(target_os = "linux") {
+        ("sudo", vec!["docker", "version"])
+    } else {
+        ("docker", vec!["version"])
+    };
+
+    let docker_version = Command::new(command).args(args).output();
+
+    match docker_version {
+        Ok(output) if output.status.success() => Ok(()),
+        _ => Err("Docker daemon is not running. Please start Docker!".to_string()),
+    }
+}
+
+// Utility logging function for stn
 fn stn_log(msg: &str) {
     println!("stn_log: {}", msg);
 }
