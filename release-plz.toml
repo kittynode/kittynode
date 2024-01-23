@@ -25,3 +25,11 @@ publish_allow_dirty = false
 
 # disable running `cargo-semver-checks`
 semver_check = false
+
+[[package]]
+name = "utils"
+release = false # don't process this package
+
+[[package]]
+name = "docker"
+publish = false # don't publish this package
