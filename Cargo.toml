@@ -1,15 +1,6 @@
-[package]
-name = "stn"
-description = "A command line tool for managing Taiko nodes."
-license = "MIT"
-version = "0.1.20"
-edition = "2021"
-repository = "https://github.com/d1onys1us/stn"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
-clap = { version = "4.4.18", features = ["derive"] }
+[workspace]
+members = ["crates/docker", "crates/stn", "crates/utils"]
+resolver = "2"
 
 # The profile that 'cargo dist' will build with
 [profile.dist]
@@ -25,6 +16,12 @@ ci = ["github"]
 # The installers to generate for each app
 installers = ["shell", "powershell"]
 # Target platforms to build apps for (Rust target-triple syntax)
-targets = ["aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-unknown-linux-gnu", "x86_64-unknown-linux-musl", "x86_64-pc-windows-msvc"]
+targets = [
+    "aarch64-apple-darwin",
+    "x86_64-apple-darwin",
+    "x86_64-unknown-linux-gnu",
+    "x86_64-unknown-linux-musl",
+    "x86_64-pc-windows-msvc",
+]
 # Publish jobs to run in CI
 pr-run-mode = "plan"
