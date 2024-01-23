@@ -28,8 +28,8 @@ semver_check = false
 
 [[package]]
 name = "utils"
-publish = false
+release = false
 
 [[package]]
 name = "docker"
-publish = false
+release = false
