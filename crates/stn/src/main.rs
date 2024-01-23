@@ -136,29 +136,6 @@ fn install(taiko_node_dir: &Path) {
     stn_log("simple-taiko-node successfully installed");
 }
 
-fn status(taiko_node_dir: &Path) {
-    // Perform a docker ps
-    execute_docker_command(&["ps"], taiko_node_dir).expect("Failed to execute docker ps command")
-}
-
-fn logs(log_type: &LogsSubcommands, taiko_node_dir: &Path) {
-    let mut args = vec!["compose", "logs", "-f"];
-
-    match log_type {
-        LogsSubcommands::All => {
-            // Do nothing, no other args needed
-        }
-        LogsSubcommands::Execution => {
-            args.push("l2_execution_engine");
-        }
-        LogsSubcommands::Driver => {
-            args.push("taiko_client_driver");
-        }
-    }
-
-    execute_docker_command(&args, taiko_node_dir).expect("Failed to execute docker logs command");
-}
-
 fn config(taiko_node_dir: &Path) {
     let mut l1_endpoint_http = String::new();
     let mut l1_endpoint_ws = String::new();
@@ -272,4 +249,26 @@ fn terminate(taiko_node_dir: &Path) {
     execute_docker_command(&["compose", "down", "-v"], taiko_node_dir)
         .expect("Failed to execute docker compose down -v command");
     stn_log("simple-taiko-node removed from system");
+}
+
+fn logs(log_type: &LogsSubcommands, taiko_node_dir: &Path) {
+    let mut args = vec!["compose", "logs", "-f"];
+
+    match log_type {
+        LogsSubcommands::All => {
+            // Do nothing, no other args needed
+        }
+        LogsSubcommands::Execution => {
+            args.push("l2_execution_engine");
+        }
+        LogsSubcommands::Driver => {
+            args.push("taiko_client_driver");
+        }
+    }
+
+    execute_docker_command(&args, taiko_node_dir).expect("Failed to execute docker logs command");
+}
+
+fn status(taiko_node_dir: &Path) {
+    execute_docker_command(&["ps"], taiko_node_dir).expect("Failed to execute docker ps command")
 }

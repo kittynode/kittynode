@@ -27,7 +27,7 @@ pub fn cd_taiko_node_dir() -> Result<(), io::Error> {
     })
 }
 
-// Helper function
+/// Helper function that returns the path to the taiko-node directory.
 pub fn get_taiko_node_directory() -> Result<PathBuf, io::Error> {
     let home_dir = env::var("HOME")
         .map_err(|_| io::Error::new(io::ErrorKind::NotFound, "Failed to get home directory"))?;
