@@ -1,6 +1,6 @@
 [workspace]
-resolver = "2"
 members = ["crates/docker", "crates/stn", "crates/utils"]
+resolver = "2"
 
 # The profile that 'cargo dist' will build with
 [profile.dist]
