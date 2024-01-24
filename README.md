@@ -10,7 +10,7 @@ A command line tool for managing Taiko nodes.
 
 ![screenshot of cli tool](.github/readme_cli_screenshot.png)
 
-> Screenshot of `v0.1.28`, but `stn` is getting updated all the time.
+> Screenshot of `v0.1.27`, but `stn` is getting updated all the time.
 
 ## Installation
 
