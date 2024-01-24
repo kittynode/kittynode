@@ -187,16 +187,34 @@ fn config(taiko_node_dir: &Path) {
 }
 
 fn up(taiko_node_dir: &Path) {
+    // Check taiko node is installed first
+    if !taiko_node_dir.exists() {
+        utils::stn_log("simple-taiko-node is not installed.");
+        return;
+    }
     match docker::execute_docker_command(&["compose", "up", "-d"], taiko_node_dir) {
-        Ok(_) => utils::stn_log("simple-taiko-node successfully started"),
-        Err(_) => panic!("Failed to execute docker compose up -d command"),
+        Ok(msg) => {
+            utils::stn_log(&msg);
+        }
+        Err(e) => {
+            eprintln!("{}", e);
+        }
     }
 }
 
 fn down(taiko_node_dir: &Path) {
+    // Check taiko node is installed first
+    if !taiko_node_dir.exists() {
+        utils::stn_log("simple-taiko-node is not installed.");
+        return;
+    }
     match docker::execute_docker_command(&["compose", "down"], taiko_node_dir) {
-        Ok(_) => utils::stn_log("simple-taiko-node successfully stopped"),
-        Err(_) => panic!("Failed to execute docker compose down command"),
+        Ok(msg) => {
+            utils::stn_log(&msg);
+        }
+        Err(e) => {
+            eprintln!("{}", e);
+        }
     }
 }
 
@@ -229,8 +247,15 @@ fn upgrade(taiko_node_dir: &Path) {
     }
 
     // Pull latest docker images
-    docker::execute_docker_command(&["compose", "pull"], taiko_node_dir)
-        .expect("Failed to execute docker compose pull command");
+    match docker::execute_docker_command(&["compose", "pull"], taiko_node_dir) {
+        Ok(msg) => {
+            utils::stn_log(&msg);
+        }
+        Err(e) => {
+            eprintln!("{}", e);
+            return;
+        }
+    }
 
     // Execute a script with bash: in ./scripts/util/update-env.sh
     let mut update_env = Command::new("bash")
@@ -253,15 +278,21 @@ fn upgrade(taiko_node_dir: &Path) {
 }
 
 fn remove(taiko_node_dir: &Path) {
-    // check if taiko node is installed first
+    // Check if taiko node is installed first
     if !taiko_node_dir.exists() {
         utils::stn_log("simple-taiko-node is not installed.");
         return;
     }
-    if let Err(e) = docker::execute_docker_command(&["compose", "down", "-v"], taiko_node_dir) {
-        eprintln!("{}", e);
-        return;
+    match docker::execute_docker_command(&["compose", "down", "-v"], taiko_node_dir) {
+        Ok(msg) => {
+            utils::stn_log(&msg);
+        }
+        Err(e) => {
+            eprintln!("{}", e);
+            return;
+        }
     }
+
     utils::stn_log("simple-taiko-node volumes deleted from system");
     match fs::remove_dir_all(taiko_node_dir) {
         Ok(_) => {
@@ -274,6 +305,12 @@ fn remove(taiko_node_dir: &Path) {
 }
 
 fn logs(log_type: &LogsSubcommands, taiko_node_dir: &Path) {
+    // Check taiko node is installed first
+    if !taiko_node_dir.exists() {
+        utils::stn_log("simple-taiko-node is not installed.");
+        return;
+    }
+
     let mut args = vec!["compose", "logs", "-f"];
 
     match log_type {
@@ -288,8 +325,14 @@ fn logs(log_type: &LogsSubcommands, taiko_node_dir: &Path) {
         }
     }
 
-    docker::execute_docker_command(&args, taiko_node_dir)
-        .expect("Failed to execute docker logs command");
+    match docker::execute_docker_command(&args, taiko_node_dir) {
+        Ok(msg) => {
+            utils::stn_log(&msg);
+        }
+        Err(e) => {
+            eprintln!("{}", e);
+        }
+    }
 }
 
 fn status(taiko_node_dir: &Path) {
@@ -299,7 +342,12 @@ fn status(taiko_node_dir: &Path) {
         return;
     }
 
-    if let Err(e) = docker::execute_docker_command(&["ps"], taiko_node_dir) {
-        eprintln!("{}", e);
+    match docker::execute_docker_command(&["ps"], taiko_node_dir) {
+        Ok(msg) => {
+            utils::stn_log(&msg);
+        }
+        Err(e) => {
+            eprintln!("{}", e);
+        }
     }
 }
