@@ -1,7 +1,24 @@
 use std::{path::Path, process::Command};
 
+#[derive(Debug)]
+pub enum DockerError {
+    DockerNotRunning,
+    CommandFailed(Vec<String>),
+}
+
+impl std::fmt::Display for DockerError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match *self {
+            DockerError::DockerNotRunning => {
+                write!(f, "Docker daemon is not running. Please start Docker!")
+            }
+            DockerError::CommandFailed(ref args) => write!(f, "Command failed: {:?}", args),
+        }
+    }
+}
+
 /// Execute a docker command with the corrects args (prepending sudo for linux) and working directory
-pub fn execute_docker_command(args: &[&str], working_dir: &Path) -> Result<(), String> {
+pub fn execute_docker_command(args: &[&str], working_dir: &Path) -> Result<(), DockerError> {
     // Check docker daemon
     check_docker_daemon()?;
 
@@ -26,12 +43,15 @@ pub fn execute_docker_command(args: &[&str], working_dir: &Path) -> Result<(), S
     let result = child.wait();
     match result {
         Ok(status) if status.success() => Ok(()),
-        _ => Err(format!("Failed to execute command: {:?}", args)),
+        _ => {
+            let args_vec: Vec<String> = args.iter().map(|&arg| arg.to_string()).collect();
+            Err(DockerError::CommandFailed(args_vec))
+        }
     }
 }
 
 /// Check if Docker daemon is running
-pub fn check_docker_daemon() -> Result<(), String> {
+pub fn check_docker_daemon() -> Result<(), DockerError> {
     let (command, args) = if cfg!(target_os = "linux") {
         ("sudo", vec!["docker", "version"])
     } else {
@@ -42,6 +62,6 @@ pub fn check_docker_daemon() -> Result<(), String> {
 
     match docker_version {
         Ok(output) if output.status.success() => Ok(()),
-        _ => Err("Docker daemon is not running. Please start Docker!".to_string()),
+        _ => Err(DockerError::DockerNotRunning),
     }
 }
