@@ -272,6 +272,11 @@ fn logs(log_type: &LogsSubcommands, taiko_node_dir: &Path) {
 }
 
 fn status(taiko_node_dir: &Path) {
+    // Check taiko node is installed first
+    if !taiko_node_dir.exists() {
+        utils::stn_log("simple-taiko-node is not installed.");
+        return;
+    }
     docker::execute_docker_command(&["ps"], taiko_node_dir)
         .expect("Failed to execute docker ps command")
 }
