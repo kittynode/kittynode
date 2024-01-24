@@ -17,10 +17,11 @@ impl std::fmt::Display for DockerError {
     }
 }
 
+/// Execute a docker command with the corrects args (prepending sudo for linux) and working directory
 pub fn execute_docker_command(args: &[&str], working_dir: &Path) -> Result<String, DockerError> {
-    // Check docker daemon
     check_docker_daemon()?;
 
+    // Prepend sudo for linux
     let mut child = if cfg!(target_os = "linux") {
         Command::new("sudo")
             .current_dir(working_dir)
