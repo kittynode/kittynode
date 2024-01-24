@@ -1,12 +1,13 @@
+mod constants;
+mod docker;
+mod utils;
+
 use clap::{Parser, Subcommand};
 use std::fs;
 use std::fs::{File, OpenOptions};
 use std::io::{Read, Write};
 use std::path::Path;
 use std::process::{Command, Stdio};
-use stn_docker::{check_docker_daemon, execute_docker_command};
-use stn_utils::constants;
-use stn_utils::{get_taiko_node_directory, stn_log};
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -55,7 +56,7 @@ enum LogsSubcommands {
 fn main() {
     let cli = Cli::parse();
 
-    let taiko_node_dir = match get_taiko_node_directory() {
+    let taiko_node_dir = match utils::get_taiko_node_directory() {
         Ok(dir) => dir,
         Err(e) => {
             eprintln!("Error getting Taiko node directory: {}", e);
@@ -94,11 +95,11 @@ fn main() {
 fn install(taiko_node_dir: &Path) {
     // Check if Taiko node is already installed
     if taiko_node_dir.exists() {
-        stn_log("simple-taiko-node is already installed.");
+        utils::stn_log("simple-taiko-node is already installed.");
         return;
     }
 
-    stn_log(&format!(
+    utils::stn_log(&format!(
         "Installing simple-taiko-node to {}",
         taiko_node_dir.to_str().unwrap()
     ));
@@ -121,9 +122,9 @@ fn install(taiko_node_dir: &Path) {
         .expect("Failed to wait for git clone to complete.");
 
     if git_clone_status.success() {
-        stn_log("Git clone successful.");
+        utils::stn_log("Git clone successful.");
     } else {
-        stn_log("Git clone failed.");
+        utils::stn_log("Git clone failed.");
     }
 
     // Copy .env.sample to .env
@@ -133,7 +134,7 @@ fn install(taiko_node_dir: &Path) {
     )
     .expect("Failed to copy .env.sample to .env");
 
-    stn_log("simple-taiko-node successfully installed");
+    utils::stn_log("simple-taiko-node successfully installed");
 }
 
 fn config(taiko_node_dir: &Path) {
@@ -185,20 +186,20 @@ fn config(taiko_node_dir: &Path) {
 }
 
 fn up(taiko_node_dir: &Path) {
-    execute_docker_command(&["compose", "up", "-d"], taiko_node_dir)
+    docker::execute_docker_command(&["compose", "up", "-d"], taiko_node_dir)
         .expect("Failed to execute docker compose up -d command");
-    stn_log("simple-taiko-node successfully started");
+    utils::stn_log("simple-taiko-node successfully started");
 }
 
 fn down(taiko_node_dir: &Path) {
-    execute_docker_command(&["compose", "down"], taiko_node_dir)
+    docker::execute_docker_command(&["compose", "down"], taiko_node_dir)
         .expect("Failed to execute docker compose down command");
-    stn_log("simple-taiko-node successfully stopped");
+    utils::stn_log("simple-taiko-node successfully stopped");
 }
 
 fn upgrade(taiko_node_dir: &Path) {
     // Check docker is on
-    check_docker_daemon().expect("Docker daemon is not running. Please start Docker!");
+    docker::check_docker_daemon().expect("Docker daemon is not running. Please start Docker!");
 
     // Pull latest simple-taiko-node from GitHub
     let mut git_pull = Command::new("git")
@@ -216,13 +217,13 @@ fn upgrade(taiko_node_dir: &Path) {
         .expect("Failed to wait for git pull to complete.");
 
     if git_pull_status.success() {
-        stn_log("Git pull successful.");
+        utils::stn_log("Git pull successful.");
     } else {
-        stn_log("Git pull failed.");
+        utils::stn_log("Git pull failed.");
     }
 
     // Pull latest docker images
-    execute_docker_command(&["compose", "pull"], taiko_node_dir)
+    docker::execute_docker_command(&["compose", "pull"], taiko_node_dir)
         .expect("Failed to execute docker compose pull command");
 
     // Execute a script with bash: in ./scripts/util/update-env.sh
@@ -239,16 +240,16 @@ fn upgrade(taiko_node_dir: &Path) {
         .expect("Failed to wait for update-env.sh to complete.");
 
     if update_env_status.success() {
-        stn_log("update-env.sh script successful.");
+        utils::stn_log("update-env.sh script successful.");
     } else {
-        stn_log("update-env.sh script failed.");
+        utils::stn_log("update-env.sh script failed.");
     }
 }
 
 fn terminate(taiko_node_dir: &Path) {
-    execute_docker_command(&["compose", "down", "-v"], taiko_node_dir)
+    docker::execute_docker_command(&["compose", "down", "-v"], taiko_node_dir)
         .expect("Failed to execute docker compose down -v command");
-    stn_log("simple-taiko-node removed from system");
+    utils::stn_log("simple-taiko-node removed from system");
 }
 
 fn logs(log_type: &LogsSubcommands, taiko_node_dir: &Path) {
@@ -266,9 +267,11 @@ fn logs(log_type: &LogsSubcommands, taiko_node_dir: &Path) {
         }
     }
 
-    execute_docker_command(&args, taiko_node_dir).expect("Failed to execute docker logs command");
+    docker::execute_docker_command(&args, taiko_node_dir)
+        .expect("Failed to execute docker logs command");
 }
 
 fn status(taiko_node_dir: &Path) {
-    execute_docker_command(&["ps"], taiko_node_dir).expect("Failed to execute docker ps command")
+    docker::execute_docker_command(&["ps"], taiko_node_dir)
+        .expect("Failed to execute docker ps command")
 }

@@ -125,17 +125,7 @@ name = "stn"
 version = "0.1.21"
 dependencies = [
  "clap",
- "stn_docker",
- "stn_utils",
 ]
-
-[[package]]
-name = "stn_docker"
-version = "0.1.0"
-
-[[package]]
-name = "stn_utils"
-version = "0.1.0"
 
 [[package]]
 name = "strsim"

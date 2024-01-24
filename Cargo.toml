@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/docker", "crates/stn", "crates/utils"]
+members = ["crates/stn"]
 resolver = "2"
 
 # The profile that 'cargo dist' will build with
