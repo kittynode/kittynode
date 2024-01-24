@@ -1,5 +1,6 @@
-on: push
 name: Clippy check
+
+on: push
 
 # Make sure CI fails on all warnings, including Clippy lints
 env:
