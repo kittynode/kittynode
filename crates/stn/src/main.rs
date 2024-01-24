@@ -105,7 +105,7 @@ fn install(taiko_node_dir: &Path) {
     ));
 
     // Create home directory if it doesn't exist
-    fs::create_dir_all(&taiko_node_dir).expect("Failed to create .stn directory");
+    fs::create_dir_all(taiko_node_dir).expect("Failed to create .stn directory");
 
     // Pull latest simple-taiko-node from GitHub
     let mut git_clone = Command::new("git")
@@ -301,6 +301,5 @@ fn status(taiko_node_dir: &Path) {
 
     if let Err(e) = docker::execute_docker_command(&["ps"], taiko_node_dir) {
         eprintln!("{}", e);
-        return;
     }
 }

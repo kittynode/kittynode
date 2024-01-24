@@ -28,16 +28,13 @@ pub fn execute_docker_command(args: &[&str], working_dir: &Path) -> Result<(), D
             .current_dir(working_dir)
             .args(["docker"].iter().chain(args))
             .spawn()
-            .expect(&format!(
-                "Failed to execute sudo docker command: {:?}",
-                args
-            ))
+            .unwrap_or_else(|_| panic!("Failed to execute sudo docker command: {:?}", args))
     } else {
         Command::new("docker")
             .current_dir(working_dir)
             .args(args)
             .spawn()
-            .expect(&format!("Failed to execute docker command: {:?}", args))
+            .unwrap_or_else(|_| panic!("Failed to execute docker command: {:?}", args))
     };
 
     let result = child.wait();
