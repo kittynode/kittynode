@@ -30,7 +30,7 @@ enum Commands {
     /// Upgrades simple-taiko-node to the latest version
     Upgrade,
     /// Deletes simple-taiko-node instance
-    Terminate,
+    Remove,
     /// Handles logs operations
     Logs(Logs),
     /// Status of Taiko nodes
@@ -80,8 +80,8 @@ fn main() {
         Commands::Upgrade => {
             upgrade(&taiko_node_dir);
         }
-        Commands::Terminate => {
-            terminate(&taiko_node_dir);
+        Commands::Remove => {
+            remove(&taiko_node_dir);
         }
         Commands::Logs(logs_subcommands) => {
             logs(&logs_subcommands.subcommands, &taiko_node_dir);
@@ -141,13 +141,14 @@ fn config(taiko_node_dir: &Path) {
     let mut l1_endpoint_http = String::new();
     let mut l1_endpoint_ws = String::new();
 
-    // Prompt for L1_ENDPOINT_HTTP and L1_ENDPOINT_WS
-    println!("Please enter your L1_ENDPOINT_HTTP:");
+    print!("Please enter your L1_ENDPOINT_HTTP: ");
+    std::io::stdout().flush().expect("Failed to flush stdout");
     std::io::stdin()
         .read_line(&mut l1_endpoint_http)
         .expect("Failed to read L1_ENDPOINT_HTTP");
 
-    println!("Please enter your L1_ENDPOINT_WS:");
+    print!("Please enter your L1_ENDPOINT_WS: ");
+    std::io::stdout().flush().expect("Failed to flush stdout");
     std::io::stdin()
         .read_line(&mut l1_endpoint_ws)
         .expect("Failed to read L1_ENDPOINT_WS");
@@ -200,8 +201,11 @@ fn down(taiko_node_dir: &Path) {
 }
 
 fn upgrade(taiko_node_dir: &Path) {
-    // Check docker is on
-    docker::check_docker_daemon().expect("Docker daemon is not running. Please start Docker!");
+    // Check if Docker daemon is running
+    if let Err(e) = docker::check_docker_daemon() {
+        eprintln!("{}", e);
+        return;
+    }
 
     // Pull latest simple-taiko-node from GitHub
     let mut git_pull = Command::new("git")
@@ -248,10 +252,25 @@ fn upgrade(taiko_node_dir: &Path) {
     }
 }
 
-fn terminate(taiko_node_dir: &Path) {
-    docker::execute_docker_command(&["compose", "down", "-v"], taiko_node_dir)
-        .expect("Failed to execute docker compose down -v command");
-    utils::stn_log("simple-taiko-node removed from system");
+fn remove(taiko_node_dir: &Path) {
+    // check if taiko node is installed first
+    if !taiko_node_dir.exists() {
+        utils::stn_log("simple-taiko-node is not installed.");
+        return;
+    }
+    if let Err(e) = docker::execute_docker_command(&["compose", "down", "-v"], taiko_node_dir) {
+        eprintln!("{}", e);
+        return;
+    }
+    utils::stn_log("simple-taiko-node volumes deleted from system");
+    match fs::remove_dir_all(taiko_node_dir) {
+        Ok(_) => {
+            utils::stn_log("simple-taiko-node directory deleted from system");
+        }
+        Err(e) => {
+            eprintln!("Failed to remove simple-taiko-node directory: {}", e);
+        }
+    }
 }
 
 fn logs(log_type: &LogsSubcommands, taiko_node_dir: &Path) {
@@ -279,6 +298,9 @@ fn status(taiko_node_dir: &Path) {
         utils::stn_log("simple-taiko-node is not installed.");
         return;
     }
-    docker::execute_docker_command(&["ps"], taiko_node_dir)
-        .expect("Failed to execute docker ps command")
+
+    if let Err(e) = docker::execute_docker_command(&["ps"], taiko_node_dir) {
+        eprintln!("{}", e);
+        return;
+    }
 }
