@@ -1,12 +1,12 @@
 use clap::{Parser, Subcommand};
-use docker::{check_docker_daemon, execute_docker_command};
 use std::fs;
 use std::fs::{File, OpenOptions};
 use std::io::{Read, Write};
 use std::path::Path;
 use std::process::{Command, Stdio};
-use utils::constants;
-use utils::stn_log;
+use stn_docker::{check_docker_daemon, execute_docker_command};
+use stn_utils::constants;
+use stn_utils::{get_taiko_node_directory, stn_log};
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -55,7 +55,7 @@ enum LogsSubcommands {
 fn main() {
     let cli = Cli::parse();
 
-    let taiko_node_dir = match utils::get_taiko_node_directory() {
+    let taiko_node_dir = match get_taiko_node_directory() {
         Ok(dir) => dir,
         Err(e) => {
             eprintln!("Error getting Taiko node directory: {}", e);

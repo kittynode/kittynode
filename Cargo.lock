@@ -97,10 +97,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "acbf1af155f9b9ef647e42cdc158db4b64a1b61f743629225fde6f3e0be2a7c7"
 
 [[package]]
-name = "docker"
-version = "0.1.0"
-
-[[package]]
 name = "heck"
 version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -129,9 +125,17 @@ name = "stn"
 version = "0.1.21"
 dependencies = [
  "clap",
- "docker",
- "utils",
+ "stn_docker",
+ "stn_utils",
 ]
+
+[[package]]
+name = "stn_docker"
+version = "0.1.0"
+
+[[package]]
+name = "stn_utils"
+version = "0.1.0"
 
 [[package]]
 name = "strsim"
@@ -161,10 +165,6 @@ name = "utf8parse"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "711b9620af191e0cdc7468a8d14e709c3dcdb115b36f838e601583af800a370a"
-
-[[package]]
-name = "utils"
-version = "0.1.0"
 
 [[package]]
 name = "windows-sys"
