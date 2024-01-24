@@ -19,21 +19,21 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    /// Install a simple-taiko-node instance
+    /// Install a Taiko node
     Install,
-    /// Configs a simple-taiko-node instance
+    /// Configure your Taiko node
     Config,
-    /// Starts up simple-taiko-node in the background
+    /// Start your Taiko node
     Up,
-    /// Stops simple-taiko-node
+    /// Stop your Taiko node
     Down,
-    /// Upgrades simple-taiko-node to the latest version
+    /// Upgrade your Taiko node
     Upgrade,
-    /// Deletes simple-taiko-node instance
+    /// Delete your Taiko node
     Remove,
-    /// Handles logs operations
+    /// Logs of your Taiko node
     Logs(Logs),
-    /// Status of Taiko nodes
+    /// Status of your Taiko node
     Status,
 }
 
