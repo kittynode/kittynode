@@ -3,8 +3,8 @@
 
 # stn
 
-![GitHub Release](https://img.shields.io/github/v/release/d1onys1us/stn?logo=github&link=https%3A%2F%2Fgithub.com%2Fd1onys1us%2Fstn%2Freleases)
-![Crates.io Version](https://img.shields.io/crates/v/stn?logo=rust&link=https%3A%2F%2Fcrates.io%2Fcrates%2Fstn)
+[![GitHub Release](https://img.shields.io/github/v/release/d1onys1us/stn?logo=github)](https://github.com/d1onys1us/stn/releases)
+[![Crates.io Version](https://img.shields.io/crates/v/stn?logo=rust)](https://crates.io/crates/stn)
 
 A command line tool for managing Taiko nodes.
 
