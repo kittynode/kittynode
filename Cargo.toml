@@ -8,6 +8,7 @@ license = "MIT"
 version = "0.1.27"
 edition = "2021"
 repository = "https://github.com/d1onys1us/stn"
+readme = "README.md"
 
 # The profile that 'cargo dist' will build with
 [profile.dist]
