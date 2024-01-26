@@ -2,6 +2,7 @@
 
 [![GitHub Release](https://img.shields.io/github/v/release/d1onys1us/stn?logo=github)](https://github.com/d1onys1us/stn/releases)
 [![Crates.io Version](https://img.shields.io/crates/v/stn?logo=rust)](https://crates.io/crates/stn)
+[![codecov](https://codecov.io/gh/d1onys1us/stn/graph/badge.svg?token=TJAUBD8RPT)](https://codecov.io/gh/d1onys1us/stn)
 
 A command line tool for managing Taiko nodes.
 
@@ -12,14 +13,6 @@ A command line tool for managing Taiko nodes.
 ## Installation
 
 Visit the [releases page](https://github.com/d1onys1us/stn/releases) for a simple one-line command to install `stn`.
-
-#### Supported platforms:
-
-- Apple Silicon macOS (aarch64-apple-darwin)
-- Intel macOS (x86_64-apple-darwin)
-- x64 Linux (x86_64-unknown-linux-gnu)
-- x64 MUSL Linux (x86_64-unknown-linux-musl)
-- x64 Windows (x86_64-pc-windows-msvc)
 
 ## Quickstart
 
