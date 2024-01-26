@@ -1,4 +1,4 @@
-name: Continuous Deployment
+name: Continuous Delivery
 
 on:
   push:
@@ -6,8 +6,7 @@ on:
       - main
 
 jobs:
-  release-plz:
-    name: Release-plz
+  continuous-delivery:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

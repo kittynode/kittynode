@@ -1,0 +1,27 @@
+name: Continuous Integration
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
+      - name: Run tests
+        run: cargo test --all --all-features
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
+      - name: Check code formatting
+        run: cargo fmt --all -- --check
+
+      - name: Check for typos
+        uses: crate-ci/typos@master
+
+      - name: Run Clippy
+        run: cargo clippy --all-targets --all-features -- -D warnings
