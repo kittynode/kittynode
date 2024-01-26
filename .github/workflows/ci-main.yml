@@ -6,8 +6,7 @@ on:
       - main
 
 jobs:
-  release-plz:
-    name: Release-plz
+  main:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

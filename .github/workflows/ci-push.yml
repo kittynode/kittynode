@@ -1,4 +1,4 @@
-name: Continuous Integration - PR
+name: Continuous Integration - Push
 
 on: push
 
