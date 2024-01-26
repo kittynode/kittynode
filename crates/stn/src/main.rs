@@ -1,5 +1,6 @@
 mod constants;
 mod docker;
+mod network;
 mod utils;
 
 use clap::{Parser, Subcommand};
@@ -53,7 +54,8 @@ enum LogsSubcommands {
     Driver,
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
     let cli = Cli::parse();
 
     let taiko_node_dir = match utils::get_taiko_node_directory() {
@@ -69,7 +71,7 @@ fn main() {
             install(&taiko_node_dir);
         }
         Commands::Config => {
-            config(&taiko_node_dir);
+            config(&taiko_node_dir).await;
         }
         Commands::Up => {
             up(&taiko_node_dir);
@@ -137,9 +139,26 @@ fn install(taiko_node_dir: &Path) {
     utils::stn_log("simple-taiko-node successfully installed");
 }
 
-fn config(taiko_node_dir: &Path) {
+async fn config(taiko_node_dir: &Path) {
     let mut l1_endpoint_http = String::new();
     let mut l1_endpoint_ws = String::new();
+
+    // Ask the user if they have an L1_ENDPOINT_HTTP and L1_ENDPOINT_WS
+    let mut input = String::new();
+    print!("Do you have an HTTP and WS endpoint for a Holesky L1 archive node? (y/n): ");
+    std::io::stdout().flush().expect("Failed to flush stdout");
+    // Store y/n value
+    std::io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read input");
+    if input.trim() != "y" {
+        println!(
+            concat!("\nYou must have an HTTP and WS endpoint for a Holesky L1 archive node to configure a Taiko node. You can either:\n",
+                    "  1. Install a Holesky L1 archive node and run it locally\n",
+                    "  2. Use a public Holesky L1 archive node from an RPC provider (will have to pay or eventually get rate limited)\n",
+                    "\nSee the docs at https://docs.taiko.xyz/guides/run-a-taiko-node for more info."));
+        return;
+    }
 
     print!("Please enter your L1_ENDPOINT_HTTP: ");
     std::io::stdout().flush().expect("Failed to flush stdout");
@@ -155,6 +174,22 @@ fn config(taiko_node_dir: &Path) {
 
     l1_endpoint_http = l1_endpoint_http.trim().to_string();
     l1_endpoint_ws = l1_endpoint_ws.trim().to_string();
+
+    let (http_valid, ws_valid) =
+        network::validate_endpoints(&l1_endpoint_http, &l1_endpoint_ws).await;
+
+    // Based on the validation results, you can decide what to do next
+    if http_valid {
+        println!("HTTP endpoint is valid.");
+    }
+    if ws_valid {
+        println!("WS endpoint is valid.");
+    }
+
+    if !http_valid || !ws_valid {
+        eprintln!("One or more endpoints are invalid. Please check your endpoints and try again.");
+        return;
+    }
 
     // Update .env with L1_ENDPOINT_HTTP and L1_ENDPOINT_WS
     let env_path = Path::new(&taiko_node_dir).join(".env");
