@@ -1,6 +1,3 @@
-> [!WARNING]
-> The `v0.1.*` version tag means this is considered alpha software.
-
 # stn
 
 [![GitHub Release](https://img.shields.io/github/v/release/d1onys1us/stn?logo=github)](https://github.com/d1onys1us/stn/releases)
