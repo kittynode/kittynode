@@ -1,4 +1,4 @@
-name: Continuous Deployment
+name: Continuous Integration - Main
 
 on:
   push:
