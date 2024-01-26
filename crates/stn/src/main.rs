@@ -147,10 +147,10 @@ async fn config(taiko_node_dir: &Path) {
     let mut input = String::new();
     print!("Do you have an HTTP and WS endpoint for a Holesky L1 archive node? (y/n): ");
     std::io::stdout().flush().expect("Failed to flush stdout");
-    // Store y/n value
     std::io::stdin()
         .read_line(&mut input)
         .expect("Failed to read input");
+
     if input.trim() != "y" {
         println!(
             concat!("\nYou must have an HTTP and WS endpoint for a Holesky L1 archive node to configure a Taiko node. You can either:\n",
@@ -178,17 +178,10 @@ async fn config(taiko_node_dir: &Path) {
     let (http_valid, ws_valid) =
         network::validate_endpoints(&l1_endpoint_http, &l1_endpoint_ws).await;
 
-    // Based on the validation results, you can decide what to do next
-    if http_valid {
-        println!("HTTP endpoint is valid.");
-    }
-    if ws_valid {
-        println!("WS endpoint is valid.");
-    }
-
-    if !http_valid || !ws_valid {
-        eprintln!("One or more endpoints are invalid. Please check your endpoints and try again.");
-        return;
+    if http_valid && ws_valid {
+        println!("Both HTTP and WS endpoints are valid.");
+    } else {
+        return; // Don't continue if endpoints are invalid
     }
 
     // Update .env with L1_ENDPOINT_HTTP and L1_ENDPOINT_WS
