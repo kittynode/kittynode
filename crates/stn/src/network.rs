@@ -1,9 +1,57 @@
-use ethers::providers::{Http, Middleware, Provider, Ws};
-use std::time::Duration;
+use ethers::{
+    providers::{Http, Middleware, Provider, Ws},
+    types::SyncingStatus,
+};
+use std::{fmt, time::Duration};
 use tokio::time::timeout;
 
 use crate::constants;
 
+/// Custom error to handle different cases in is_syncing function.
+pub enum SyncError {
+    ProviderCreationFailed,
+    SyncStatusFetchFailed,
+}
+
+impl fmt::Display for SyncError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            SyncError::ProviderCreationFailed => write!(f, "Failed to create HTTP provider."),
+            SyncError::SyncStatusFetchFailed => write!(f, "Failed to retrieve syncing status."),
+        }
+    }
+}
+
+/// Returns the sync status of the L1 endpoint. If syncing, returns progress as percentage.
+pub async fn is_syncing(l1_endpoint_http: &str) -> Result<f64, SyncError> {
+    let http_provider: Provider<Http> = Provider::<Http>::try_from(l1_endpoint_http)
+        .map_err(|_| SyncError::ProviderCreationFailed)?;
+
+    match http_provider.syncing().await {
+        Ok(SyncingStatus::IsSyncing(sync_progress)) => {
+            // print out debug data, TODO: don't print out all this debug stuff
+            println!(
+                "Syncing: current_block: {}, highest_block: {}",
+                sync_progress.current_block, sync_progress.highest_block
+            );
+            let progress = if sync_progress.highest_block > sync_progress.current_block {
+                100.0 * (sync_progress.current_block.as_u64() as f64)
+                    / (sync_progress.highest_block.as_u64() as f64)
+            } else {
+                100.0 // Assuming that if current_block is not less than highest_block, syncing is complete.
+            };
+            Ok(progress)
+        }
+        Ok(SyncingStatus::IsFalse) => {
+            // print out debug log
+            println!("Syncing: false");
+            return Ok(0.0);
+        }
+        Err(_) => Err(SyncError::SyncStatusFetchFailed),
+    }
+}
+
+/// Validates the endpoints and returns a tuple of booleans indicating whether the endpoints are valid.
 pub async fn validate_endpoints(l1_endpoint_http: &str, l1_endpoint_ws: &str) -> (bool, bool) {
     let timeout_duration = Duration::new(constants::DEFAULT_NETWORK_TIMEOUT, 0);
 

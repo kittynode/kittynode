@@ -6,6 +6,7 @@ mod utils;
 
 use clap::{Parser, Subcommand};
 use env_manager::EnvManager;
+use network::is_syncing;
 use std::io::Write;
 use std::path::Path;
 use std::process::{Command, Stdio};
@@ -37,6 +38,8 @@ enum Commands {
     Logs(Logs),
     /// Status of your Taiko node
     Status,
+    /// Health of your Taiko node
+    Health,
 }
 
 #[derive(Parser)]
@@ -91,6 +94,9 @@ async fn main() {
         }
         Commands::Status => {
             status(&taiko_node_dir);
+        }
+        Commands::Health => {
+            health().await;
         }
     }
 }
@@ -347,12 +353,27 @@ fn status(taiko_node_dir: &Path) {
         return;
     }
 
+    // Do a docker ps
     match docker::execute_docker_command(&["ps"], taiko_node_dir) {
         Ok(msg) => {
             utils::stn_log(&msg);
         }
         Err(e) => {
             eprintln!("{}", e);
+        }
+    }
+}
+
+async fn health() {
+    // TODO: fetch from .env file
+    let l2_endpoint_http = "http://localhost:8547";
+
+    match is_syncing(l2_endpoint_http).await {
+        Ok(progress) => {
+            println!("Syncing in progress: {:.2}% complete.", progress);
+        }
+        Err(error) => {
+            eprintln!("Error checking syncing status: {}", error);
         }
     }
 }
