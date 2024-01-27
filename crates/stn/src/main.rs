@@ -6,7 +6,7 @@ mod utils;
 
 use clap::{Parser, Subcommand};
 use env_manager::EnvManager;
-use network::is_syncing;
+use network::get_sync_state;
 use std::io::Write;
 use std::path::Path;
 use std::process::{Command, Stdio};
@@ -368,9 +368,13 @@ async fn health() {
     // TODO: fetch from .env file
     let l2_endpoint_http = "http://localhost:8547";
 
-    match is_syncing(l2_endpoint_http).await {
-        Ok(progress) => {
-            println!("Syncing in progress: {:.2}% complete.", progress);
+    match get_sync_state(l2_endpoint_http).await {
+        Ok(sync_state) => {
+            if sync_state.is_syncing {
+                println!("Syncing in progress: {:.2}% complete.", sync_state.progress);
+            } else {
+                println!("Node is fully synced."); // TODO: bug, even if not syncing it returns false
+            }
         }
         Err(error) => {
             eprintln!("Error checking syncing status: {}", error);
