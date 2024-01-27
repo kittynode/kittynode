@@ -4,6 +4,6 @@ coverage:
     project:
       default:
         informational: true
-    patch:
-      default:
-        informational: true
+        branches:
+          - main
+    patch: off
