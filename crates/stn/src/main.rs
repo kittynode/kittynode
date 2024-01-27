@@ -339,7 +339,7 @@ fn logs(log_type: &LogsSubcommands, taiko_node_dir: &Path) {
         return;
     }
 
-    let mut args = vec!["compose", "logs", "-f"];
+    let mut args = vec!["compose", "logs", "--tail=100", "-f"];
 
     match log_type {
         LogsSubcommands::All => {
