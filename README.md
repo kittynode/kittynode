@@ -2,7 +2,7 @@
 
 [![GitHub Release](https://img.shields.io/github/v/release/d1onys1us/stn?logo=github)](https://github.com/d1onys1us/stn/releases)
 [![Crates.io Version](https://img.shields.io/crates/v/stn?logo=rust)](https://crates.io/crates/stn)
-[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/d1onys1us/stn/ci.yml?label=ci)](https://github.com/d1onys1us/stn/actions/workflows/ci.yml?query=branch:main)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/d1onys1us/stn/ci.yml?logo=github&label=ci)](https://github.com/d1onys1us/stn/actions/workflows/ci.yml?query=branch:main)
 [![codecov](https://codecov.io/gh/d1onys1us/stn/graph/badge.svg?token=TJAUBD8RPT)](https://codecov.io/gh/d1onys1us/stn)
 
 A command line tool for managing Taiko nodes.
