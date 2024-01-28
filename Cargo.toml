@@ -5,7 +5,7 @@ resolver = "2"
 [workspace.package]
 description = "A command line tool for managing Taiko nodes."
 license = "MIT"
-version = "0.1.30"
+version = "0.1.31"
 edition = "2021"
 repository = "https://github.com/d1onys1us/stn"
 readme = "README.md"
