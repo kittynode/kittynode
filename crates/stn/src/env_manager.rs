@@ -33,6 +33,15 @@ impl EnvManager {
         })
     }
 
+    pub fn get(&self, key: &str) -> Option<String> {
+        self.variables.get(key).and_then(|&line_num| {
+            self.lines.get(line_num).and_then(|line| {
+                line.split_once('=')
+                    .map(|(_, value)| value.trim().to_string())
+            })
+        })
+    }
+
     pub fn set(&mut self, key: String, value: String) {
         match self.variables.get(&key) {
             Some(&line_num) => {
