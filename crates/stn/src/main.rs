@@ -1,14 +1,15 @@
 mod constants;
 mod docker;
+mod env_manager;
 mod network;
 mod utils;
 
 use clap::{Parser, Subcommand};
-use std::fs;
-use std::fs::{File, OpenOptions};
-use std::io::{Read, Write};
+use env_manager::EnvManager;
+use std::io::Write;
 use std::path::Path;
 use std::process::{Command, Stdio};
+use std::{fs, io};
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -146,8 +147,8 @@ async fn config(taiko_node_dir: &Path) {
     // Ask the user if they have an L1_ENDPOINT_HTTP and L1_ENDPOINT_WS
     let mut input = String::new();
     print!("Do you have an HTTP and WS endpoint for a Holesky L1 archive node? (y/n): ");
-    std::io::stdout().flush().expect("Failed to flush stdout");
-    std::io::stdin()
+    io::stdout().flush().expect("Failed to flush stdout");
+    io::stdin()
         .read_line(&mut input)
         .expect("Failed to read input");
 
@@ -161,14 +162,14 @@ async fn config(taiko_node_dir: &Path) {
     }
 
     print!("Please enter your L1_ENDPOINT_HTTP: ");
-    std::io::stdout().flush().expect("Failed to flush stdout");
-    std::io::stdin()
+    io::stdout().flush().expect("Failed to flush stdout");
+    io::stdin()
         .read_line(&mut l1_endpoint_http)
         .expect("Failed to read L1_ENDPOINT_HTTP");
 
     print!("Please enter your L1_ENDPOINT_WS: ");
-    std::io::stdout().flush().expect("Failed to flush stdout");
-    std::io::stdin()
+    io::stdout().flush().expect("Failed to flush stdout");
+    io::stdin()
         .read_line(&mut l1_endpoint_ws)
         .expect("Failed to read L1_ENDPOINT_WS");
 
@@ -181,37 +182,19 @@ async fn config(taiko_node_dir: &Path) {
     if http_valid && ws_valid {
         println!("Both HTTP and WS endpoints are valid.");
     } else {
+        println!("One or both of the endpoints are invalid.");
         return; // Don't continue if endpoints are invalid
     }
 
-    // Update .env with L1_ENDPOINT_HTTP and L1_ENDPOINT_WS
-    let env_path = Path::new(&taiko_node_dir).join(".env");
-    let mut file = File::open(env_path).expect("Failed to open .env file");
-    let mut contents = String::new();
-    file.read_to_string(&mut contents)
-        .expect("Failed to read .env file");
+    // Initialize EnvManager and update .env with L1_ENDPOINT_HTTP and L1_ENDPOINT_WS
+    let env_path = taiko_node_dir.join(".env");
+    let mut env_manager = EnvManager::new(&env_path).expect("Failed to initialize EnvManager");
 
-    let new_contents = contents
-        .lines()
-        .map(|line| {
-            if line.starts_with("L1_ENDPOINT_HTTP") {
-                return format!("L1_ENDPOINT_HTTP={}", l1_endpoint_http);
-            } else if line.starts_with("L1_ENDPOINT_WS") {
-                return format!("L1_ENDPOINT_WS={}", l1_endpoint_ws);
-            }
-            line.to_string()
-        })
-        .collect::<Vec<_>>()
-        .join("\n");
+    env_manager.set("L1_ENDPOINT_HTTP".to_string(), l1_endpoint_http);
+    env_manager.set("L1_ENDPOINT_WS".to_string(), l1_endpoint_ws);
+    env_manager.save().expect("Failed to save .env file");
 
-    let env_path = Path::new(&taiko_node_dir).join(".env");
-    let mut file = OpenOptions::new()
-        .write(true)
-        .truncate(true)
-        .open(env_path)
-        .expect("Failed to open .env file");
-    file.write_all(new_contents.as_bytes())
-        .expect("Failed to write to .env file");
+    println!("simple-taiko-node successfully configured.");
 }
 
 fn up(taiko_node_dir: &Path) {
@@ -285,23 +268,17 @@ fn upgrade(taiko_node_dir: &Path) {
         }
     }
 
-    // Execute a script with bash: in ./scripts/util/update-env.sh
-    let mut update_env = Command::new("bash")
-        .current_dir(taiko_node_dir)
-        .arg("./script/util/update-env.sh")
-        .stdout(Stdio::inherit())
-        .stderr(Stdio::inherit())
-        .spawn()
-        .expect("Failed to execute update-env.sh script.");
+    // Update .env file with .env.sample using EnvManager
+    let env_path = taiko_node_dir.join(".env");
+    let sample_env_path = taiko_node_dir.join(".env.sample");
+    let mut env_manager =
+        EnvManager::new(&env_path).expect("Failed to initialize EnvManager for .env file");
 
-    let update_env_status = update_env
-        .wait()
-        .expect("Failed to wait for update-env.sh to complete.");
-
-    if update_env_status.success() {
-        utils::stn_log("update-env.sh script successful.");
-    } else {
-        utils::stn_log("update-env.sh script failed.");
+    match env_manager.update_from_sample(&sample_env_path) {
+        Ok(()) => utils::stn_log("Successfully updated .env file from .env.sample."),
+        Err(e) => {
+            eprintln!("Failed to update .env file from .env.sample: {}", e);
+        }
     }
 }
 
