@@ -32,6 +32,8 @@ enum Commands {
     Down,
     /// Upgrade your Taiko node
     Upgrade,
+    /// Restarts your Taiko node
+    Restart,
     /// Delete your Taiko node
     Remove,
     /// Logs of your Taiko node
@@ -83,6 +85,9 @@ async fn main() {
         }
         Commands::Upgrade => {
             upgrade(&taiko_node_dir);
+        }
+        Commands::Restart => {
+            restart(&taiko_node_dir);
         }
         Commands::Remove => {
             remove(&taiko_node_dir);
@@ -281,6 +286,11 @@ fn upgrade(taiko_node_dir: &Path) {
             eprintln!("Failed to update .env file from .env.sample: {}", e);
         }
     }
+}
+
+fn restart(taiko_node_dir: &Path) {
+    down(taiko_node_dir);
+    up(taiko_node_dir);
 }
 
 fn remove(taiko_node_dir: &Path) {
