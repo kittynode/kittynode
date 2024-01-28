@@ -38,8 +38,6 @@ enum Commands {
     Logs(Logs),
     /// Status of your Taiko node
     Status,
-    /// Health of your Taiko node
-    Health,
 }
 
 #[derive(Parser)]
@@ -93,10 +91,7 @@ async fn main() {
             logs(&logs_subcommands.subcommands, &taiko_node_dir);
         }
         Commands::Status => {
-            status(&taiko_node_dir);
-        }
-        Commands::Health => {
-            health().await;
+            status(&taiko_node_dir).await;
         }
     }
 }
@@ -346,34 +341,27 @@ fn logs(log_type: &LogsSubcommands, taiko_node_dir: &Path) {
     }
 }
 
-fn status(taiko_node_dir: &Path) {
+async fn status(taiko_node_dir: &Path) {
     // Check taiko node is installed first
     if !taiko_node_dir.exists() {
         utils::stn_log("simple-taiko-node is not installed.");
         return;
     }
 
-    // Do a docker ps
-    match docker::execute_docker_command(&["ps"], taiko_node_dir) {
-        Ok(msg) => {
-            utils::stn_log(&msg);
-        }
-        Err(e) => {
-            eprintln!("{}", e);
-        }
-    }
-}
+    let env_path = taiko_node_dir.join(".env");
+    let env_manager = EnvManager::new(&env_path).expect("Failed to initialize EnvManager");
 
-async fn health() {
-    // TODO: fetch from .env file
-    let l2_endpoint_http = "http://localhost:8547";
+    let l2_endpoint_port = env_manager
+        .get("PORT_L2_EXECUTION_ENGINE_HTTP")
+        .expect("PORT_L2_EXECUTION_ENGINE_HTTP not set");
+    let l2_endpoint_http = format!("http://localhost:{}", l2_endpoint_port);
 
-    match get_sync_state(l2_endpoint_http).await {
+    match get_sync_state(&l2_endpoint_http).await {
         Ok(sync_state) => {
             if sync_state.is_syncing {
                 println!("Syncing in progress: {:.2}% complete.", sync_state.progress);
             } else {
-                println!("Node is fully synced."); // TODO: bug, even if not syncing it returns false
+                println!("Node is not syncing.");
             }
         }
         Err(error) => {
