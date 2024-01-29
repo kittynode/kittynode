@@ -53,7 +53,7 @@ pub async fn get_sync_state(eth_endpoint_http: &str) -> Result<SyncState, SyncEr
     }
 }
 
-/// Given two eth endpoints, compares their block height within a tolerance of 1 block, and retuns true if they are in sync.
+/// Given two eth endpoints, compares their block height within a tolerance of 1 block, and returns true if they are in sync.
 pub async fn is_synced(eth_endpoint_http_1: &str, eth_endpoint_http_2: &str) -> bool {
     let http_provider_1: Provider<Http> =
         Provider::<Http>::try_from(eth_endpoint_http_1).expect("Failed to create HTTP provider 1.");
