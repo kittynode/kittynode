@@ -11,6 +11,7 @@ use std::io::Write;
 use std::path::Path;
 use std::process::{Command, Stdio};
 use std::{fs, io};
+use utils::stn_log;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -25,7 +26,7 @@ enum Commands {
     /// Install a Taiko node
     Install,
     /// Configure your Taiko node
-    Config,
+    Config(Config),
     /// Start your Taiko node
     Up,
     /// Stop your Taiko node
@@ -48,6 +49,12 @@ struct Logs {
     subcommands: LogsSubcommands,
 }
 
+#[derive(Parser)]
+struct Config {
+    #[command(subcommand)]
+    subcommands: ConfigSubcommands,
+}
+
 #[derive(Subcommand)]
 enum LogsSubcommands {
     /// Shows all logs
@@ -56,6 +63,18 @@ enum LogsSubcommands {
     Execution,
     /// Shows driver logs
     Driver,
+}
+
+#[derive(Subcommand)]
+enum ConfigSubcommands {
+    /// Config a full node
+    Full,
+    /// Config a proposer
+    Proposer,
+    /// Config a ZK prover
+    Zkp,
+    /// Config an SGX prover
+    Sgx,
 }
 
 #[tokio::main]
@@ -74,8 +93,8 @@ async fn main() {
         Commands::Install => {
             install(&taiko_node_dir);
         }
-        Commands::Config => {
-            config(&taiko_node_dir).await;
+        Commands::Config(config_subcommands) => {
+            config(&config_subcommands.subcommands, &taiko_node_dir).await;
         }
         Commands::Up => {
             up(&taiko_node_dir);
@@ -146,61 +165,77 @@ fn install(taiko_node_dir: &Path) {
     utils::stn_log("simple-taiko-node successfully installed");
 }
 
-async fn config(taiko_node_dir: &Path) {
-    let mut l1_endpoint_http = String::new();
-    let mut l1_endpoint_ws = String::new();
+async fn config(config_subcommand: &ConfigSubcommands, taiko_node_dir: &Path) {
+    match config_subcommand {
+        ConfigSubcommands::Full => {
+            let mut l1_endpoint_http = String::new();
+            let mut l1_endpoint_ws = String::new();
 
-    // Ask the user if they have an L1_ENDPOINT_HTTP and L1_ENDPOINT_WS
-    let mut input = String::new();
-    print!("Do you have an HTTP and WS endpoint for a Holesky L1 archive node? (y/n): ");
-    io::stdout().flush().expect("Failed to flush stdout");
-    io::stdin()
-        .read_line(&mut input)
-        .expect("Failed to read input");
+            // Ask the user if they have an L1_ENDPOINT_HTTP and L1_ENDPOINT_WS
+            let mut input = String::new();
+            print!("Do you have an HTTP and WS endpoint for a Holesky L1 archive node? (y/n): ");
+            io::stdout().flush().expect("Failed to flush stdout");
+            io::stdin()
+                .read_line(&mut input)
+                .expect("Failed to read input");
 
-    if input.trim() != "y" {
-        println!(
-            concat!("\nYou must have an HTTP and WS endpoint for a Holesky L1 archive node to configure a Taiko node. You can either:\n",
-                    "  1. Install a Holesky L1 archive node and run it locally\n",
-                    "  2. Use a public Holesky L1 archive node from an RPC provider (will have to pay or eventually get rate limited)\n",
-                    "\nSee the docs at https://docs.taiko.xyz/guides/run-a-taiko-node for more info."));
-        return;
+            if input.trim() != "y" {
+                println!(
+                        concat!("\nYou must have an HTTP and WS endpoint for a Holesky L1 archive node to configure a Taiko node. You can either:\n",
+                                "  1. Install a Holesky L1 archive node and run it locally\n",
+                                "  2. Use a public Holesky L1 archive node from an RPC provider (will have to pay or eventually get rate limited)\n",
+                                "\nSee the docs at https://docs.taiko.xyz/guides/run-a-taiko-node for more info."));
+                return;
+            }
+
+            print!("Please enter your L1_ENDPOINT_HTTP: ");
+            io::stdout().flush().expect("Failed to flush stdout");
+            io::stdin()
+                .read_line(&mut l1_endpoint_http)
+                .expect("Failed to read L1_ENDPOINT_HTTP");
+
+            print!("Please enter your L1_ENDPOINT_WS: ");
+            io::stdout().flush().expect("Failed to flush stdout");
+            io::stdin()
+                .read_line(&mut l1_endpoint_ws)
+                .expect("Failed to read L1_ENDPOINT_WS");
+
+            l1_endpoint_http = l1_endpoint_http.trim().to_string();
+            l1_endpoint_ws = l1_endpoint_ws.trim().to_string();
+
+            let (http_valid, ws_valid) =
+                network::validate_endpoints(&l1_endpoint_http, &l1_endpoint_ws).await;
+
+            if http_valid && ws_valid {
+                println!("Both HTTP and WS endpoints are valid.");
+            } else {
+                println!("One or both of the endpoints are invalid.");
+                return; // Don't continue if endpoints are invalid
+            }
+
+            // Initialize EnvManager and update .env with L1_ENDPOINT_HTTP and L1_ENDPOINT_WS
+            let env_path = taiko_node_dir.join(".env");
+            let mut env_manager =
+                EnvManager::new(&env_path).expect("Failed to initialize EnvManager");
+
+            env_manager.set("L1_ENDPOINT_HTTP".to_string(), l1_endpoint_http);
+            env_manager.set("L1_ENDPOINT_WS".to_string(), l1_endpoint_ws);
+            env_manager.save().expect("Failed to save .env file");
+
+            println!("simple-taiko-node successfully configured.");
+        }
+        ConfigSubcommands::Proposer => {
+            stn_log("Proposer setup coming soon.");
+            // Check if prover is enabled
+            // Ask if they want to default to ZKPool
+        }
+        ConfigSubcommands::Zkp => {
+            stn_log("ZKP setup coming soon.");
+        }
+        ConfigSubcommands::Sgx => {
+            stn_log("Sgx setup coming soon.");
+        }
     }
-
-    print!("Please enter your L1_ENDPOINT_HTTP: ");
-    io::stdout().flush().expect("Failed to flush stdout");
-    io::stdin()
-        .read_line(&mut l1_endpoint_http)
-        .expect("Failed to read L1_ENDPOINT_HTTP");
-
-    print!("Please enter your L1_ENDPOINT_WS: ");
-    io::stdout().flush().expect("Failed to flush stdout");
-    io::stdin()
-        .read_line(&mut l1_endpoint_ws)
-        .expect("Failed to read L1_ENDPOINT_WS");
-
-    l1_endpoint_http = l1_endpoint_http.trim().to_string();
-    l1_endpoint_ws = l1_endpoint_ws.trim().to_string();
-
-    let (http_valid, ws_valid) =
-        network::validate_endpoints(&l1_endpoint_http, &l1_endpoint_ws).await;
-
-    if http_valid && ws_valid {
-        println!("Both HTTP and WS endpoints are valid.");
-    } else {
-        println!("One or both of the endpoints are invalid.");
-        return; // Don't continue if endpoints are invalid
-    }
-
-    // Initialize EnvManager and update .env with L1_ENDPOINT_HTTP and L1_ENDPOINT_WS
-    let env_path = taiko_node_dir.join(".env");
-    let mut env_manager = EnvManager::new(&env_path).expect("Failed to initialize EnvManager");
-
-    env_manager.set("L1_ENDPOINT_HTTP".to_string(), l1_endpoint_http);
-    env_manager.set("L1_ENDPOINT_WS".to_string(), l1_endpoint_ws);
-    env_manager.save().expect("Failed to save .env file");
-
-    println!("simple-taiko-node successfully configured.");
 }
 
 fn up(taiko_node_dir: &Path) {
