@@ -224,10 +224,128 @@ async fn config(config_subcommand: &ConfigSubcommands, taiko_node_dir: &Path) {
 
             println!("simple-taiko-node successfully configured.");
         }
+        // there are basically two prerequisites for becoming a proposer:
+        // 1. you need to have a prover currently running OR a marketplace prover configured. (i have a default static endpoint they can use, which we can tell them)
+        // 2. you need to have a node installed, running, and fully synced
+        // at the end i think we should ask the user if you'd like the tool to restart the node.
+        //
+        // algorithm:
+        // 0. check if they have a node installed, running, and fully synced, if so proceed, if not, send the error message
+        // 1. check if they have a local prover running, if so, verify the prover API is functional
+        // 2. if they don't have a local prover running, ask if they would like to setup a marketplace prover
+        // 3. if they say yes, healthcheck the marketplace prover
+        // 4. if the marketplace prover fails, send them to the docs to find another marketplace prover
+        // 5. if the marketplace prover succeeds, set the variable in their .env with env_manager
+        // 6. now that their prover is set, and functional, and we have verified they are fully synced, proceed to enable_proposer flag to true
+        // 7. ask the user if they would like us to restart the node for them
         ConfigSubcommands::Proposer => {
-            stn_log("Proposer setup coming soon.");
-            // Check if prover is enabled
-            // Ask if they want to default to ZKPool
+            // Initialize EnvManager and var to track intent
+            let env_path = taiko_node_dir.join(".env");
+            let mut env_manager =
+                EnvManager::new(&env_path).expect("Failed to initialize EnvManager");
+
+            // Check current state of the proposer
+            let current_state = env_manager
+                .get("ENABLE_PROPOSER")
+                .unwrap_or("false".to_string());
+
+            if current_state != "true" {
+                println!("The node is currently not configured as a proposer. Would you like to enable it? (y/n): ");
+                let mut input = String::new();
+                io::stdin()
+                    .read_line(&mut input)
+                    .expect("Failed to read input");
+                if input.trim() == "y" {
+                    // Enable proposer
+                    // 0. Check if they have a node installed, running, and fully synced
+                    let local_http = format!(
+                        "http://localhost:{}",
+                        env_manager
+                            .get("PORT_L2_EXECUTION_ENGINE_HTTP")
+                            .expect("PORT_L2_EXECUTION_ENGINE_HTTP not set")
+                    );
+                    let canonical_http = constants::KATLA_RPC_URL.to_string();
+                    let node_synced = network::is_synced(&local_http, &canonical_http).await;
+                    if !node_synced {
+                        println!("Node is not installed, running, or fully synced.");
+                        return;
+                    }
+                    // 1. Check if they have a local prover running [TODO: refactor into taiko_node::prover::verify_prover_api()]
+                    let local_prover_running = env_manager
+                        .get("PROVER_ENDPOINTS")
+                        .expect("PROVER_ENDPOINTS not set.")
+                        .to_string()
+                        .contains("taiko_client_prover_relayer");
+                    if local_prover_running {
+                        // Check if local prover is functional
+                        if !network::is_prover_api_functional(&local_http).await {
+                            println!("Local prover is running but the API is not functional.");
+                            return;
+                        }
+                    } else {
+                        // 2. If they don't have a local prover running, ask if they would like to setup a marketplace prover
+                        println!("Would you like to setup a marketplace prover? (y/n): ");
+                        let mut input = String::new();
+                        io::stdin()
+                            .read_line(&mut input)
+                            .expect("Failed to read input");
+                        if input.trim() == "y" {
+                            // 3. Healthcheck the marketplace prover
+                            if !network::is_prover_api_functional(constants::DEFAULT_PROVER_URL)
+                                .await
+                            {
+                                // 4. If the marketplace prover fails, send them to the docs to find another marketplace prover
+                                println!("Marketplace prover failed. Please consult the documentation to find another marketplace prover.");
+                                return;
+                            } else {
+                                // 5. If the marketplace prover succeeds, set the variable in their .env with env_manager
+                                env_manager.set(
+                                    "PROVER_ENDPOINTS".to_string(),
+                                    constants::DEFAULT_PROVER_URL.to_string(),
+                                );
+                            }
+                        } else {
+                            println!(
+                                "Local prover not running and marketplace prover setup declined."
+                            );
+                            return;
+                        }
+                    }
+                    // 6. Now that their prover is set, and functional, and we have verified they are fully synced, proceed to enable_proposer flag to true
+                    env_manager.set("ENABLE_PROPOSER".to_string(), "true".to_string());
+                    env_manager.save().expect("Failed to save .env file");
+                } else {
+                    println!("No changes made to proposer configuration.");
+                    return;
+                }
+            } else {
+                println!("The node is currently configured as a proposer. Would you like to disable it? (y/n): ");
+                let mut input = String::new();
+                io::stdin()
+                    .read_line(&mut input)
+                    .expect("Failed to read input");
+                if input.trim() == "y" {
+                    // Disable proposer
+                    env_manager.set("ENABLE_PROPOSER".to_string(), "false".to_string());
+                    env_manager.save().expect("Failed to save .env file");
+                    stn_log("Proposer flag set to disabled.");
+                } else {
+                    println!("No changes made to proposer configuration.");
+                }
+                return;
+            }
+
+            // Offer to restart the node to apply changes
+            println!("Would you like to restart the node to apply changes? (y/n): ");
+            let mut restart_input = String::new();
+            io::stdin()
+                .read_line(&mut restart_input)
+                .expect("Failed to read input");
+            if restart_input.trim() == "y" {
+                restart(taiko_node_dir); // Call the restart function
+            } else {
+                println!("Changes will take effect after the next restart.");
+            }
         }
         ConfigSubcommands::Zkp => {
             stn_log("ZKP setup coming soon.");
