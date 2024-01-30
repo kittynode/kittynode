@@ -12,7 +12,6 @@ use std::path::Path;
 use std::process::{Command, Stdio};
 use std::{fs, io};
 use utils::stn_log;
-use webbrowser;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -543,7 +542,14 @@ async fn status(taiko_node_dir: &Path) {
             if sync_state.is_syncing {
                 println!("Syncing in progress: {:.2}% complete.", sync_state.progress);
             } else {
-                println!("Node is not syncing.");
+                // If not syncing, check if it is finished syncing
+                let is_fully_synced =
+                    network::is_synced(&l2_endpoint_http, constants::KATLA_RPC_URL).await;
+                if is_fully_synced {
+                    println!("Node is fully synced.");
+                } else {
+                    println!("Node is not syncing.");
+                }
             }
         }
         Err(error) => {
