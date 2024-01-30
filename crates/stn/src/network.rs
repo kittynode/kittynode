@@ -128,7 +128,7 @@ pub async fn is_prover_api_functional(prover_endpoint_http: &str) -> bool {
         Ok(response) => {
             println!("Prover endpoint: {}", prover_endpoint_http);
             println!("Prover API status code: {}", response.status());
-            return response.status() == reqwest::StatusCode::OK;
+            response.status() == reqwest::StatusCode::OK
         }
         Err(_) => false,
     }

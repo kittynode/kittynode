@@ -312,7 +312,7 @@ async fn config(config_subcommand: &ConfigSubcommands, taiko_node_dir: &Path) {
                                 );
                                 stn_log(&format!(
                                     "Set {} as marketplace prover.",
-                                    constants::DEFAULT_PROVER_URL.to_string()
+                                    constants::DEFAULT_PROVER_URL
                                 ));
                             }
                         } else {
@@ -421,7 +421,7 @@ async fn config(config_subcommand: &ConfigSubcommands, taiko_node_dir: &Path) {
                                     );
                                     stn_log(&format!(
                                         "Set {} as marketplace prover.",
-                                        constants::DEFAULT_PROVER_URL.to_string()
+                                        constants::DEFAULT_PROVER_URL
                                     ));
                                 }
                             } else {
