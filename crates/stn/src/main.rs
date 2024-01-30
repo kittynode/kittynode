@@ -103,7 +103,7 @@ async fn main() {
             config(&config_subcommands.subcommands, &taiko_node_dir).await;
         }
         Commands::Up => {
-            up(&taiko_node_dir);
+            up(&taiko_node_dir).await;
         }
         Commands::Down => {
             down(&taiko_node_dir);
@@ -112,7 +112,7 @@ async fn main() {
             upgrade(&taiko_node_dir);
         }
         Commands::Restart => {
-            restart(&taiko_node_dir);
+            restart(&taiko_node_dir).await;
         }
         Commands::Remove => {
             remove(&taiko_node_dir);
@@ -357,7 +357,7 @@ async fn config(config_subcommand: &ConfigSubcommands, taiko_node_dir: &Path) {
                 .read_line(&mut restart_input)
                 .expect("Failed to read input");
             if restart_input.trim() == "y" {
-                restart(taiko_node_dir);
+                restart(taiko_node_dir).await;
             } else {
                 println!("Changes will take effect after the next restart.");
             }
@@ -371,10 +371,25 @@ async fn config(config_subcommand: &ConfigSubcommands, taiko_node_dir: &Path) {
     }
 }
 
-fn up(taiko_node_dir: &Path) {
+async fn up(taiko_node_dir: &Path) {
     // Check taiko node is installed first
     if !taiko_node_dir.exists() {
         utils::stn_log("simple-taiko-node is not installed.");
+        return;
+    }
+
+    let env_path = taiko_node_dir.join(".env");
+    let env_manager = EnvManager::new(&env_path).expect("Failed to initialize EnvManager");
+    let l1_endpoint_http = env_manager
+        .get("L1_ENDPOINT_HTTP")
+        .expect("L1_ENDPOINT_HTTP not set");
+    let l1_endpoint_ws = env_manager
+        .get("L1_ENDPOINT_WS")
+        .expect("L1_ENDPOINT_WS not set");
+    let (http_valid, ws_valid) =
+        network::validate_endpoints(&l1_endpoint_http, &l1_endpoint_ws).await;
+    if !http_valid || !ws_valid {
+        utils::stn_log("L1 endpoints are not healthy. Run `stn config` to set up new endpoints.");
         return;
     }
     match docker::execute_docker_command(&["compose", "up", "-d"], taiko_node_dir) {
@@ -456,9 +471,9 @@ fn upgrade(taiko_node_dir: &Path) {
     }
 }
 
-fn restart(taiko_node_dir: &Path) {
+async fn restart(taiko_node_dir: &Path) {
     down(taiko_node_dir);
-    up(taiko_node_dir);
+    up(taiko_node_dir).await;
 }
 
 fn remove(taiko_node_dir: &Path) {

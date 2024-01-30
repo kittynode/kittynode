@@ -10,7 +10,10 @@ impl std::fmt::Display for DockerError {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match *self {
             DockerError::DockerNotRunning => {
-                write!(f, "Docker daemon is not running. Please start Docker!")
+                write!(
+                    f,
+                    "Docker daemon is not running. Please start Docker or try restarting it!"
+                )
             }
             DockerError::CommandFailed(ref args) => write!(f, "Command failed: {:?}", args),
         }
