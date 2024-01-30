@@ -366,7 +366,7 @@ async fn config(config_subcommand: &ConfigSubcommands, taiko_node_dir: &Path) {
                         env_manager.save().expect("Failed to save .env file");
                         stn_log("Proposer flag set to disabled.");
                     }
-                    // TODO: remove code duplication
+                    // TODO: remove code duplication and into a function
                     1 => {
                         // Check if they have a node installed, running, and fully synced
                         let local_http = format!(
