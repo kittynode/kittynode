@@ -224,20 +224,6 @@ async fn config(config_subcommand: &ConfigSubcommands, taiko_node_dir: &Path) {
 
             println!("simple-taiko-node successfully configured.");
         }
-        // there are basically two prerequisites for becoming a proposer:
-        // 1. you need to have a prover currently running OR a marketplace prover configured. (i have a default static endpoint they can use, which we can tell them)
-        // 2. you need to have a node installed, running, and fully synced
-        // at the end i think we should ask the user if you'd like the tool to restart the node.
-        //
-        // algorithm:
-        // 0. check if they have a node installed, running, and fully synced, if so proceed, if not, send the error message
-        // 1. check if they have a local prover running, if so, verify the prover API is functional
-        // 2. if they don't have a local prover running, ask if they would like to setup a marketplace prover
-        // 3. if they say yes, healthcheck the marketplace prover
-        // 4. if the marketplace prover fails, send them to the docs to find another marketplace prover
-        // 5. if the marketplace prover succeeds, set the variable in their .env with env_manager
-        // 6. now that their prover is set, and functional, and we have verified they are fully synced, proceed to enable_proposer flag to true
-        // 7. ask the user if they would like us to restart the node for them
         ConfigSubcommands::Proposer => {
             // Initialize EnvManager and var to track intent
             let env_path = taiko_node_dir.join(".env");
@@ -255,9 +241,9 @@ async fn config(config_subcommand: &ConfigSubcommands, taiko_node_dir: &Path) {
                 io::stdin()
                     .read_line(&mut input)
                     .expect("Failed to read input");
+                // Enable proposer
                 if input.trim() == "y" {
-                    // Enable proposer
-                    // 0. Check if they have a node installed, running, and fully synced
+                    // Check if they have a node installed, running, and fully synced
                     let local_http = format!(
                         "http://localhost:{}",
                         env_manager
@@ -270,50 +256,60 @@ async fn config(config_subcommand: &ConfigSubcommands, taiko_node_dir: &Path) {
                         println!("Node is not installed, running, or fully synced.");
                         return;
                     }
-                    // 1. Check if they have a local prover running [TODO: refactor into taiko_node::prover::verify_prover_api()]
+                    // Check if they have a local prover running
                     let local_prover_running = env_manager
                         .get("PROVER_ENDPOINTS")
                         .expect("PROVER_ENDPOINTS not set.")
                         .to_string()
                         .contains("taiko_client_prover_relayer");
+                    let mut is_local_prover_functional = false;
+                    // Local prover set
                     if local_prover_running {
-                        // Check if local prover is functional
-                        if !network::is_prover_api_functional(&local_http).await {
+                        is_local_prover_functional =
+                            network::is_prover_api_functional(&local_http).await;
+                        if !is_local_prover_functional {
                             println!("Local prover is running but the API is not functional.");
-                            return;
                         }
-                    } else {
-                        // 2. If they don't have a local prover running, ask if they would like to setup a marketplace prover
+                    }
+                    // If local prover running but not functional
+                    if local_prover_running && !is_local_prover_functional {
+                        // If they don't have a local prover running, ask if they would like to setup a marketplace prover
                         println!("Would you like to setup a marketplace prover? (y/n): ");
                         let mut input = String::new();
                         io::stdin()
                             .read_line(&mut input)
                             .expect("Failed to read input");
                         if input.trim() == "y" {
-                            // 3. Healthcheck the marketplace prover
+                            // Healthcheck the marketplace prover
                             if !network::is_prover_api_functional(constants::DEFAULT_PROVER_URL)
                                 .await
                             {
-                                // 4. If the marketplace prover fails, send them to the docs to find another marketplace prover
+                                // If the marketplace prover fails, send them to the docs to find another marketplace prover
                                 println!("Marketplace prover failed. Please consult the documentation to find another marketplace prover.");
                                 return;
                             } else {
-                                // 5. If the marketplace prover succeeds, set the variable in their .env with env_manager
+                                // If the marketplace prover succeeds, set the variable in their .env with env_manager
                                 env_manager.set(
                                     "PROVER_ENDPOINTS".to_string(),
                                     constants::DEFAULT_PROVER_URL.to_string(),
                                 );
                             }
                         } else {
-                            println!(
-                                "Local prover not running and marketplace prover setup declined."
-                            );
+                            println!("No changes made to proposer configuration.");
                             return;
                         }
                     }
-                    // 6. Now that their prover is set, and functional, and we have verified they are fully synced, proceed to enable_proposer flag to true
+                    // Marketplace prover running but not functional
+                    if !local_prover_running
+                        && !network::is_prover_api_functional(&local_http).await
+                    {
+                        println!("Marketplace prover failed. Please consult the documentation to find another marketplace prover. No changes made to proposer configuration.");
+                        return;
+                    }
+                    // Now that their prover is set, and functional, and we have verified they are fully synced, proceed to enable_proposer flag to true
                     env_manager.set("ENABLE_PROPOSER".to_string(), "true".to_string());
                     env_manager.save().expect("Failed to save .env file");
+                    stn_log("Prover is functional and ENABLE_PROPOSER has been set to true.");
                 } else {
                     println!("No changes made to proposer configuration.");
                     return;
@@ -325,7 +321,7 @@ async fn config(config_subcommand: &ConfigSubcommands, taiko_node_dir: &Path) {
                     .read_line(&mut input)
                     .expect("Failed to read input");
                 if input.trim() == "y" {
-                    // Disable proposer
+                    // Disable the proposer
                     env_manager.set("ENABLE_PROPOSER".to_string(), "false".to_string());
                     env_manager.save().expect("Failed to save .env file");
                     stn_log("Proposer flag set to disabled.");
@@ -342,7 +338,7 @@ async fn config(config_subcommand: &ConfigSubcommands, taiko_node_dir: &Path) {
                 .read_line(&mut restart_input)
                 .expect("Failed to read input");
             if restart_input.trim() == "y" {
-                restart(taiko_node_dir); // Call the restart function
+                restart(taiko_node_dir);
             } else {
                 println!("Changes will take effect after the next restart.");
             }
