@@ -53,8 +53,9 @@ pub async fn get_sync_state(eth_endpoint_http: &str) -> Result<SyncState, SyncEr
     }
 }
 
-/// Given two eth endpoints, compares their block height within a tolerance of 1 block, and returns true if they are in sync.
+/// Given two eth endpoints, compares their block height within a tolerance, and returns true if they are in sync.
 pub async fn is_synced(eth_endpoint_http_1: &str, eth_endpoint_http_2: &str) -> bool {
+    let tolerance = 2;
     let http_provider_1: Provider<Http> =
         Provider::<Http>::try_from(eth_endpoint_http_1).expect("Failed to create HTTP provider 1.");
     let http_provider_2: Provider<Http> =
@@ -70,8 +71,8 @@ pub async fn is_synced(eth_endpoint_http_1: &str, eth_endpoint_http_2: &str) -> 
         .unwrap_or_else(|_| panic!("Failed to fetch block number for {}.", eth_endpoint_http_2));
 
     if block_number_1 == block_number_2
-        || block_number_1 == block_number_2 + 1
-        || block_number_1 == block_number_2 - 1
+        || block_number_1 == block_number_2 + tolerance
+        || block_number_1 == block_number_2 - tolerance
     {
         return true;
     }
@@ -124,7 +125,11 @@ pub async fn validate_endpoints(eth_endpoint_http: &str, eth_endpoint_ws: &str) 
 /// Perform a GET on /status for the prover_endpoint_http, and verify a 200 status code.
 pub async fn is_prover_api_functional(prover_endpoint_http: &str) -> bool {
     match reqwest::get(&format!("{}/status", prover_endpoint_http)).await {
-        Ok(response) => response.status() == reqwest::StatusCode::OK,
+        Ok(response) => {
+            println!("Prover endpoint: {}", prover_endpoint_http);
+            println!("Prover API status code: {}", response.status());
+            response.status() == reqwest::StatusCode::OK
+        }
         Err(_) => false,
     }
 }

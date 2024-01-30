@@ -5,6 +5,8 @@ mod network;
 mod utils;
 
 use clap::{Parser, Subcommand};
+use dialoguer::theme::ColorfulTheme;
+use dialoguer::Select;
 use env_manager::EnvManager;
 use network::get_sync_state;
 use std::io::Write;
@@ -308,6 +310,10 @@ async fn config(config_subcommand: &ConfigSubcommands, taiko_node_dir: &Path) {
                                     "PROVER_ENDPOINTS".to_string(),
                                     constants::DEFAULT_PROVER_URL.to_string(),
                                 );
+                                stn_log(&format!(
+                                    "Set {} as marketplace prover.",
+                                    constants::DEFAULT_PROVER_URL
+                                ));
                             }
                         } else {
                             println!("No changes made to proposer configuration.");
@@ -316,15 +322,27 @@ async fn config(config_subcommand: &ConfigSubcommands, taiko_node_dir: &Path) {
                     }
                     // Marketplace prover running but not functional
                     if !local_prover_running
-                        && !network::is_prover_api_functional(&local_http).await
+                        && !network::is_prover_api_functional(constants::DEFAULT_PROVER_URL).await
                     {
                         println!("Marketplace prover failed. Please consult the documentation to find another marketplace prover. No changes made to proposer configuration.");
                         return;
                     }
-                    // Now that their prover is set, and functional, and we have verified they are fully synced, proceed to enable_proposer flag to true
+                    // Now prompt and set their proposer private key
+                    let l1_proposer_private_key: String = dialoguer::Password::new()
+                        .with_prompt(
+                            "Please enter your L1_PROPOSER_PRIVATE_KEY (use a test account only!)",
+                        )
+                        .interact()
+                        .expect("Failed to read L1_PROPOSER_PRIVATE_KEY");
+
+                    // Now that their prover is set, and functional, and we have verified they are fully synced, proceed to enable_proposer flag to true, and set private key
                     env_manager.set("ENABLE_PROPOSER".to_string(), "true".to_string());
+                    env_manager.set(
+                        "L1_PROPOSER_PRIVATE_KEY".to_string(),
+                        l1_proposer_private_key,
+                    );
+
                     env_manager.save().expect("Failed to save .env file");
-                    stn_log("Prover is functional and ENABLE_PROPOSER has been set to true.");
                 } else {
                     println!("No changes made to proposer configuration.");
                     return;
@@ -332,20 +350,115 @@ async fn config(config_subcommand: &ConfigSubcommands, taiko_node_dir: &Path) {
             }
             // Proposer is enabled
             else {
-                print!("The node is currently configured as a proposer. Would you like to disable it? (y/n): ");
-                io::stdout().flush().expect("Failed to flush stdout");
-                let mut input = String::new();
-                io::stdin()
-                    .read_line(&mut input)
-                    .expect("Failed to read input");
-                if input.trim() == "y" {
-                    // Disable the proposer
-                    env_manager.set("ENABLE_PROPOSER".to_string(), "false".to_string());
-                    env_manager.save().expect("Failed to save .env file");
-                    stn_log("Proposer flag set to disabled.");
-                } else {
-                    println!("No changes made to proposer configuration.");
-                    return;
+                let selections = &["Disable", "Update", "Cancel"];
+                let selection = Select::with_theme(&ColorfulTheme::default())
+                    .with_prompt(
+                        "The node is already configured as a proposer. What would you like to do?",
+                    )
+                    .default(0)
+                    .items(&selections[..])
+                    .interact()
+                    .unwrap();
+
+                match selection {
+                    0 => {
+                        env_manager.set("ENABLE_PROPOSER".to_string(), "false".to_string());
+                        env_manager.save().expect("Failed to save .env file");
+                        stn_log("Proposer flag set to disabled.");
+                    }
+                    // TODO: remove code duplication
+                    1 => {
+                        // Check if they have a node installed, running, and fully synced
+                        let local_http = format!(
+                            "http://localhost:{}",
+                            env_manager
+                                .get("PORT_L2_EXECUTION_ENGINE_HTTP")
+                                .expect("PORT_L2_EXECUTION_ENGINE_HTTP not set")
+                        );
+                        let canonical_http = constants::KATLA_RPC_URL.to_string();
+                        let node_synced = network::is_synced(&local_http, &canonical_http).await;
+                        if !node_synced {
+                            println!("Node is not installed, running, or fully synced.");
+                            return;
+                        }
+                        // Check if they have a local prover running
+                        let local_prover_running = env_manager
+                            .get("PROVER_ENDPOINTS")
+                            .expect("PROVER_ENDPOINTS not set.")
+                            .to_string()
+                            .contains("taiko_client_prover_relayer");
+                        let mut is_local_prover_functional = false;
+                        // Local prover set
+                        if local_prover_running {
+                            is_local_prover_functional =
+                                network::is_prover_api_functional(&local_http).await;
+                            if !is_local_prover_functional {
+                                println!("Local prover is running but the API is not functional.");
+                            }
+                        }
+                        // If local prover running but not functional
+                        if local_prover_running && !is_local_prover_functional {
+                            // If they don't have a local prover running, ask if they would like to setup a marketplace prover
+                            print!("Would you like to setup a marketplace prover? (y/n): ");
+                            io::stdout().flush().expect("Failed to flush stdout");
+                            let mut input = String::new();
+                            io::stdin()
+                                .read_line(&mut input)
+                                .expect("Failed to read input");
+                            if input.trim() == "y" {
+                                // Healthcheck the marketplace prover
+                                if !network::is_prover_api_functional(constants::DEFAULT_PROVER_URL)
+                                    .await
+                                {
+                                    // If the marketplace prover fails, send them to the docs to find another marketplace prover
+                                    println!("Marketplace prover failed. Please consult the documentation to find another marketplace prover and manually update the .env.");
+                                    return;
+                                } else {
+                                    // If the marketplace prover succeeds, set the variable in their .env with env_manager
+                                    env_manager.set(
+                                        "PROVER_ENDPOINTS".to_string(),
+                                        constants::DEFAULT_PROVER_URL.to_string(),
+                                    );
+                                    stn_log(&format!(
+                                        "Set {} as marketplace prover.",
+                                        constants::DEFAULT_PROVER_URL
+                                    ));
+                                }
+                            } else {
+                                println!("No changes made to proposer configuration.");
+                                return;
+                            }
+                        }
+                        // Marketplace prover running but not functional
+                        if !local_prover_running
+                            && !network::is_prover_api_functional(constants::DEFAULT_PROVER_URL)
+                                .await
+                        {
+                            println!("Marketplace prover failed. Please consult the documentation to find another marketplace prover. No changes made to proposer configuration.");
+                            return;
+                        }
+                        // Now prompt and set their proposer private key
+                        let l1_proposer_private_key: String = dialoguer::Password::new()
+                        .with_prompt(
+                            "Please enter your L1_PROPOSER_PRIVATE_KEY (use a test account only!)",
+                        )
+                        .interact()
+                        .expect("Failed to read L1_PROPOSER_PRIVATE_KEY");
+
+                        // Now that their prover is set, and functional, and we have verified they are fully synced, proceed to enable_proposer flag to true, and set private key
+                        env_manager.set("ENABLE_PROPOSER".to_string(), "true".to_string());
+                        env_manager.set(
+                            "L1_PROPOSER_PRIVATE_KEY".to_string(),
+                            l1_proposer_private_key,
+                        );
+
+                        env_manager.save().expect("Failed to save .env file");
+                    }
+                    2 => {
+                        println!("No changes made to proposer configuration.");
+                        return;
+                    }
+                    _ => {} // This case should never happen as we have only 3 options
                 }
             }
 
