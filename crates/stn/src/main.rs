@@ -109,7 +109,7 @@ async fn main() {
             down(&taiko_node_dir);
         }
         Commands::Upgrade => {
-            upgrade(&taiko_node_dir);
+            upgrade(&taiko_node_dir).await;
         }
         Commands::Restart => {
             restart(&taiko_node_dir).await;
@@ -418,7 +418,7 @@ fn down(taiko_node_dir: &Path) {
     }
 }
 
-fn upgrade(taiko_node_dir: &Path) {
+async fn upgrade(taiko_node_dir: &Path) {
     // Check if Docker daemon is running
     if let Err(e) = docker::check_docker_daemon() {
         eprintln!("{}", e);
@@ -468,6 +468,19 @@ fn upgrade(taiko_node_dir: &Path) {
         Err(e) => {
             eprintln!("Failed to update .env file from .env.sample: {}", e);
         }
+    }
+
+    // Node has been updated, ask if they'd like to restart
+    print!("Would you like to restart the node to apply changes? (y/n): ");
+    io::stdout().flush().expect("Failed to flush stdout");
+    let mut restart_input = String::new();
+    io::stdin()
+        .read_line(&mut restart_input)
+        .expect("Failed to read input");
+    if restart_input.trim() == "y" {
+        restart(taiko_node_dir).await;
+    } else {
+        println!("Changes will take effect after the next restart.");
     }
 }
 
