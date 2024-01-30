@@ -235,8 +235,10 @@ async fn config(config_subcommand: &ConfigSubcommands, taiko_node_dir: &Path) {
                 .get("ENABLE_PROPOSER")
                 .unwrap_or("false".to_string());
 
+            // Proposer is disabled
             if current_state != "true" {
-                println!("The node is currently not configured as a proposer. Would you like to enable it? (y/n): ");
+                print!("The node is currently not configured as a proposer. Would you like to enable it? (y/n): ");
+                io::stdout().flush().expect("Failed to flush stdout");
                 let mut input = String::new();
                 io::stdin()
                     .read_line(&mut input)
@@ -274,7 +276,8 @@ async fn config(config_subcommand: &ConfigSubcommands, taiko_node_dir: &Path) {
                     // If local prover running but not functional
                     if local_prover_running && !is_local_prover_functional {
                         // If they don't have a local prover running, ask if they would like to setup a marketplace prover
-                        println!("Would you like to setup a marketplace prover? (y/n): ");
+                        print!("Would you like to setup a marketplace prover? (y/n): ");
+                        io::stdout().flush().expect("Failed to flush stdout");
                         let mut input = String::new();
                         io::stdin()
                             .read_line(&mut input)
@@ -314,8 +317,11 @@ async fn config(config_subcommand: &ConfigSubcommands, taiko_node_dir: &Path) {
                     println!("No changes made to proposer configuration.");
                     return;
                 }
-            } else {
-                println!("The node is currently configured as a proposer. Would you like to disable it? (y/n): ");
+            }
+            // Proposer is enabled
+            else {
+                print!("The node is currently configured as a proposer. Would you like to disable it? (y/n): ");
+                io::stdout().flush().expect("Failed to flush stdout");
                 let mut input = String::new();
                 io::stdin()
                     .read_line(&mut input)
@@ -327,12 +333,13 @@ async fn config(config_subcommand: &ConfigSubcommands, taiko_node_dir: &Path) {
                     stn_log("Proposer flag set to disabled.");
                 } else {
                     println!("No changes made to proposer configuration.");
+                    return;
                 }
-                return;
             }
 
             // Offer to restart the node to apply changes
-            println!("Would you like to restart the node to apply changes? (y/n): ");
+            print!("Would you like to restart the node to apply changes? (y/n): ");
+            io::stdout().flush().expect("Failed to flush stdout");
             let mut restart_input = String::new();
             io::stdin()
                 .read_line(&mut restart_input)
