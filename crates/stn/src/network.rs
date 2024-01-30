@@ -53,6 +53,31 @@ pub async fn get_sync_state(eth_endpoint_http: &str) -> Result<SyncState, SyncEr
     }
 }
 
+/// Given two eth endpoints, compares their block height within a tolerance of 1 block, and returns true if they are in sync.
+pub async fn is_synced(eth_endpoint_http_1: &str, eth_endpoint_http_2: &str) -> bool {
+    let http_provider_1: Provider<Http> =
+        Provider::<Http>::try_from(eth_endpoint_http_1).expect("Failed to create HTTP provider 1.");
+    let http_provider_2: Provider<Http> =
+        Provider::<Http>::try_from(eth_endpoint_http_2).expect("Failed to create HTTP provider 2.");
+
+    let block_number_1 = http_provider_1
+        .get_block_number()
+        .await
+        .unwrap_or_else(|_| panic!("Failed to fetch block number for {}.", eth_endpoint_http_1));
+    let block_number_2 = http_provider_2
+        .get_block_number()
+        .await
+        .unwrap_or_else(|_| panic!("Failed to fetch block number for {}.", eth_endpoint_http_2));
+
+    if block_number_1 == block_number_2
+        || block_number_1 == block_number_2 + 1
+        || block_number_1 == block_number_2 - 1
+    {
+        return true;
+    }
+    false
+}
+
 /// Validates the endpoints and returns a tuple of booleans indicating whether the endpoints are valid and archive nodes by fetching block 0.
 pub async fn validate_endpoints(eth_endpoint_http: &str, eth_endpoint_ws: &str) -> (bool, bool) {
     let timeout_duration = Duration::new(constants::DEFAULT_NETWORK_TIMEOUT, 0);
@@ -94,6 +119,14 @@ pub async fn validate_endpoints(eth_endpoint_http: &str, eth_endpoint_ws: &str) 
     };
 
     (http_validation, ws_validation)
+}
+
+/// Perform a GET on /status for the prover_endpoint_http, and verify a 200 status code.
+pub async fn is_prover_api_functional(prover_endpoint_http: &str) -> bool {
+    match reqwest::get(&format!("{}/status", prover_endpoint_http)).await {
+        Ok(response) => response.status() == reqwest::StatusCode::OK,
+        Err(_) => false,
+    }
 }
 
 // Helper to timeout the ws connection because invalid ws endpoints can hang for a long time
