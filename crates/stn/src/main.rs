@@ -283,13 +283,12 @@ async fn config(config_subcommand: &ConfigSubcommands, taiko_node_dir: &Path) {
                     // If local prover running but not functional
                     if local_prover_running && !is_local_prover_functional {
                         // If they don't have a local prover running, ask if they would like to setup a marketplace prover
-                        print!("Would you like to setup a marketplace prover? (y/n): ");
-                        io::stdout().flush().expect("Failed to flush stdout");
-                        let mut input = String::new();
-                        io::stdin()
-                            .read_line(&mut input)
-                            .expect("Failed to read input");
-                        if input.trim() == "y" {
+                        let setup_marketplace_prover = dialoguer::Confirm::new()
+                            .with_prompt("Would you like to set up a marketplace prover?")
+                            .default(false)
+                            .interact()
+                            .expect("Failed to get user response");
+                        if setup_marketplace_prover {
                             // Healthcheck the marketplace prover
                             if !network::is_prover_api_functional(constants::DEFAULT_PROVER_URL)
                                 .await
