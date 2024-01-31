@@ -182,18 +182,12 @@ fn install(taiko_node_dir: &Path) {
 async fn config(config_subcommand: &ConfigSubcommands, taiko_node_dir: &Path) {
     match config_subcommand {
         ConfigSubcommands::Full => {
-            let mut l1_endpoint_http = String::new();
-            let mut l1_endpoint_ws = String::new();
-
-            // Ask the user if they have an L1_ENDPOINT_HTTP and L1_ENDPOINT_WS
-            let mut input = String::new();
-            print!("Do you have an HTTP and WS endpoint for a Holesky L1 archive node? (y/n): ");
-            io::stdout().flush().expect("Failed to flush stdout");
-            io::stdin()
-                .read_line(&mut input)
+            let has_endpoints = dialoguer::Confirm::with_theme(&ColorfulTheme::default())
+                .with_prompt("Do you have an HTTP and WS endpoint for a Holesky L1 archive node?")
+                .interact()
                 .expect("Failed to read input");
 
-            if input.trim() != "y" {
+            if !has_endpoints {
                 println!(
                         concat!("\nYou must have an HTTP and WS endpoint for a Holesky L1 archive node to configure a Taiko node. You can either:\n",
                                 "  1. Install a Holesky L1 archive node and run it locally\n",
@@ -202,20 +196,19 @@ async fn config(config_subcommand: &ConfigSubcommands, taiko_node_dir: &Path) {
                 return;
             }
 
-            print!("Please enter your L1_ENDPOINT_HTTP: ");
-            io::stdout().flush().expect("Failed to flush stdout");
-            io::stdin()
-                .read_line(&mut l1_endpoint_http)
-                .expect("Failed to read L1_ENDPOINT_HTTP");
+            let l1_endpoint_http: String = dialoguer::Input::<String>::new()
+                .with_prompt("Please enter your L1_ENDPOINT_HTTP")
+                .interact_text()
+                .expect("Failed to read L1_ENDPOINT_HTTP")
+                .trim()
+                .to_string();
 
-            print!("Please enter your L1_ENDPOINT_WS: ");
-            io::stdout().flush().expect("Failed to flush stdout");
-            io::stdin()
-                .read_line(&mut l1_endpoint_ws)
-                .expect("Failed to read L1_ENDPOINT_WS");
-
-            l1_endpoint_http = l1_endpoint_http.trim().to_string();
-            l1_endpoint_ws = l1_endpoint_ws.trim().to_string();
+            let l1_endpoint_ws: String = dialoguer::Input::<String>::new()
+                .with_prompt("Please enter your L1_ENDPOINT_WS")
+                .interact_text()
+                .expect("Failed to read L1_ENDPOINT_WS")
+                .trim()
+                .to_string();
 
             let (http_valid, ws_valid) =
                 network::validate_endpoints(&l1_endpoint_http, &l1_endpoint_ws).await;
