@@ -244,14 +244,14 @@ async fn config(config_subcommand: &ConfigSubcommands, taiko_node_dir: &Path) {
 
             // Proposer is disabled
             if current_state != "true" {
-                print!("The node is currently not configured as a proposer. Would you like to enable it? (y/n): ");
-                io::stdout().flush().expect("Failed to flush stdout");
-                let mut input = String::new();
-                io::stdin()
-                    .read_line(&mut input)
-                    .expect("Failed to read input");
+                let enable_node_as_proposer = dialoguer::Confirm::new()
+                    .with_prompt("The node is currently not configured as a proposer. Would you like to enable it?")
+                    .default(false)
+                    .interact()
+                    .expect("Failed to get user response");
+
                 // Enable proposer
-                if input.trim() == "y" {
+                if enable_node_as_proposer {
                     // Check if they have a node installed, running, and fully synced
                     let local_http = format!(
                         "http://localhost:{}",
