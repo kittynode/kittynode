@@ -56,27 +56,27 @@ pub async fn get_sync_state(eth_endpoint_http: &str) -> Result<SyncState, SyncEr
 /// Given two eth endpoints, compares their block height within a tolerance, and returns true if they are in sync.
 pub async fn is_synced(eth_endpoint_http_1: &str, eth_endpoint_http_2: &str) -> bool {
     let tolerance = 2;
-    let http_provider_1: Provider<Http> =
-        Provider::<Http>::try_from(eth_endpoint_http_1).expect("Failed to create HTTP provider 1.");
-    let http_provider_2: Provider<Http> =
-        Provider::<Http>::try_from(eth_endpoint_http_2).expect("Failed to create HTTP provider 2.");
+    let http_provider_1 = match Provider::<Http>::try_from(eth_endpoint_http_1) {
+        Ok(provider) => provider,
+        Err(_) => return false,
+    };
 
-    let block_number_1 = http_provider_1
-        .get_block_number()
-        .await
-        .unwrap_or_else(|_| panic!("Failed to fetch block number for {}.", eth_endpoint_http_1));
-    let block_number_2 = http_provider_2
-        .get_block_number()
-        .await
-        .unwrap_or_else(|_| panic!("Failed to fetch block number for {}.", eth_endpoint_http_2));
+    let http_provider_2 = match Provider::<Http>::try_from(eth_endpoint_http_2) {
+        Ok(provider) => provider,
+        Err(_) => return false,
+    };
 
-    if block_number_1 == block_number_2
-        || block_number_1 == block_number_2 + tolerance
-        || block_number_1 == block_number_2 - tolerance
-    {
-        return true;
-    }
-    false
+    let block_number_1 = match http_provider_1.get_block_number().await {
+        Ok(number) => number,
+        Err(_) => return false,
+    };
+
+    let block_number_2 = match http_provider_2.get_block_number().await {
+        Ok(number) => number,
+        Err(_) => return false,
+    };
+
+    (block_number_1 <= block_number_2 + tolerance) && (block_number_1 >= block_number_2 - tolerance)
 }
 
 /// Validates the endpoints and returns a tuple of booleans indicating whether the endpoints are valid and archive nodes by fetching block 0.
