@@ -1,5 +1,5 @@
+use dialoguer::{theme::ColorfulTheme, Confirm};
 use std::{
-    io::{self, Write},
     path::Path,
     process::{Command, Stdio},
 };
@@ -59,13 +59,11 @@ pub async fn upgrade(taiko_node_dir: &Path) {
     }
 
     // Node has been updated, ask if they'd like to restart
-    print!("Would you like to restart the node to apply changes? (y/n): ");
-    io::stdout().flush().expect("Failed to flush stdout");
-    let mut restart_input = String::new();
-    io::stdin()
-        .read_line(&mut restart_input)
-        .expect("Failed to read input");
-    if restart_input.trim() == "y" {
+    if Confirm::with_theme(&ColorfulTheme::default())
+        .with_prompt("Would you like to restart the node to apply changes?")
+        .interact()
+        .expect("Failed to read input")
+    {
         restart(taiko_node_dir).await;
     } else {
         println!("Changes will take effect after the next restart.");
