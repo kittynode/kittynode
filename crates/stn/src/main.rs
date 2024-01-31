@@ -6,7 +6,6 @@ mod network;
 mod utils;
 
 use clap::{Parser, Subcommand};
-use std::path::Path;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
