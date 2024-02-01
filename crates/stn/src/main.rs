@@ -3,9 +3,11 @@ mod constants;
 mod docker;
 mod env_manager;
 mod network;
+mod update_checker;
 mod utils;
 
 use clap::{Parser, Subcommand};
+use update_checker::UpdateChecker;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -81,13 +83,28 @@ enum ConfigSubcommands {
 async fn main() {
     let cli = Cli::parse();
 
-    let taiko_node_dir = match utils::get_taiko_node_directory() {
-        Ok(dir) => dir,
+    let taiko_node_dir = match utils::get_stn_directory() {
+        Ok(dir) => dir.join(constants::TAIKO_NODE_DIRECTORY_NAME),
         Err(e) => {
             eprintln!("Error getting Taiko node directory: {}", e);
             return;
         }
     };
+
+    let stn_dir = match utils::get_stn_directory() {
+        Ok(dir) => dir,
+        Err(e) => {
+            eprintln!("Error getting stn directory: {}", e);
+            return;
+        }
+    };
+
+    let update_checker = UpdateChecker::new(stn_dir);
+
+    // Check for updates and set reminder if needed
+    if let Err(e) = update_checker.check_for_updates().await {
+        eprintln!("Failed to check for updates: {}", e);
+    }
 
     match &cli.command {
         Commands::Install => {

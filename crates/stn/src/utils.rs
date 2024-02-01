@@ -8,11 +8,11 @@ pub fn stn_log(msg: &str) {
     println!("stn_log: {}", msg);
 }
 
-/// Helper function that returns the path to the taiko-node directory.
-pub fn get_taiko_node_directory() -> Result<PathBuf, io::Error> {
+/// Helper function that returns the path to the stn config directory.
+pub fn get_stn_directory() -> Result<PathBuf, io::Error> {
     let home_dir = env::var("HOME")
         .map_err(|_| io::Error::new(io::ErrorKind::NotFound, "Failed to get home directory"))?;
-    Ok(Path::new(&home_dir).join(constants::TAIKO_NODE_PATH))
+    Ok(Path::new(&home_dir).join(constants::STN_PATH))
 }
 
 #[cfg(test)]

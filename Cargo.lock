@@ -3070,6 +3070,9 @@ dependencies = [
  "dialoguer",
  "ethers",
  "reqwest",
+ "semver",
+ "serde",
+ "serde_json",
  "tokio",
  "webbrowser",
 ]
