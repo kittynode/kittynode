@@ -11,9 +11,41 @@ A command line tool for managing Taiko nodes.
 
 > Screenshot of `v0.1.27`, but `stn` is getting updated all the time.
 
-## Installation
+## Installing and updating
 
-Visit the [releases page](https://github.com/d1onys1us/stn/releases) for a simple one-line command to install `stn`.
+Installing and updating use the same command.
+
+#### Linux
+
+Inside of a terminal:
+
+```bash
+curl -L something.xyz
+```
+
+#### Windows
+
+Inside of a Powershell window:
+
+```bash
+curl -L something.xyz
+```
+
+#### MacOS
+
+Inside of a terminal:
+
+```bash
+curl -L something.xyz
+```
+
+#### Cargo
+
+Inside of a terminal:
+
+```bash
+cargo install --force stn
+```
 
 ## Quickstart
 
@@ -23,7 +55,7 @@ Visit the [releases page](https://github.com/d1onys1us/stn/releases) for a simpl
 
 ## Usage
 
-Execute `stn help` for the full list of commands.
+Execute `stn` for the full list of commands and their description.
 
 ## Contribute
 
