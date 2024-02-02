@@ -99,10 +99,8 @@ async fn main() {
         }
     };
 
-    let update_checker = UpdateChecker::new(stn_dir);
-
-    // Check for updates and set reminder if needed
-    if let Err(e) = update_checker.check_for_updates().await {
+    // Check for updates, pulling from a cache
+    if let Err(e) = UpdateChecker::new(stn_dir).check_for_updates().await {
         eprintln!("Failed to check for updates: {}", e);
     }
 
