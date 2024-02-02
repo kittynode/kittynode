@@ -24,21 +24,16 @@ impl UpdateChecker {
         let now = SystemTime::now().duration_since(UNIX_EPOCH)?.as_secs();
         let twelve_hours = 43200;
 
-        // If it's been more than 12 hours since the last check, or the latest version is not cached, check for updates
         if now - config.last_update_check > twelve_hours || config.latest_version.is_none() {
             let latest_version = self.get_latest_release_version().await?;
 
-            // Cache the latest version fetched, whether it's greater than the current version or not
             if let Some(latest_version) = latest_version {
-                // Display update message if the fetched version is greater than the current version
                 if latest_version > current_version {
                     self.display_update_message(&latest_version);
                 }
-                // Always update the cached latest version
                 config.latest_version = Some(latest_version.to_string());
             }
 
-            // Update the last check time every time the check is made
             config.last_update_check = now;
             config.save(&self.stn_config_dir)?;
         } else if let Some(cached_latest_version_str) = &config.latest_version {

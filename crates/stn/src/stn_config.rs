@@ -28,7 +28,6 @@ impl StnConfig {
     }
 
     pub fn save(&self, stn_config_dir: &Path) -> Result<(), io::Error> {
-        // Ensure the directory exists
         fs::create_dir_all(stn_config_dir)?;
 
         let config_path = stn_config_dir.join(".stn_config.toml");
