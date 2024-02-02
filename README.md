@@ -20,7 +20,7 @@ Installing and updating use the same command.
 Inside of a terminal:
 
 ```bash
-curl -L something.xyz
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/d1onys1us/stn/releases/latest/download/stn-installer.sh | sh
 ```
 
 #### Windows
@@ -28,7 +28,7 @@ curl -L something.xyz
 Inside of a Powershell window:
 
 ```bash
-curl -L something.xyz
+irm https://github.com/d1onys1us/stn/releases/latest/download/stn-installer.ps1 | iex
 ```
 
 #### MacOS
@@ -36,7 +36,7 @@ curl -L something.xyz
 Inside of a terminal:
 
 ```bash
-curl -L something.xyz
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/d1onys1us/stn/releases/latest/download/stn-installer.sh | sh
 ```
 
 #### Cargo
