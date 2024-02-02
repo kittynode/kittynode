@@ -13,7 +13,7 @@ pub struct StnConfig {
 
 impl StnConfig {
     pub fn load(stn_config_dir: &Path) -> Result<Self, io::Error> {
-        let config_path = stn_config_dir.join(".stn_config.toml");
+        let config_path = stn_config_dir.join("stn_config.toml");
         let content = match fs::read_to_string(config_path) {
             Ok(content) => content,
             Err(_) => {
@@ -30,7 +30,7 @@ impl StnConfig {
     pub fn save(&self, stn_config_dir: &Path) -> Result<(), io::Error> {
         fs::create_dir_all(stn_config_dir)?;
 
-        let config_path = stn_config_dir.join(".stn_config.toml");
+        let config_path = stn_config_dir.join("stn_config.toml");
         let content = toml::to_string(self).map_err(|err| {
             io::Error::new(
                 ErrorKind::InvalidData,
