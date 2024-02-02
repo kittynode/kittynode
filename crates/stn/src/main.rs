@@ -3,6 +3,7 @@ mod constants;
 mod docker;
 mod env_manager;
 mod network;
+mod stn_config;
 mod update_checker;
 mod utils;
 
@@ -81,8 +82,6 @@ enum ConfigSubcommands {
 
 #[tokio::main]
 async fn main() {
-    let cli = Cli::parse();
-
     let taiko_node_dir = match utils::get_stn_directory() {
         Ok(dir) => dir.join(constants::TAIKO_NODE_DIRECTORY_NAME),
         Err(e) => {
@@ -103,6 +102,8 @@ async fn main() {
     if let Err(e) = UpdateChecker::new(stn_dir).check_for_updates().await {
         eprintln!("Failed to check for updates: {}", e);
     }
+
+    let cli: Cli = Cli::parse();
 
     match &cli.command {
         Commands::Install => {
