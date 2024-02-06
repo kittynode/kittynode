@@ -23,7 +23,8 @@ impl StnConfig {
                 })
             } // If file not found, return default config
         };
-        let config = toml::from_str(&content)?;
+        let config: StnConfig = toml::from_str(&content)
+            .map_err(|err| io::Error::new(io::ErrorKind::Other, err.to_string()))?;
         Ok(config)
     }
 
