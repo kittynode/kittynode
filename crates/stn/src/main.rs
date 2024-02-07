@@ -57,7 +57,7 @@ struct Config {
 }
 
 #[derive(Subcommand)]
-enum LogsSubcommands {
+pub enum LogsSubcommands {
     /// Shows all logs
     All,
     /// Shows execution logs
@@ -69,7 +69,7 @@ enum LogsSubcommands {
 }
 
 #[derive(Subcommand)]
-enum ConfigSubcommands {
+pub enum ConfigSubcommands {
     /// Config a full node
     Full,
     /// Config a proposer
