@@ -39,7 +39,7 @@ pub async fn status(taiko_node_dir: &Path) {
         }
         Err(error) => {
             eprintln!(
-                "Error checking syncing status: {}. Are you sure your node is running?",
+                "{} Are you sure your node is running?",
                 error
             );
         }
