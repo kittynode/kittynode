@@ -38,10 +38,7 @@ pub async fn status(taiko_node_dir: &Path) {
             }
         }
         Err(error) => {
-            eprintln!(
-                "{} Are you sure your node is running?",
-                error
-            );
+            eprintln!("{} Are you sure your node is running?", error);
         }
     }
 }
