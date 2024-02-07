@@ -15,6 +15,14 @@ A command line tool for managing Taiko nodes.
 
 Installing and updating use the same command.
 
+#### Cargo (recommended)
+
+1. [Install Rust](https://www.rust-lang.org/tools/install)
+2. Install or update `stn` with cargo:
+   ```bash
+   cargo install stn
+   ```
+
 #### Linux
 
 Inside of a terminal:
@@ -37,14 +45,6 @@ Inside of a terminal:
 
 ```bash
 curl --proto '=https' --tlsv1.2 -LsSf https://github.com/d1onys1us/stn/releases/latest/download/stn-installer.sh | sh
-```
-
-#### Cargo
-
-Inside of a terminal:
-
-```bash
-cargo install --force stn
 ```
 
 ## Quickstart
