@@ -42,7 +42,7 @@ pub fn execute_docker_command(args: &[&str], working_dir: &Path) -> Result<Strin
     let result = child.wait();
     match result {
         Ok(status) if status.success() => {
-            let success_message = format!("Successfully executed command: {:?}", args);
+            let success_message = format!("Successfully executed docker command: {:?}", args);
             Ok(success_message)
         }
         _ => {
