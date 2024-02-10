@@ -1,5 +1,5 @@
 use crate::commands::restart;
-use crate::{constants, env_manager::EnvManager, network, utils::stn_log, ConfigSubcommands};
+use crate::{constants, env_manager::EnvManager, network, ConfigSubcommands};
 use dialoguer::{theme::ColorfulTheme, Confirm, Input, Password, Select};
 use std::path::Path;
 
@@ -16,10 +16,10 @@ pub async fn config(config_subcommand: &ConfigSubcommands, taiko_node_dir: &Path
             handle_proposer_config(&mut env_manager, taiko_node_dir).await;
         }
         ConfigSubcommands::Zkp => {
-            stn_log("ZKP setup coming soon.");
+            println!("ZKP setup coming soon.");
         }
         ConfigSubcommands::Sgx => {
-            stn_log("SGX setup coming soon.");
+            println!("SGX setup coming soon.");
         }
     }
 }
@@ -170,7 +170,7 @@ async fn handle_existing_proposer_configuration(
         0 => {
             env_manager.set("ENABLE_PROPOSER".to_string(), "false".to_string());
             env_manager.save().expect("Failed to save .env file");
-            stn_log("Proposer flag set to disabled.");
+            println!("Proposer flag set to disabled.");
             offer_restart(taiko_node_dir).await;
         }
         1 => {

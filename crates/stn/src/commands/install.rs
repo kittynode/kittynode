@@ -4,19 +4,19 @@ use std::{
     process::{Command, Stdio},
 };
 
-use crate::{constants, utils};
+use crate::constants;
 
 pub fn install(taiko_node_dir: &Path) {
     // Check if Taiko node is already installed
     if taiko_node_dir.exists() {
-        utils::stn_log("simple-taiko-node is already installed.");
+        println!("simple-taiko-node is already installed.");
         return;
     }
 
-    utils::stn_log(&format!(
+    println!(
         "Installing simple-taiko-node to {}",
         taiko_node_dir.to_str().unwrap()
-    ));
+    );
 
     // Create home directory if it doesn't exist
     fs::create_dir_all(taiko_node_dir).expect("Failed to create .stn directory");
@@ -36,9 +36,9 @@ pub fn install(taiko_node_dir: &Path) {
         .expect("Failed to wait for git clone to complete.");
 
     if git_clone_status.success() {
-        utils::stn_log("Git clone successful.");
+        println!("Git clone successful.");
     } else {
-        utils::stn_log("Git clone failed.");
+        println!("Git clone failed.");
     }
 
     // Copy .env.sample to .env
@@ -48,5 +48,5 @@ pub fn install(taiko_node_dir: &Path) {
     )
     .expect("Failed to copy .env.sample to .env");
 
-    utils::stn_log("simple-taiko-node successfully installed");
+    println!("simple-taiko-node successfully installed");
 }
