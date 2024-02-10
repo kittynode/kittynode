@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use crate::{env_manager::EnvManager, utils};
+use crate::env_manager::EnvManager;
 
 pub fn dashboard(taiko_node_dir: &Path) {
     let env_path = taiko_node_dir.join(".env");
@@ -11,7 +11,7 @@ pub fn dashboard(taiko_node_dir: &Path) {
     let grafana_url = format!("http://localhost:{}", grafana_port);
     match webbrowser::open(&grafana_url) {
         Ok(_) => {
-            utils::stn_log(&format!("Opened Grafana dashboard at {}", grafana_url));
+            println!("Opened Grafana dashboard at {}", grafana_url);
         }
         Err(e) => {
             eprintln!("Failed to open Grafana dashboard: {}", e);

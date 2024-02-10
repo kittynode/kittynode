@@ -4,13 +4,12 @@ use crate::{
     constants,
     env_manager::EnvManager,
     network::{self, get_sync_state},
-    utils,
 };
 
 pub async fn status(taiko_node_dir: &Path) {
     // Check taiko node is installed first
     if !taiko_node_dir.exists() {
-        utils::stn_log("simple-taiko-node is not installed.");
+        println!("simple-taiko-node is not installed.");
         return;
     }
 

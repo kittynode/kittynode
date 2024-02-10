@@ -1,11 +1,11 @@
 use std::path::Path;
 
-use crate::{docker, utils, LogsSubcommands};
+use crate::{docker, LogsSubcommands};
 
 pub fn logs(log_type: &LogsSubcommands, taiko_node_dir: &Path) {
     // Check taiko node is installed first
     if !taiko_node_dir.exists() {
-        utils::stn_log("simple-taiko-node is not installed.");
+        println!("simple-taiko-node is not installed.");
         return;
     }
 
@@ -28,7 +28,7 @@ pub fn logs(log_type: &LogsSubcommands, taiko_node_dir: &Path) {
 
     match docker::execute_docker_command(&args, taiko_node_dir) {
         Ok(msg) => {
-            utils::stn_log(&msg);
+            println!("{}", msg);
         }
         Err(e) => {
             eprintln!("{}", e);

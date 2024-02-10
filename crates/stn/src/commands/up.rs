@@ -1,11 +1,11 @@
 use std::path::Path;
 
-use crate::{docker, env_manager::EnvManager, network, utils};
+use crate::{docker, env_manager::EnvManager, network};
 
 pub async fn up(taiko_node_dir: &Path) {
     // Check taiko node is installed first
     if !taiko_node_dir.exists() {
-        utils::stn_log("simple-taiko-node is not installed.");
+        println!("simple-taiko-node is not installed.");
         return;
     }
 
@@ -20,12 +20,12 @@ pub async fn up(taiko_node_dir: &Path) {
     let (http_valid, ws_valid) =
         network::validate_endpoints(&l1_endpoint_http, &l1_endpoint_ws).await;
     if !http_valid || !ws_valid {
-        utils::stn_log("L1 endpoints are not healthy. Run `stn config` to set up new endpoints.");
+        println!("L1 endpoints are not healthy. Run `stn config` to set up new endpoints.");
         return;
     }
     match docker::execute_docker_command(&["compose", "up", "-d"], taiko_node_dir) {
         Ok(msg) => {
-            utils::stn_log(&msg);
+            println!("{}", msg);
         }
         Err(e) => {
             eprintln!("{}", e);

@@ -5,7 +5,11 @@ mod env_manager;
 mod network;
 mod stn_config;
 mod update_checker;
-mod utils;
+
+use std::{
+    env, io,
+    path::{Path, PathBuf},
+};
 
 use clap::{Parser, Subcommand};
 use update_checker::UpdateChecker;
@@ -82,7 +86,7 @@ pub enum ConfigSubcommands {
 
 #[tokio::main]
 async fn main() {
-    let taiko_node_dir = match utils::get_stn_directory() {
+    let taiko_node_dir = match get_stn_directory() {
         Ok(dir) => dir.join(constants::TAIKO_NODE_DIRECTORY_NAME),
         Err(e) => {
             eprintln!("Error getting Taiko node directory: {}", e);
@@ -90,7 +94,7 @@ async fn main() {
         }
     };
 
-    let stn_dir = match utils::get_stn_directory() {
+    let stn_dir = match get_stn_directory() {
         Ok(dir) => dir,
         Err(e) => {
             eprintln!("Error getting stn directory: {}", e);
@@ -140,4 +144,11 @@ async fn main() {
             commands::dashboard(&taiko_node_dir);
         }
     }
+}
+
+/// Helper function that returns the path to the stn config directory.
+pub fn get_stn_directory() -> Result<PathBuf, io::Error> {
+    let home_dir = env::var("HOME")
+        .map_err(|_| io::Error::new(io::ErrorKind::NotFound, "Failed to get home directory"))?;
+    Ok(Path::new(&home_dir).join(constants::STN_PATH))
 }

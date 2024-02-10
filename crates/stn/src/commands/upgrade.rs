@@ -4,7 +4,7 @@ use std::{
     process::{Command, Stdio},
 };
 
-use crate::{commands::restart, docker, env_manager::EnvManager, utils};
+use crate::{commands::restart, docker, env_manager::EnvManager};
 
 pub async fn upgrade(taiko_node_dir: &Path) {
     // Check if Docker daemon is running
@@ -29,15 +29,15 @@ pub async fn upgrade(taiko_node_dir: &Path) {
         .expect("Failed to wait for git pull to complete.");
 
     if git_pull_status.success() {
-        utils::stn_log("Git pull successful.");
+        println!("Git pull successful.");
     } else {
-        utils::stn_log("Git pull failed.");
+        println!("Git pull failed.");
     }
 
     // Pull latest docker images
     match docker::execute_docker_command(&["compose", "pull"], taiko_node_dir) {
         Ok(msg) => {
-            utils::stn_log(&msg);
+            println!("{}", msg);
         }
         Err(e) => {
             eprintln!("{}", e);
@@ -52,7 +52,7 @@ pub async fn upgrade(taiko_node_dir: &Path) {
         EnvManager::new(&env_path).expect("Failed to initialize EnvManager for .env file");
 
     match env_manager.update_from_sample(&sample_env_path) {
-        Ok(()) => utils::stn_log("Successfully updated .env file from .env.sample."),
+        Ok(()) => println!("Successfully updated .env file from .env.sample."),
         Err(e) => {
             eprintln!("Failed to update .env file from .env.sample: {}", e);
         }
