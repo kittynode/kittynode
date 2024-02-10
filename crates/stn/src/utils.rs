@@ -22,6 +22,6 @@ mod tests {
     /// Tests that the `stn_log` function does not panic when called.
     #[test]
     fn test_stn_log() {
-        stn_log("This is a test log message.");
+        stn_log("This is a test message.");
     }
 }
