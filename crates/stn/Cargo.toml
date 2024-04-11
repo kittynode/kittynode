@@ -13,7 +13,7 @@ dialoguer = "0.11.0"
 ethers = { version = "2.0", features = ["rustls", "ws"] }
 reqwest = { version = "0.11", default-features=false, features = ["json", "tokio-rustls"] }
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
-webbrowser = { version = "0.8.13" }
+webbrowser = { version = "0.8.15" }
 semver = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
