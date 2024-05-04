@@ -3,8 +3,6 @@ mod constants;
 mod docker;
 mod env_manager;
 mod network;
-mod stn_config;
-mod update_checker;
 
 use std::{
     env, io,
@@ -12,7 +10,6 @@ use std::{
 };
 
 use clap::{Parser, Subcommand};
-use update_checker::UpdateChecker;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -93,19 +90,6 @@ async fn main() {
             return;
         }
     };
-
-    let stn_dir = match get_stn_directory() {
-        Ok(dir) => dir,
-        Err(e) => {
-            eprintln!("Error getting stn directory: {}", e);
-            return;
-        }
-    };
-
-    // Check for updates, pulling from a cache
-    if let Err(e) = UpdateChecker::new(stn_dir).check_for_updates().await {
-        eprintln!("Failed to check for updates: {}", e);
-    }
 
     let cli: Cli = Cli::parse();
 

@@ -4,5 +4,3 @@ pub const TAIKO_NODE_DIRECTORY_NAME: &str = "taiko-node";
 pub const DEFAULT_NETWORK_TIMEOUT: u64 = 10;
 pub const KATLA_RPC_URL: &str = "https://rpc.katla.taiko.xyz";
 pub const DEFAULT_PROVER_URL: &str = "http://taiko-a6-prover.zkpool.io";
-pub const GITHUB_REPO_USERNAME: &str = "d1onys1us";
-pub const GITHUB_REPO_NAME: &str = "stn";
