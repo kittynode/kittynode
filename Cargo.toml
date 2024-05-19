@@ -29,3 +29,5 @@ targets = ["aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-unknown-linux-
 pr-run-mode = "plan"
 # Whether to install an updater program
 install-updater = true
+# Whether to allow differences in the generated release.yml
+allow-dirty = true
