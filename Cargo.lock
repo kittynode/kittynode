@@ -220,9 +220,9 @@ dependencies = [
 
 [[package]]
 name = "axoupdater"
-version = "0.6.2"
+version = "0.6.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8fd70e10a815d55bcef2a2e0907b189fc6d800558b7481883ad6535d5ae7cd42"
+checksum = "669a5ea910fb9b97e3df709c7d0f626fc9e5e9cb83c00bd3a1b4c54835ed8b66"
 dependencies = [
  "axoasset",
  "axoprocess",
@@ -233,7 +233,7 @@ dependencies = [
  "miette",
  "reqwest 0.12.4",
  "serde",
- "temp-dir",
+ "tempfile",
  "thiserror",
 ]
 
@@ -3516,12 +3516,6 @@ name = "tap"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "55937e1799185b12863d447f42597ed69d9928686b8d88a1df17376a097d8369"
-
-[[package]]
-name = "temp-dir"
-version = "0.1.13"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1f227968ec00f0e5322f9b8173c7a0cbcff6181a0a5b28e9892491c286277231"
 
 [[package]]
 name = "tempfile"
