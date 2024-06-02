@@ -6,6 +6,7 @@ pub enum DockerError {
     CommandFailed(Vec<String>),
 }
 
+// test comment
 impl std::fmt::Display for DockerError {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match *self {
