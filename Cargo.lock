@@ -127,19 +127,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "async-compression"
-version = "0.4.11"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cd066d0b4ef8ecb03a55319dc13aa6910616d0f44008a045bb1835af830abff5"
-dependencies = [
- "flate2",
- "futures-core",
- "memchr",
- "pin-project-lite",
- "tokio",
-]
-
-[[package]]
 name = "async-trait"
 version = "0.1.80"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -180,9 +167,9 @@ checksum = "0c4b4d0bd25bd0b74681c0ad21497610ce1b7c91b1022cd21c80c6fbdd9476b0"
 
 [[package]]
 name = "axoasset"
-version = "0.9.5"
+version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "83394fb98d130ef5a4713d26dccc1bb25c66e1d58f351fed710af62c57abb8fa"
+checksum = "45e7b7ac1c1cd4fdcaa2f9e704defa9defd996039083d85e17efa5e8eefb3bd2"
 dependencies = [
  "camino",
  "image",
@@ -220,9 +207,9 @@ dependencies = [
 
 [[package]]
 name = "axoupdater"
-version = "0.6.5"
+version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "669a5ea910fb9b97e3df709c7d0f626fc9e5e9cb83c00bd3a1b4c54835ed8b66"
+checksum = "3adfac228780fcf162617739408bd8edeb1ae1d497c95082759c5e607cac1e71"
 dependencies = [
  "axoasset",
  "axoprocess",
@@ -231,7 +218,6 @@ dependencies = [
  "gazenot",
  "homedir",
  "miette",
- "reqwest 0.12.4",
  "serde",
  "tempfile",
  "thiserror",
@@ -1477,15 +1463,14 @@ dependencies = [
 
 [[package]]
 name = "gazenot"
-version = "0.3.1"
+version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d48f72c27df37233564f3050f767b1b77fff511143c7428a64b929f279b7a558"
+checksum = "7628c2e8e192258187c04c7632aa417b17d4b290b2c233c5f423c51119018db8"
 dependencies = [
  "axoasset",
  "backon",
  "camino",
  "miette",
- "reqwest 0.12.4",
  "schemars",
  "serde",
  "serde_json",
@@ -2817,7 +2802,6 @@ version = "0.12.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "566cafdd92868e0939d3fb961bd0dc25fcfaaed179291093b3d43e6b3150ea10"
 dependencies = [
- "async-compression",
  "base64 0.22.1",
  "bytes",
  "futures-core",
@@ -2844,7 +2828,6 @@ dependencies = [
  "sync_wrapper",
  "tokio",
  "tokio-rustls 0.25.0",
- "tokio-util",
  "tower-service",
  "url",
  "wasm-bindgen",
