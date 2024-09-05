@@ -59,4 +59,4 @@ Execute `stn` for the full list of commands and their description.
 
 ## Contribute
 
-If you have any feature requests or bug reports please [open an issue](https://github.com/libreth/stn/issues/new)! ヽ(・∀・)ﾉ
+If you have any feature requests or bug reports please [open an issue](https://github.com/libreth/stn/issues/new)!
