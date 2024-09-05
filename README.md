@@ -1,9 +1,9 @@
 # stn
 
-[![GitHub Release](https://img.shields.io/github/v/release/libreth/stn?logo=github)](https://github.com/libreth/stn/releases)
+[![GitHub Release](https://img.shields.io/github/v/release/d1onys1us-org/stn?logo=github)](https://github.com/d1onys1us-org/stn/releases)
 [![Crates.io Version](https://img.shields.io/crates/v/stn?logo=rust)](https://crates.io/crates/stn)
-[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/libreth/stn/ci.yml?branch=main&logo=GitHub%20Actions&label=ci)](https://github.com/libreth/stn/actions/workflows/ci.yml?query=branch:main)
-[![codecov](https://codecov.io/gh/libreth/stn/graph/badge.svg?token=TJAUBD8RPT)](https://codecov.io/gh/libreth/stn)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/d1onys1us-org/stn/ci.yml?branch=main&logo=GitHub%20Actions&label=ci)](https://github.com/d1onys1us-org/stn/actions/workflows/ci.yml?query=branch:main)
+[![codecov](https://codecov.io/gh/d1onys1us-org/stn/graph/badge.svg?token=TJAUBD8RPT)](https://codecov.io/gh/d1onys1us-org/stn)
 
 A command line tool for managing Taiko nodes.
 
@@ -28,7 +28,7 @@ Installing and updating use the same command.
 Inside of a terminal:
 
 ```bash
-curl --proto '=https' --tlsv1.2 -LsSf https://github.com/libreth/stn/releases/latest/download/stn-installer.sh | sh
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/d1onys1us-org/stn/releases/latest/download/stn-installer.sh | sh
 ```
 
 #### Windows
@@ -36,7 +36,7 @@ curl --proto '=https' --tlsv1.2 -LsSf https://github.com/libreth/stn/releases/la
 Inside of a Powershell window:
 
 ```bash
-irm https://github.com/libreth/stn/releases/latest/download/stn-installer.ps1 | iex
+irm https://github.com/d1onys1us-org/stn/releases/latest/download/stn-installer.ps1 | iex
 ```
 
 #### MacOS
@@ -44,7 +44,7 @@ irm https://github.com/libreth/stn/releases/latest/download/stn-installer.ps1 | 
 Inside of a terminal:
 
 ```bash
-curl --proto '=https' --tlsv1.2 -LsSf https://github.com/libreth/stn/releases/latest/download/stn-installer.sh | sh
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/d1onys1us-org/stn/releases/latest/download/stn-installer.sh | sh
 ```
 
 ## Quickstart
@@ -59,4 +59,4 @@ Execute `stn` for the full list of commands and their description.
 
 ## Contribute
 
-If you have any feature requests or bug reports please [open an issue](https://github.com/libreth/stn/issues/new)! ヽ(・∀・)ﾉ
+If you have any feature requests or bug reports please [open an issue](https://github.com/d1onys1us-org/stn/issues/new)!
