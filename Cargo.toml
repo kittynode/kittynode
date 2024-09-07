@@ -5,7 +5,7 @@ resolver = "2"
 [workspace.package]
 description = "A command line tool for managing nodes."
 license = "MIT"
-version = "0.1.50"
+version = "0.1.51"
 edition = "2021"
 repository = "https://github.com/d1onys1us-org/stn"
 readme = "README.md"
