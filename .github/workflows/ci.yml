@@ -30,8 +30,21 @@ jobs:
           files: lcov.info
           fail_ci_if_error: true
 
+      - name: Debug - List target directory
+        run: |
+          echo "Contents of target/debug:"
+          ls -l target/debug
+          echo "Contents of target/release:"
+          ls -l target/release
       - name: Add stn to PATH
-        run: echo "$GITHUB_WORKSPACE/target/debug" >> $GITHUB_PATH
+        run: |
+          echo "$GITHUB_WORKSPACE/target/debug" >> $GITHUB_PATH
+          echo "$GITHUB_WORKSPACE/target/release" >> $GITHUB_PATH
+          echo $PATH
+
+
+      # - name: Add stn to PATH
+      #   run: echo "$GITHUB_WORKSPACE/target/debug" >> $GITHUB_PATH
 
       - name: Generate vhs gif
         uses: charmbracelet/vhs-action@v2
