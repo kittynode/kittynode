@@ -10,5 +10,5 @@ publish_allow_dirty = false
 semver_check = false
 
 [[package]]
-name = "stn"
+name = "stan"
 changelog_path = "CHANGELOG.md"
