@@ -31,7 +31,7 @@ jobs:
         run: echo "$GITHUB_WORKSPACE/target/debug" >> $GITHUB_PATH
 
       - name: Generate vhs gif
-        uses: charmbracelet/vhs-action@v1
+        uses: charmbracelet/vhs-action@v2
         with:
           path: "vhs.tape"
 
