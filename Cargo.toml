@@ -3,11 +3,11 @@ members = ["crates/*"]
 resolver = "2"
 
 [workspace.package]
-description = "A command line tool for managing Taiko nodes."
+description = "A command line tool for managing nodes."
 license = "MIT"
 version = "0.1.50"
 edition = "2021"
-repository = "https://github.com/d1onys1us-org/stn"
+repository = "https://github.com/d1onys1us-org/stan"
 readme = "README.md"
 
 # The profile that 'cargo dist' will build with

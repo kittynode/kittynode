@@ -1,5 +1,5 @@
 [package]
-name = "stn"
+name = "stan"
 description.workspace = true
 license.workspace = true
 version.workspace = true
