@@ -5,9 +5,6 @@ on: push
 jobs:
   test:
     runs-on: ubuntu-latest
-    # For vhs gif auto-commit
-    permissions:
-      contents: write
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -22,29 +19,12 @@ jobs:
         run: cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
 
       - name: Upload coverage to Codecov
-        # Disable Codecov for dependabot PRs
         if: github.actor != 'dependabot[bot]'
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: lcov.info
           fail_ci_if_error: true
-
-      - name: Build binary (debug)
-        run: cargo build
-
-      - name: Add binary to PATH
-        run: echo "$GITHUB_WORKSPACE/target/debug" >> $GITHUB_PATH
-
-      - name: Generate vhs gif
-        uses: charmbracelet/vhs-action@v2
-        with:
-          path: "vhs.tape"
-
-      - name: Commit updated vhs gif
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "chore: commit updated vhs gif"
 
   lint:
     runs-on: ubuntu-latest
@@ -60,8 +40,6 @@ jobs:
 
       - name: Check for typos
         uses: crate-ci/typos@master
-        with:
-          config: ${{github.workspace}}/_typos.toml
 
       - name: Run Clippy
         run: cargo clippy --all-targets --all-features -- -D warnings
