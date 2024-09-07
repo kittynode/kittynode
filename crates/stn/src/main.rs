@@ -83,7 +83,7 @@ pub enum ConfigSubcommands {
 
 #[tokio::main]
 async fn main() {
-    let taiko_node_dir = match get_stan_directory() {
+    let taiko_node_dir = match get_stn_directory() {
         Ok(dir) => dir.join(constants::TAIKO_NODE_DIRECTORY_NAME),
         Err(e) => {
             eprintln!("Error getting Taiko node directory: {}", e);
@@ -130,9 +130,9 @@ async fn main() {
     }
 }
 
-/// Helper function that returns the path to the stan config directory.
-pub fn get_stan_directory() -> Result<PathBuf, io::Error> {
+/// Helper function that returns the path to the stn config directory.
+pub fn get_stn_directory() -> Result<PathBuf, io::Error> {
     let home_dir = env::var("HOME")
         .map_err(|_| io::Error::new(io::ErrorKind::NotFound, "Failed to get home directory"))?;
-    Ok(Path::new(&home_dir).join(constants::STAN_PATH))
+    Ok(Path::new(&home_dir).join(constants::STN_PATH))
 }
