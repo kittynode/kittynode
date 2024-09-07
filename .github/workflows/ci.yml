@@ -30,21 +30,11 @@ jobs:
           files: lcov.info
           fail_ci_if_error: true
 
-      - name: Build binary
-        run: cargo build --release
-      - name: Locate and add binary to PATH
-        run: |
-          BINARY_PATH=$(find $GITHUB_WORKSPACE/target -type f -name "stn" | head -n 1)
-          if [ -z "$BINARY_PATH" ]; then
-            echo "Binary 'stn' not found"
-            exit 1
-          fi
-          BINARY_DIR=$(dirname "$BINARY_PATH")
-          echo "$BINARY_DIR" >> $GITHUB_PATH
-          echo "Binary added to PATH: $BINARY_DIR"
+      - name: Build binary (debug)
+        run: cargo build
 
-      # - name: Add stn to PATH
-      #   run: echo "$GITHUB_WORKSPACE/target/debug" >> $GITHUB_PATH
+      - name: Add binary to PATH
+        run: echo "$GITHUB_WORKSPACE/target/debug" >> $GITHUB_PATH
 
       - name: Generate vhs gif
         uses: charmbracelet/vhs-action@v2
