@@ -27,6 +27,16 @@ jobs:
           files: lcov.info
           fail_ci_if_error: true
 
+      - name: Generate vhs
+        uses: charmbracelet/vhs-action@v1
+        with:
+          path: "vhs.tape"
+
+      - name: Commit updated vhs
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: commit updated vhs"
+
   lint:
     runs-on: ubuntu-latest
     steps:
