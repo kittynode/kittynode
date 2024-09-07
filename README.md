@@ -5,7 +5,7 @@
 
 # stn
 
-A command line tool for managing Taiko nodes.
+A command line tool for managing nodes.
 
 ## Installing and updating
 
