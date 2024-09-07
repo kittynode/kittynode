@@ -20,7 +20,7 @@ pub async fn up(taiko_node_dir: &Path) {
     let (http_valid, ws_valid) =
         network::validate_endpoints(&l1_endpoint_http, &l1_endpoint_ws).await;
     if !http_valid || !ws_valid {
-        println!("L1 endpoints are not healthy. Run `stan config` to set up new endpoints.");
+        println!("L1 endpoints are not healthy. Run `stn config` to set up new endpoints.");
         return;
     }
     match docker::execute_docker_command(&["compose", "up", "-d"], taiko_node_dir) {
