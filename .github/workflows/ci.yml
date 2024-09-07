@@ -27,15 +27,18 @@ jobs:
           files: lcov.info
           fail_ci_if_error: true
 
-      - name: Generate vhs
+      - name: Add stn to PATH
+        run: echo "$GITHUB_WORKSPACE/target/debug" >> $GITHUB_PATH
+
+      - name: Generate vhs gif
         uses: charmbracelet/vhs-action@v1
         with:
           path: "vhs.tape"
 
-      - name: Commit updated vhs
+      - name: Commit updated vhs gif
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: commit updated vhs"
+          commit_message: "chore: commit updated vhs gif"
 
   lint:
     runs-on: ubuntu-latest
