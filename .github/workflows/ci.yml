@@ -30,18 +30,18 @@ jobs:
           files: lcov.info
           fail_ci_if_error: true
 
-      - name: Debug - List target directory
+      - name: Build binary
+        run: cargo build --release
+      - name: Locate and add binary to PATH
         run: |
-          echo "Contents of target/debug:"
-          ls -l target/debug
-          echo "Contents of target/release:"
-          ls -l target/release
-      - name: Add stn to PATH
-        run: |
-          echo "$GITHUB_WORKSPACE/target/debug" >> $GITHUB_PATH
-          echo "$GITHUB_WORKSPACE/target/release" >> $GITHUB_PATH
-          echo $PATH
-
+          BINARY_PATH=$(find $GITHUB_WORKSPACE/target -type f -name "stn" | head -n 1)
+          if [ -z "$BINARY_PATH" ]; then
+            echo "Binary 'stn' not found"
+            exit 1
+          fi
+          BINARY_DIR=$(dirname "$BINARY_PATH")
+          echo "$BINARY_DIR" >> $GITHUB_PATH
+          echo "Binary added to PATH: $BINARY_DIR"
 
       # - name: Add stn to PATH
       #   run: echo "$GITHUB_WORKSPACE/target/debug" >> $GITHUB_PATH
