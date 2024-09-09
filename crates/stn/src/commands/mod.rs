@@ -1,5 +1,4 @@
 pub mod config;
-pub mod dashboard;
 pub mod down;
 pub mod install;
 pub mod logs;
@@ -11,7 +10,6 @@ pub mod up;
 pub mod upgrade;
 
 pub use config::config;
-pub use dashboard::dashboard;
 pub use down::down;
 pub use install::install;
 pub use logs::logs;

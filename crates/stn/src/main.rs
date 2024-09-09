@@ -3,17 +3,13 @@ mod constants;
 mod docker;
 mod env_manager;
 mod network;
+mod utils;
 
-use std::{
-    env, io,
-    path::{Path, PathBuf},
-};
-
+use crate::utils::get_stn_directory;
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
-#[command(author, version, about, long_about = None)]
-#[command(propagate_version = true)]
+#[command(about, version)]
 struct Cli {
     #[command(subcommand)]
     command: Commands,
@@ -41,8 +37,6 @@ enum Commands {
     Status,
     /// System usage stats of your Taiko node
     Stats,
-    /// Open the Grafana dashboard in default browser
-    Dashboard,
 }
 
 #[derive(Parser)]
@@ -65,24 +59,17 @@ pub enum LogsSubcommands {
     Execution,
     /// Shows driver logs
     Driver,
-    /// Show proposer logs
-    Proposer,
 }
 
 #[derive(Subcommand)]
 pub enum ConfigSubcommands {
     /// Config a full node
     Full,
-    /// Config a proposer
-    Proposer,
-    /// Config a ZK prover
-    Zkp,
-    /// Config an SGX prover
-    Sgx,
 }
 
 #[tokio::main]
 async fn main() {
+    // Get the Taiko node directory
     let taiko_node_dir = match get_stn_directory() {
         Ok(dir) => dir.join(constants::TAIKO_NODE_DIRECTORY_NAME),
         Err(e) => {
@@ -91,8 +78,10 @@ async fn main() {
         }
     };
 
+    // Parse the command line arguments
     let cli: Cli = Cli::parse();
 
+    // Execute the command
     match &cli.command {
         Commands::Install => {
             commands::install(&taiko_node_dir);
@@ -124,15 +113,5 @@ async fn main() {
         Commands::Stats => {
             commands::stats(&taiko_node_dir);
         }
-        Commands::Dashboard => {
-            commands::dashboard(&taiko_node_dir);
-        }
     }
-}
-
-/// Helper function that returns the path to the stn config directory.
-pub fn get_stn_directory() -> Result<PathBuf, io::Error> {
-    let home_dir = env::var("HOME")
-        .map_err(|_| io::Error::new(io::ErrorKind::NotFound, "Failed to get home directory"))?;
-    Ok(Path::new(&home_dir).join(constants::STN_PATH))
 }

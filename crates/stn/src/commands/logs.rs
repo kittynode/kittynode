@@ -21,9 +21,6 @@ pub fn logs(log_type: &LogsSubcommands, taiko_node_dir: &Path) {
         LogsSubcommands::Driver => {
             args.push("taiko_client_driver");
         }
-        LogsSubcommands::Proposer => {
-            args.push("taiko_client_proposer");
-        }
     }
 
     match docker::execute_docker_command(&args, taiko_node_dir) {

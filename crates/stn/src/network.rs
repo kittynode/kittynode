@@ -122,18 +122,6 @@ pub async fn validate_endpoints(eth_endpoint_http: &str, eth_endpoint_ws: &str) 
     (http_validation, ws_validation)
 }
 
-/// Perform a GET on /status for the prover_endpoint_http, and verify a 200 status code.
-pub async fn is_prover_api_functional(prover_endpoint_http: &str) -> bool {
-    match reqwest::get(&format!("{}/status", prover_endpoint_http)).await {
-        Ok(response) => {
-            println!("Prover endpoint: {}", prover_endpoint_http);
-            println!("Prover API status code: {}", response.status());
-            response.status() == reqwest::StatusCode::OK
-        }
-        Err(_) => false,
-    }
-}
-
 // Helper to timeout the ws connection because invalid ws endpoints can hang for a long time
 // and didn't find another util for it in ethers. Example: `ws://192.168`
 async fn connect_ws_with_timeout(

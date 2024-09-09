@@ -1,0 +1,3 @@
+[images]
+taiko-client = "us-docker.pkg.dev/evmchain/images/taiko-client:taiko-client-v0.29.0"
+taiko-geth = "us-docker.pkg.dev/evmchain/images/taiko-geth:v1.5.0"

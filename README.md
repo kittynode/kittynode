@@ -21,3 +21,20 @@ Installing and updating use the same command. See the [release page](https://git
 ## Command reference
 
 Execute `stn --help` for the full list of commands and their description.
+
+## Folder structure
+
+```mermaid
+graph TD
+    A[workspace root]
+    A --> B[packages]
+    A --> C[cli]
+    A --> D[tauri-gui]
+    A --> E[core]
+    B --> F[package1]
+    B --> G[package2]
+    B --> H[...]
+    E --> I[node_management]
+    E --> J[config_management]
+    E --> K[package_management]
+```
