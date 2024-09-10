@@ -41,5 +41,8 @@ jobs:
       - name: Check for typos
         uses: crate-ci/typos@master
 
+      - name: Install toolchain
+        uses: dtolnay/rust-toolchain@stable
+
       - name: Run Clippy
         run: cargo clippy --all-targets --all-features -- -D warnings
