@@ -8,10 +8,14 @@
     // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
     greetMsg = await invoke("greet", { name });
   }
+
+  async function install() {
+    await invoke("install");
+  }
 </script>
 
 <div class="container">
-  <h1>Welcome to Tauri!</h1>
+  <h1>Welcome to Kittynode! :3</h1>
 
   <div class="row">
     <a href="https://vitejs.dev" target="_blank">
@@ -33,6 +37,9 @@
   </form>
 
   <p>{greetMsg}</p>
+
+  <p>Click the button to install a Taiko node.</p>
+  <button on:click={install}>Install</button>
 </div>
 
 <style>
