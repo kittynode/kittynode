@@ -1,0 +1,6 @@
+{
+    "name": "stn",
+    "scripts": {
+        "tauri": "pnpm -F stn_gui tauri"
+    }
+}

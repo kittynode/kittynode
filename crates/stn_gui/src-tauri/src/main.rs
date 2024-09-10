@@ -1,20 +1,19 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
+fn check_running_nodes() -> u32 {
+    0 // Placeholder return value
 }
 
 #[tauri::command]
-fn install() {
+fn install_node() {
     stn_core::install();
 }
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, install])
+        .invoke_handler(tauri::generate_handler![check_running_nodes, install_node])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
