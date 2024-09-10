@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/stn", "crates/stn_core", "crates/stn_gui/src-tauri"]
+members = ["crates/stn_cli", "crates/stn_core", "crates/stn_gui/src-tauri"]
 resolver = "2"
 
 [workspace.package]
