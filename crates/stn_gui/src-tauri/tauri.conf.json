@@ -6,7 +6,7 @@
     "distDir": "../build"
   },
   "package": {
-    "productName": "stn_gui",
+    "productName": "stn-gui",
     "version": "0.1.0"
   },
   "tauri": {
@@ -19,7 +19,7 @@
     },
     "windows": [
       {
-        "title": "stn_gui",
+        "title": "stn-gui",
         "width": 800,
         "height": 600
       }
@@ -30,7 +30,7 @@
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "com.stn_gui.app",
+      "identifier": "com.stn-gui.app",
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
