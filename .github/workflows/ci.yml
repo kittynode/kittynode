@@ -4,11 +4,15 @@ on: push
 
 jobs:
   test:
-    # runs-on: ubuntu-latest
-    runs-on: "ubuntu-20.04"
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
+
+      - name: Install libgtk-3-dev
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev
 
       - name: Install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov
@@ -28,11 +32,15 @@ jobs:
           fail_ci_if_error: true
 
   lint:
-    #runs-on: ubuntu-latest
-    runs-on: "ubuntu-20.04"
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
+
+      - name: Install libgtk-3-dev
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev
 
       - name: Cache Cargo dependencies
         uses: Swatinem/rust-cache@v2
