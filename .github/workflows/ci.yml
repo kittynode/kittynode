@@ -4,7 +4,8 @@ on: push
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest
+    runs-on: "ubuntu-20.04"
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -27,7 +28,8 @@ jobs:
           fail_ci_if_error: true
 
   lint:
-    runs-on: ubuntu-latest
+    #runs-on: ubuntu-latest
+    runs-on: "ubuntu-20.04"
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
