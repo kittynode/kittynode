@@ -1747,7 +1747,7 @@ dependencies = [
 
 [[package]]
 name = "kittynode"
-version = "0.1.51"
+version = "0.1.52"
 dependencies = [
  "axoupdater",
  "clap",
@@ -1757,11 +1757,11 @@ dependencies = [
 
 [[package]]
 name = "kittynode_core"
-version = "0.1.51"
+version = "0.1.52"
 
 [[package]]
 name = "kittynode_gui"
-version = "0.1.51"
+version = "0.1.52"
 dependencies = [
  "kittynode_core",
  "serde",
