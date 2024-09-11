@@ -9,10 +9,10 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v4
 
-      - name: Install libgtk-3-dev
+      - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev libsoup2.4-dev javascriptcoregtk-4.0-dev
+          sudo apt-get install -y libgtk-3-dev libsoup2.4-dev javascriptcoregtk-4.0-dev webkit2gtk-sys-dev
 
       - name: Install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov
@@ -37,10 +37,10 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v4
 
-      - name: Install libgtk-3-dev
+      - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev libsoup2.4-dev javascriptcoregtk-4.0-dev
+          sudo apt-get install -y libgtk-3-dev libsoup2.4-dev javascriptcoregtk-4.0-dev webkit2gtk-sys-dev
 
       - name: Cache Cargo dependencies
         uses: Swatinem/rust-cache@v2
