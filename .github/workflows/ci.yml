@@ -1,4 +1,4 @@
-name: Continuous Integration
+name: CI
 
 on: push
 
@@ -9,11 +9,19 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v4
 
-      - name: Install cargo-llvm-cov
-        uses: taiki-e/install-action@cargo-llvm-cov
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - name: Create dist directory for tauri dev build (workaround)
+        run: mkdir -p ./crates/kittynode_gui/build
 
       - name: Cache Cargo dependencies
         uses: Swatinem/rust-cache@v2
+
+      - name: Install cargo-llvm-cov
+        uses: taiki-e/install-action@cargo-llvm-cov
 
       - name: Generate code coverage
         run: cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
@@ -31,6 +39,14 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - name: Create dist directory for tauri dev build (workaround)
+        run: mkdir -p ./crates/kittynode_gui/build
 
       - name: Cache Cargo dependencies
         uses: Swatinem/rust-cache@v2

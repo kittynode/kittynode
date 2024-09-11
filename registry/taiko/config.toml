@@ -1,0 +1,3 @@
+# Network endpoints
+L1_ENDPOINT_WS = ""
+L1_BEACON_HTTP = ""

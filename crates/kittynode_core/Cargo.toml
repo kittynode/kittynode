@@ -1,0 +1,10 @@
+[package]
+name = "kittynode_core"
+description.workspace = true
+license.workspace = true
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+readme.workspace = true
+
+[dependencies]
