@@ -13,3 +13,11 @@ semver_check = false
 name = "kittynode"
 changelog_include = ["kittynode_core", "kittynode_gui"]
 changelog_path = "./CHANGELOG.md"
+
+[[package]]
+name = "kittynode_core"
+changelog_update = false
+
+[[package]]
+name = "kittynode_gui"
+changelog_update = false
