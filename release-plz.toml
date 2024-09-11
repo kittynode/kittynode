@@ -10,6 +10,6 @@ publish_allow_dirty = false
 semver_check = false
 
 [[package]]
-name = "kittynode_cli"
+name = "kittynode"
 changelog_include = ["kittynode_core", "kittynode_gui"]
 changelog_path = "./CHANGELOG.md"
