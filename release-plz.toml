@@ -11,7 +11,7 @@ semver_check = false
 
 [[package]]
 name = "kittynode"
-changelog_include = ["kittynode_core", "kittynode_gui"]
+changelog_include = ["./crates/kittynode_core", "./crates/kittynode_gui"]
 changelog_path = "./CHANGELOG.md"
 
 [[package]]
