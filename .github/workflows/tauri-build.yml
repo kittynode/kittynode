@@ -2,10 +2,8 @@ name: Tauri Build
 
 on:
   push:
-    branches:
-      - update-releaser
     tags:
-      - "kittynode-v*"
+      - "kittynode_gui-v*"
 
 jobs:
   publish-tauri:
@@ -70,6 +68,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           args: ${{ matrix.args }}
-          # Use tag that was triggered to build the app
-          tagName: kittynode_gui-v0.1.52
-          releaseName: "KittyNode GUI v0.1.52"
+          tagName: ${{ github.ref_name }}
+          releaseName: "Kittynode GUI {{ github.ref_name }}"
