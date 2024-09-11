@@ -35,8 +35,3 @@ pr-run-mode = "plan"
 install-updater = true
 # Path that installers should place binaries in
 install-path = "CARGO_HOME"
-# Extra build job for tauri
-build-local-artifacts-jobs = ["./tauri-build"]
-
-[[workspace.metadata.dist.extra-artifacts]]
-artifacts = ["./target/release/bundle/dmg/kittynode_0.1.0_aarch64.dmg"]
