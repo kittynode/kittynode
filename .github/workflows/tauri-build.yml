@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - update-releaser
+    tags:
+      - "kittynode-v*"
 
 jobs:
   publish-tauri:
@@ -68,9 +70,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           args: ${{ matrix.args }}
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: tauri-aarch64-apple-darwin
-          path: "./target/aarch64-apple-darwin/release/bundle/macos/kittynode.app"
+          # Use tag that was triggered to build the app
+          tagName: kittynode-v0.1.52

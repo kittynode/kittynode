@@ -18,6 +18,11 @@
                 >Port manager</a
             >
             <a
+                href="/key-manager"
+                class:active={$page.url.pathname === "/key-manager"}
+                >Key manager</a
+            >
+            <a
                 href="/security"
                 class:active={$page.url.pathname === "/security"}>Security</a
             >
