@@ -1746,6 +1746,31 @@ dependencies = [
 ]
 
 [[package]]
+name = "kittynode"
+version = "0.1.51"
+dependencies = [
+ "axoupdater",
+ "clap",
+ "kittynode_core",
+ "tokio",
+]
+
+[[package]]
+name = "kittynode_core"
+version = "0.1.51"
+
+[[package]]
+name = "kittynode_gui"
+version = "0.1.0"
+dependencies = [
+ "kittynode_core",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-build",
+]
+
+[[package]]
 name = "kuchikiki"
 version = "0.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2742,9 +2767,9 @@ dependencies = [
 
 [[package]]
 name = "rustls"
-version = "0.23.12"
+version = "0.23.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c58f8c84392efc0a126acce10fa59ff7b3d2ac06ab451a33f2741989b806b044"
+checksum = "f2dabaac7466917e566adb06783a81ca48944c6898a1b08b9374106dd671f4c8"
 dependencies = [
  "once_cell",
  "ring",
@@ -3124,31 +3149,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dbe866e1e51e8260c9eed836a042a5e7f6726bb2b411dffeaa712e19c388f23b"
 dependencies = [
  "loom",
-]
-
-[[package]]
-name = "stn"
-version = "0.1.51"
-dependencies = [
- "axoupdater",
- "clap",
- "stn_core",
- "tokio",
-]
-
-[[package]]
-name = "stn_core"
-version = "0.1.51"
-
-[[package]]
-name = "stn_gui"
-version = "0.1.0"
-dependencies = [
- "serde",
- "serde_json",
- "stn_core",
- "tauri",
- "tauri-build",
 ]
 
 [[package]]
@@ -3833,9 +3833,9 @@ checksum = "08f95100a766bf4f8f28f90d77e0a5461bbdb219042e7679bebe79004fed8d75"
 
 [[package]]
 name = "unicode-ident"
-version = "1.0.12"
+version = "1.0.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3354b9ac3fae1ff6755cb6db53683adb661634f67557942dea4facebec0fee4b"
+checksum = "e91b56cd4cadaeb79bbf1a5645f6b4f8dc5bde8834ad5894a8db35fda9efa1fe"
 
 [[package]]
 name = "unicode-normalization"

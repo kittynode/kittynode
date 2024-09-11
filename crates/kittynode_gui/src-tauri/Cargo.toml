@@ -1,5 +1,5 @@
 [package]
-name = "stn_gui"
+name = "kittynode_gui"
 version = "0.1.0"
 description = "A Tauri App"
 authors = ["you"]
@@ -15,7 +15,7 @@ tauri-build = { version = "1", features = [] }
 tauri = { version = "1", features = ["shell-open"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-stn_core = { path = "../../stn_core" }
+kittynode_core = { path = "../../kittynode_core" }
 
 [features]
 # This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!

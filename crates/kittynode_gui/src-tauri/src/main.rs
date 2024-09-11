@@ -8,7 +8,7 @@ fn check_running_nodes() -> u32 {
 
 #[tauri::command]
 fn install_node() {
-    stn_core::install();
+    kittynode_core::install();
 }
 
 fn main() {

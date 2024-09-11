@@ -1,5 +1,5 @@
 use clap::{Parser, Subcommand};
-use stn_core::install;
+use kittynode_core::install;
 
 #[derive(Parser)]
 #[command(about, version)]

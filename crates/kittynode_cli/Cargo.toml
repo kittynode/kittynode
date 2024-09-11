@@ -1,5 +1,5 @@
 [package]
-name = "stn"
+name = "kittynode"
 description.workspace = true
 license.workspace = true
 version.workspace = true
@@ -10,5 +10,5 @@ readme.workspace = true
 [dependencies]
 clap = { version = "4.5.17", features = ["derive"] }
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
-stn_core = { path = "../stn_core" }
+kittynode_core = { path = "../kittynode_core" }
 axoupdater = "0.7.1"
