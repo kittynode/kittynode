@@ -1,4 +1,4 @@
-name: Continuous Integration
+name: CI
 
 on: push
 
@@ -15,7 +15,7 @@ jobs:
           sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
 
       - name: Create dist directory for tauri dev build (workaround)
-        run: mkdir -p ./crates/gui/build
+        run: mkdir -p ./crates/kittynode_gui/build
 
       - name: Cache Cargo dependencies
         uses: Swatinem/rust-cache@v2
@@ -46,7 +46,7 @@ jobs:
           sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
 
       - name: Create dist directory for tauri dev build (workaround)
-        run: mkdir -p ./crates/gui/build
+        run: mkdir -p ./crates/kittynode_gui/build
 
       - name: Cache Cargo dependencies
         uses: Swatinem/rust-cache@v2
