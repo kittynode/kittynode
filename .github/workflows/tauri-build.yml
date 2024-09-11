@@ -71,4 +71,5 @@ jobs:
         with:
           args: ${{ matrix.args }}
           # Use tag that was triggered to build the app
-          tagName: kittynode-v0.1.52
+          tagName: kittynode_gui-v0.1.52
+          releaseName: "KittyNode GUI v0.1.52"
