@@ -73,4 +73,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tauri-aarch64-apple-darwin
-          path: "./target/aarch64-apple-darwin/release/bundle/dmg/kittynode_0.1.0_aarch64.dmg"
+          path: |
+            "./target/aarch64-apple-darwin/release/bundle/dmg/kittynode_0.1.0_aarch64.dmg"
+            "./target/aarch64-apple-darwin/release/bundle/macos/kittynode.app"
