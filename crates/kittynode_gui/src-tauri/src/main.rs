@@ -12,7 +12,6 @@ fn install_node() {
 }
 
 fn main() {
-    let _ = fix_path_env::fix();
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![check_running_nodes, install_node])
         .run(tauri::generate_context!())
