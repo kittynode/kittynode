@@ -3,7 +3,7 @@ name: Continuous Integration
 on: push
 
 jobs:
-  test:
+  setup:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
@@ -15,13 +15,20 @@ jobs:
           sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
 
       - name: Create dist directory for tauri dev build (workaround)
-        run: mkdir ./crates/stn_gui/build
+        run: mkdir -p ./crates/stn_gui/build
 
-      - name: Install cargo-llvm-cov
-        uses: taiki-e/install-action@cargo-llvm-cov
+  test:
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
 
       - name: Cache Cargo dependencies
         uses: Swatinem/rust-cache@v2
+
+      - name: Install cargo-llvm-cov
+        uses: taiki-e/install-action@cargo-llvm-cov
 
       - name: Generate code coverage
         run: cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
@@ -36,17 +43,10 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
+    needs: setup
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
-
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
-
-      - name: Create dist directory for tauri dev build (workaround)
-        run: mkdir ./crates/stn_gui/build
 
       - name: Cache Cargo dependencies
         uses: Swatinem/rust-cache@v2
