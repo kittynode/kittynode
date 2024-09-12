@@ -10,14 +10,5 @@ publish_allow_dirty = false
 semver_check = false
 
 [[package]]
-name = "kittynode"
-changelog_include = ["./crates/kittynode_core", "./crates/kittynode_gui"]
-changelog_path = "./CHANGELOG.md"
-
-[[package]]
-name = "kittynode_core"
-changelog_update = false
-
-[[package]]
 name = "kittynode_gui"
-changelog_update = false
+publish = false
