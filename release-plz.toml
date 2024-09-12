@@ -8,7 +8,3 @@ pr_labels = ["release"]
 allow_dirty = false
 publish_allow_dirty = false
 semver_check = false
-
-[[package]]
-name = "kittynode_gui"
-publish = false
