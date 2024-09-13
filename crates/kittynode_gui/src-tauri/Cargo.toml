@@ -17,6 +17,7 @@ tauri = { version = "1", features = ["shell-open"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 kittynode_core = { version = "^0.1.52", path = "../../kittynode_core" }
+eyre = "0.6.12"
 
 [features]
 # This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!

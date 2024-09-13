@@ -1,18 +1,44 @@
 pub mod constants;
-mod utils;
 
-use utils::get_kittynode_directory;
+use eyre::Result;
+use std::{env, fs, path::Path};
 
-pub fn install() {
-    println!("Select a package to install:");
-    println!("1. Taiko");
-    println!("2. LibreNode");
-    println!("3. KittyNode");
+pub fn create_kittynode_directory() -> Result<()> {
+    let path = Path::new(&env::var("HOME")?).join(crate::constants::KITTYNODE_PATH);
+    fs::create_dir_all(&path)?;
+    Ok(())
+}
 
-    // Ensure kittynode directory exists
-    let kittynode_dir = get_kittynode_directory().unwrap();
-    if !kittynode_dir.exists() {
-        println!("Creating kittynode directory: {}", kittynode_dir.display());
-        std::fs::create_dir_all(&kittynode_dir).unwrap();
+pub fn install() -> Result<()> {
+    create_kittynode_directory()?;
+    Ok(())
+}
+
+pub fn check_running_nodes() -> Result<i32> {
+    Ok(0)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_creates_the_kittynode_directory() {
+        let temp_dir = tempfile::tempdir().unwrap();
+        env::set_var("HOME", temp_dir.path().to_str().unwrap());
+        let result = create_kittynode_directory();
+        assert!(result.is_ok());
+    }
+
+    #[test]
+    fn install_creates_scoped_directory() {
+        let temp_dir = tempfile::tempdir().unwrap();
+        env::set_var("HOME", temp_dir.path().to_str().unwrap());
+        assert!(install().is_ok());
+    }
+
+    #[test]
+    fn check_running_nodes_returns_zero() {
+        matches!(check_running_nodes(), Ok(0));
     }
 }

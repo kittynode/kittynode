@@ -1,4 +1,5 @@
 use clap::{Parser, Subcommand};
+use eyre::Result;
 use kittynode_core::install;
 
 #[derive(Parser)]
@@ -14,12 +15,13 @@ enum Commands {
 }
 
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<()> {
     let cli: Cli = Cli::parse();
 
     match &cli.command {
         Commands::Install => {
-            install();
+            install()?;
+            Ok(())
         }
     }
 }
