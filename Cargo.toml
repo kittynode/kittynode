@@ -11,7 +11,7 @@ description = "A tool for managing decentralized node infrastructure at home."
 license = "MIT"
 version = "0.1.52"
 edition = "2021"
-repository = "https://github.com/d1onys1us-org/kittynode"
+repository = "https://github.com/kittynode/kittynode"
 readme = "README.md"
 
 # The profile that 'cargo dist' will build with
