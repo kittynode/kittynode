@@ -17,3 +17,14 @@ fn main() {
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::check_running_nodes;
+
+    #[test]
+    fn test_check_running_nodes() {
+        let result = check_running_nodes();
+        assert_eq!(result, 0);
+    }
+}
