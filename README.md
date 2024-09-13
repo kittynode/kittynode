@@ -1,5 +1,5 @@
 > [!WARNING]  
-> kittynode is pre-alpha software with frequent breaking changes. Use at your own risk!
+> kittynode is under development and is not yet ready for use.
 
 [![GitHub Release](https://img.shields.io/github/v/release/d1onys1us-org/kittynode?logo=github)](https://github.com/d1onys1us-org/kittynode/releases)
 [![Crates.io Version](https://img.shields.io/crates/v/kittynode?logo=rust)](https://crates.io/crates/kittynode)
