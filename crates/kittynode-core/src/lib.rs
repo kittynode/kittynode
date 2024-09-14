@@ -1,21 +1,36 @@
 pub mod constants;
 
+use bollard::Docker;
 use eyre::Result;
 use std::{env, fs, path::Path};
+use tracing::info;
 
 pub fn create_kittynode_directory() -> Result<()> {
+    info!("Creating Kittynode directory");
     let path = Path::new(&env::var("HOME")?).join(crate::constants::KITTYNODE_PATH);
     fs::create_dir_all(&path)?;
+    info!("Kittynode directory created");
     Ok(())
 }
 
 pub fn install() -> Result<()> {
+    info!("Installing Kittynode");
     create_kittynode_directory()?;
     Ok(())
 }
 
 pub fn check_running_nodes() -> Result<i32> {
+    info!("Checking running nodes");
     Ok(0)
+}
+
+pub async fn check_docker_version() -> Result<()> {
+    info!("Checking Docker version");
+    let docker = Docker::connect_with_local_defaults()?;
+    info!("Connected to Docker");
+    let version = docker.version().await?;
+    info!("Docker version: {:?}", version.version);
+    Ok(())
 }
 
 #[cfg(test)]

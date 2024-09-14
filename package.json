@@ -1,6 +1,6 @@
 {
     "name": "kittynode",
     "scripts": {
-        "tauri": "pnpm -F kittynode_gui tauri"
+        "tauri": "pnpm -F kittynode-gui tauri"
     }
 }

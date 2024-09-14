@@ -8,7 +8,7 @@ importers:
 
   .: {}
 
-  crates/kittynode_gui:
+  crates/kittynode-gui:
     dependencies:
       '@tauri-apps/api':
         specifier: ^1
