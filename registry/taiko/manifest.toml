@@ -1,7 +1,0 @@
-[package]
-name = "taiko"
-version = "0.1.0"
-
-[images]
-taiko_client = "us-docker.pkg.dev/evmchain/images/taiko-client:taiko-client-v0.29.0"
-taiko_geth = "us-docker.pkg.dev/evmchain/images/taiko-geth:taiko-geth-v0.29.0"
