@@ -17,11 +17,10 @@ enum Commands {
 #[tokio::main]
 async fn main() -> Result<()> {
     let cli: Cli = Cli::parse();
-
-    match &cli.command {
+    match cli.command {
         Commands::Install => {
             install()?;
-            Ok(())
         }
     }
+    Ok(())
 }
