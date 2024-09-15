@@ -17,5 +17,5 @@
     <p>Install one from the package registry!</p>
 {:else}
     <p>Running nodes: {runningNodes}</p>
-    <p>This is a feature to test release-please!</p>
+    <p>This is a feature to test release-please! :)</p>
 {/if}
