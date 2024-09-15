@@ -1,5 +1,5 @@
 {
-  "productName": "kittynode_gui",
+  "productName": "kittynode",
   "version": "0.1.0",
   "identifier": "com.kittynode.app",
   "build": {
@@ -11,7 +11,7 @@
   "app": {
     "windows": [
       {
-        "title": "kittynode_gui",
+        "title": "kittynode",
         "width": 800,
         "height": 600
       }
