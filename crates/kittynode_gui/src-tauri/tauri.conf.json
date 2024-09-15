@@ -1,6 +1,5 @@
 {
   "productName": "kittynode",
-  "version": "0.1.0",
   "identifier": "com.kittynode.app",
   "build": {
     "beforeDevCommand": "bun run dev",
