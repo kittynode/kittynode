@@ -1,6 +1,9 @@
 {
-    "name": "kittynode",
-    "scripts": {
-        "tauri": "pnpm -F kittynode_gui tauri"
-    }
+  "name": "kittynode",
+  "workspaces": [
+    "crates/kittynode_gui"
+  ],
+  "trustedDependencies": [
+    "svelte-preprocess"
+  ]
 }

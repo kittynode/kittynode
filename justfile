@@ -8,4 +8,4 @@ kittynode *args:
     ./target/debug/kittynode {{args}}
 
 tauri:
-    pnpm tauri dev
+    @cd ./crates/kittynode_gui && bun run tauri dev
