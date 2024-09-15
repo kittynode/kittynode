@@ -1,8 +1,6 @@
 {
   "packages": {
-    "crates/kittynode": {},
-    "crates/kittynode_core": {},
-    "crates/kittynode_gui": {}
+    ".": {}
   },
   "plugins": ["cargo-workspace"],
   "release-type": "rust"

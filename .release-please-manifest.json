@@ -1,5 +1,3 @@
 {
-  "crates/kittynode": "0.1.54",
-  "crates/kittynode_core": "0.1.54",
-  "crates/kittynode_gui": "0.1.54"
+  ".": "0.1.54"
 }
