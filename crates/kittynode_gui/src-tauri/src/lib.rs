@@ -33,7 +33,11 @@ async fn check_docker_version() -> Result<(), String> {
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
-        .invoke_handler(tauri::generate_handler![check_running_nodes, install_node, check_docker_version])
+        .invoke_handler(tauri::generate_handler![
+            check_running_nodes,
+            install_node,
+            check_docker_version
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
