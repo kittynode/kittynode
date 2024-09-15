@@ -1,5 +1,5 @@
 [package]
-name = "kittynode-core"
+name = "kittynode_core"
 description.workspace = true
 license.workspace = true
 version.workspace = true
