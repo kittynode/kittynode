@@ -113,9 +113,9 @@ dependencies = [
 
 [[package]]
 name = "anyhow"
-version = "1.0.88"
+version = "1.0.89"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4e1496f8fb1fbf272686b8d37f523dab3e4a7443300055e74cdaa449f3114356"
+checksum = "86fdf8605db99b54d3cd748a44c6d04df638eb5dafb219b135d0149bd0db01f6"
 
 [[package]]
 name = "atk"
@@ -1868,7 +1868,7 @@ dependencies = [
 
 [[package]]
 name = "kittynode"
-version = "0.1.53"
+version = "0.1.54"
 dependencies = [
  "axoupdater",
  "clap",
@@ -1879,7 +1879,7 @@ dependencies = [
 
 [[package]]
 name = "kittynode_core"
-version = "0.1.53"
+version = "0.1.54"
 dependencies = [
  "bollard",
  "eyre",
@@ -1889,7 +1889,7 @@ dependencies = [
 
 [[package]]
 name = "kittynode_gui"
-version = "0.1.53"
+version = "0.1.54"
 dependencies = [
  "eyre",
  "kittynode_core",
@@ -2250,7 +2250,7 @@ version = "0.7.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "af1844ef2428cc3e1cb900be36181049ef3d3193c63e43026cfe202983b27a56"
 dependencies = [
- "proc-macro-crate 1.3.1",
+ "proc-macro-crate 2.0.2",
  "proc-macro2",
  "quote",
  "syn 2.0.77",
