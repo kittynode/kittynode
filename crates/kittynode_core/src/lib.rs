@@ -21,7 +21,7 @@ pub fn install() -> Result<()> {
 
 pub fn check_running_nodes() -> Result<i32> {
     info!("Checking running nodes");
-    Ok(1)
+    Ok(4)
 }
 
 pub async fn check_docker_version() -> Result<()> {
