@@ -6,10 +6,10 @@ use std::{env, fs, path::Path};
 use tracing::info;
 
 pub fn create_kittynode_directory() -> Result<()> {
-    info!("Creating Kittynode directory");
+    info!("Creating .kittynode directory");
     let path = Path::new(&env::var("HOME")?).join(crate::constants::KITTYNODE_PATH);
     fs::create_dir_all(&path)?;
-    info!("Kittynode directory created");
+    info!(".kittynode directory created");
     Ok(())
 }
 
