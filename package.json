@@ -2,8 +2,5 @@
     "name": "kittynode",
     "workspaces": [
         "crates/kittynode_gui"
-    ],
-    "trustedDependencies": [
-        "svelte-preprocess"
     ]
 }
