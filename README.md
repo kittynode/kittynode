@@ -10,4 +10,5 @@ A tool for managing decentralized node infrastructure at home.
 
 ## Development
 
-We use [just](https://github.com/casey/just) for development tasks.
+- We use [just](https://github.com/casey/just) for development tasks.
+- For development speed we only release for aarch64-apple-darwin. But kittynode is cross-platform.
