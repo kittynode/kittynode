@@ -11,4 +11,4 @@ tauri:
     @cd ./crates/kittynode_gui && bun run tauri dev
 
 release *args:
-  git cliff --tag {{args}} -o
+  git cliff --tag {{args}} -o && git checkout -b release/{{args}}
