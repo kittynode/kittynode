@@ -1,0 +1,192 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [0.1.55] - 2024-09-15
+
+### 🚀 Features
+
+- Init the stn cli tool
+- Implement up, down, terminate, and update readme (#3)
+- Implement install, config, and update readme (#9)
+- Add dependabot.yml (#14)
+- Implement logs (#19)
+- Add powershell, linux-musl target, and simplify install (#20)
+- Improve error handling and add remove command (#53)
+- Add clippy (#55)
+- Add l1 endpoint validation in stn config (#67)
+- Add archive node validation, improve logs tail, config codecov (#76)
+- Add env_manager (#83)
+- Implement sync status (#79)
+- Add restart command (#86)
+- Implement proposer config (#90)
+- Extend logs with proposer, and add stats command
+- Add dashboard command
+- Add restart prompt after upgrade (#102)
+- Implement update checker (#117)
+- Build a statically linked binary for linux (#126)
+- Remove update polling, distribute updater with binary instead (#183)
+- Rename to kittynode, add tauri, refactor into core library (#251)
+- Test release plz on kittynode gui (#262)
+- Add hi to root (#272)
+- Add hi to cli
+- Add hi to core
+- Add hi to gui
+- Add hi to src-tauri
+- Migrate to bun, tauri 2.0
+- Test release-please
+- Test release-please
+- Test release-please
+- Remove automated release stuff
+
+### 🐛 Bug Fixes
+
+- Typo
+- Ignore release.yml from dependabot (#18)
+- Add check for installation before status, fix some logging (#46)
+- Changelog (#49)
+- Changelog (#51)
+- Handle more docker bugs (#57)
+- Improve status to check for full sync
+- Validate endpoints on startup (#100)
+- Add private key config for proposer, and ability to update (#103)
+- Private type ConfigSubcommands in public interface (#125)
+- Openssl issue with builds on linux (#144)
+
+### 🚜 Refactor
+
+- Separate logic into crates (#30)
+- Use libs instead of crates (#40)
+- Use more dialoguer (#107)
+- Use more dialoguer (#108)
+- Move command functions into commands module
+- Config proposer command
+- Use more dialoguer
+- Remove utils.rs (#138)
+- Rename stn to stan (#248)
+
+### 📚 Documentation
+
+- Improve documentation (#59)
+- Improve documentation (#61)
+- Update readme (#62)
+- Improve documentation (#63)
+- Update readme links (#66)
+- Add ci badge to readme (#80)
+- Update readme (#81)
+- Update ci badge on readme (#82)
+- Update recommended installation method (#129)
+- Update readme (#239)
+- Fix readme + license (#242)
+- Update readme (#246)
+
+### 🧪 Testing
+
+- Add tests
+
+### ⚙️ Miscellaneous Tasks
+
+- Release (#2)
+- Release (#4)
+- Release (#10)
+- Release (#16)
+- Release (#23)
+- Release (#31)
+- Fix workflow (#33)
+- Fix workflow again (#34)
+- Fix workflow again (#35)
+- Fix workflow again (#36)
+- Fix workflow again (#37)
+- Fix workflow again (#38)
+- Remove old changelog (#42)
+- Release (#43)
+- Release (#47)
+- Release (#50)
+- Release (#54)
+- Release (#58)
+- Release (#60)
+- Release (#64)
+- Release (#68)
+- Update cicd (#70)
+- Remove alpha warning and add codecov (#71)
+- Add codecov badge, cleanup readme, remove musl linux (#73)
+- Release (#77)
+- Release (#84)
+- Update ci badge to use main branch only (#85)
+- Release (#88)
+- Release (#95)
+- Release
+- Release (#101)
+- Release (#104)
+- Try alpha release versioning (#105)
+- Fix release process (#109)
+- Release v0.1.37 (#110)
+- Release (#113)
+- Release (#118)
+- Release (#122)
+- Fix log formatting (#127)
+- Release (#128)
+- Update docker log command (#131)
+- Release (#132)
+- Update cargo-dist and retry build (#135)
+- Release (#136)
+- Disable musl build and codecov on dependabot PRs (#137)
+- Release (#139)
+- Release (#145)
+- Add .editorconfig (#153)
+- Update default prover url (#158)
+- Release (#152)
+- Release (#165)
+- Release (#181)
+- Update cargo-dist (#197)
+- Finish repo org migration (#198)
+- Release (#190)
+- Add merge gatekeeper (#243)
+- Clean up (#245)
+- Update cargo dist (#247)
+- Release (#201)
+- Release (#250)
+- Fix packages (#253)
+- Fix packages again (#254)
+- Fix packages again again (#256)
+- Fix again (#257)
+- Fixup changelogs (#258)
+- Fixup changelogs again (#259)
+- Release v0.1.52 (#260)
+- Fix release process kittynode_gui (#268)
+- *(kittynode_gui)* Release v0.1.52 (#269)
+- Fix pipeline (#271)
+- Remove dummy files (#274)
+- Add dummy test
+- Update readme
+- Rename d1onys1us-org to kittynode
+- Make clippy happy
+- Simplify main loop
+- Add just files
+- Delete unused registry
+- Bunch of small things
+- Bunch of small things
+- Bunch of small things
+- Release v0.1.53 (#270)
+- Fix fmt
+- Move docs
+- Release v0.1.54 (#275)
+- Small updates
+- Small updates
+- Small updates
+- Remove version from tauri.conf.json
+- Migrate to release-please
+- Migrate to release-please
+- Migrate to release-please
+- Update readme
+- Optimize pipeline
+- Optimize pipeline
+- Init git cliff
+- Add justfile release
+- Update justfile
+
+### ◀️ Revert
+
+- Rename stn to stan (#249)
+
+<!-- generated by git-cliff -->
