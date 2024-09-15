@@ -2,7 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.1.55] - 2024-09-15
+## [v0.2.0]
+
+### 🚀 Features
+
+- Migrate to pico + fix error returns
+
+### 🐛 Bug Fixes
+
+- Log message
+
+### 🧪 Testing
+
+- Update test
+
+## [v0.1.55]
 
 ### 🚀 Features
 
