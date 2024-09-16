@@ -1,5 +1,5 @@
 {
-  "productName": "kittynode",
+  "productName": "Kittynode",
   "identifier": "com.kittynode.app",
   "build": {
     "beforeDevCommand": "bun run dev",
@@ -10,7 +10,7 @@
   "app": {
     "windows": [
       {
-        "title": "kittynode",
+        "title": "Kittynode",
         "width": 800,
         "height": 600,
         "hiddenTitle": true
