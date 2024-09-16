@@ -10,11 +10,11 @@ kittynode *args:
 tauri:
   @cd ./crates/kittynode_gui && bun run tauri dev
 
-tauri-release:
+release-tauri:
   @cd ./crates/kittynode_gui && bun run tauri build --target aarch64-apple-darwin
 
-release:
-  git cliff --bump
-
-release-o:
+release-changelog:
   git cliff --bump -o
+
+release-crates:
+  cargo publish -p kittynode_core && cargo publish -p kittynode
