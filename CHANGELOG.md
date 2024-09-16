@@ -2,28 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Kittynode v0.2.1]
+## [v0.2.1]
 
 ### 🐛 Bug Fixes
 
 - Add tauri icons
 - Mac icon rounded corner
 
-## [Kittynode v0.2.0]
-
-### 🚀 Features
-
-- Migrate to pico + fix error returns
-
-### 🐛 Bug Fixes
-
-- Log message
-
-### 🧪 Testing
-
-- Update test
-
-## [Kittynode v0.1.55]
+## [v0.2.0]
 
 ### 🚀 Features
 
@@ -59,6 +45,7 @@ All notable changes to this project will be documented in this file.
 - Test release-please
 - Test release-please
 - Remove automated release stuff
+- Migrate to pico + fix error returns
 
 ### 🐛 Bug Fixes
 
@@ -73,6 +60,7 @@ All notable changes to this project will be documented in this file.
 - Add private key config for proposer, and ability to update (#103)
 - Private type ConfigSubcommands in public interface (#125)
 - Openssl issue with builds on linux (#144)
+- Log message
 
 ### 🚜 Refactor
 
@@ -104,6 +92,7 @@ All notable changes to this project will be documented in this file.
 ### 🧪 Testing
 
 - Add tests
+- Update test
 
 ### ◀️ Revert
 

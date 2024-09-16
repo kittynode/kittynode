@@ -15,7 +15,7 @@ All notable changes to this project will be documented in this file.\n
 # https://keats.github.io/tera/docs/#introduction
 body = """
 {% if version %}\
-    ## [Kittynode {{ version }}]
+    ## [{{ version }}]
 {% else %}\
     ## [unreleased]
 {% endif %}\
