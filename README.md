@@ -12,3 +12,4 @@ A tool for managing decentralized node infrastructure at home.
 
 - We use [just](https://github.com/casey/just) for development tasks.
 - For development speed we only release for aarch64-apple-darwin. But kittynode is cross-platform.
+- For local signing use the key `tauri.conf.json` > `bundle` > `macOS` > `signingIdentity`.

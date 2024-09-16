@@ -2,7 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-## [v0.2.0]
+## [Kittynode v0.2.1]
+
+### 🐛 Bug Fixes
+
+- Add tauri icons
+- Mac icon rounded corner
+
+## [Kittynode v0.2.0]
 
 ### 🚀 Features
 
@@ -16,7 +23,7 @@ All notable changes to this project will be documented in this file.
 
 - Update test
 
-## [v0.1.55]
+## [Kittynode v0.1.55]
 
 ### 🚀 Features
 

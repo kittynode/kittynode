@@ -14,4 +14,7 @@ tauri-release:
   @cd ./crates/kittynode_gui && bun run tauri build --target aarch64-apple-darwin
 
 release:
+  git cliff --bump
+
+release-o:
   git cliff --bump -o
