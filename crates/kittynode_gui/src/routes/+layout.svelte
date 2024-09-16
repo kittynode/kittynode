@@ -1,14 +1,13 @@
 <script lang="ts">
   import "@picocss/pico/css/pico.min.css";
   import { page } from "$app/stores";
-  import logo from "$lib/assets/logo.jpg";
 </script>
 
-<main class="container">
+<header class="container">
   <nav>
     <ul>
       <li>
-        <img src={logo} alt="Kittynode Logo" class="logo" />
+        <strong>Kittynode</strong>
       </li>
     </ul>
     <ul>
@@ -16,10 +15,8 @@
         <a href="/" aria-current={$page.url.pathname === "/"}>Home</a>
       </li>
       <li>
-        <a
-          href="/package-store"
-          aria-current={$page.url.pathname === "/package-store"}
-          >Package store</a
+        <a href="/packages" aria-current={$page.url.pathname === "/packages"}
+          >Packages</a
         >
       </li>
       <li>
@@ -33,18 +30,8 @@
       </li>
     </ul>
   </nav>
-  <hr />
+</header>
+
+<main class="container">
   <slot />
 </main>
-
-<style>
-  main {
-    padding: 1rem;
-  }
-
-  .logo {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-  }
-</style>
