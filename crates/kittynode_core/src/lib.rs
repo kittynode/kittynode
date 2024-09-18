@@ -1,5 +1,5 @@
 pub mod constants;
-pub mod packages;
+pub mod package;
 
 use bollard::Docker;
 use eyre::Result;
