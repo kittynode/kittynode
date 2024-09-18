@@ -1,15 +1,18 @@
 [package]
-name = "kittynode"
 description.workspace = true
-license.workspace = true
-version.workspace = true
 edition.workspace = true
-repository.workspace = true
+license.workspace = true
+name = "kittynode"
 readme.workspace = true
+repository.workspace = true
+version.workspace = true
 
 [dependencies]
-clap = { version = "4.5.17", features = ["derive"] }
-tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
-kittynode_core = { version = "^0.2.0", path = "../kittynode_core" }
 axoupdater = "0.7.1"
-eyre = "0.6.12"
+clap = { version = "4.5.17", features = ["derive"] }
+eyre = { version = "0.6", default-features = false, features = [
+    "auto-install",
+    "track-caller",
+] }
+kittynode_core = { version = "^0.2.0", path = "../kittynode_core" }
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }

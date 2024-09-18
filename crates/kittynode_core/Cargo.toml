@@ -9,7 +9,10 @@ version.workspace = true
 
 [dependencies]
 bollard = "0.17.1"
-eyre = "0.6.12"
+eyre = { version = "0.6", default-features = false, features = [
+    "auto-install",
+    "track-caller",
+] }
 serde = { version = "1.0.210", features = ["derive"] }
 toml = "0.8.19"
 tracing = "0.1.40"
