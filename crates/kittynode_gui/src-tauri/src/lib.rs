@@ -20,6 +20,15 @@ fn install_node() -> Result<(), String> {
 }
 
 #[tauri::command]
+fn get_packages() -> Result<Vec<kittynode_core::package::Package>, String> {
+    info!("Getting packages");
+    let packages = kittynode_core::package::get_packages()
+        .wrap_err("Error getting packages")
+        .map_err(|e| e.to_string())?;
+    Ok(packages)
+}
+
+#[tauri::command]
 async fn check_docker_version() -> Result<(), String> {
     info!("Checking docker version");
     kittynode_core::check_docker_version()
@@ -36,7 +45,8 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             check_running_nodes,
             install_node,
-            check_docker_version
+            check_docker_version,
+            get_packages
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

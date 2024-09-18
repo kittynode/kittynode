@@ -15,7 +15,8 @@
     "dependencies": {
         "@picocss/pico": "^2.0.6",
         "@tauri-apps/api": ">=2.0.0-rc.0",
-        "@tauri-apps/plugin-shell": ">=2.0.0-rc.0"
+        "@tauri-apps/plugin-shell": ">=2.0.0-rc.0",
+        "zod": "^3.23.8"
     },
     "devDependencies": {
         "@sveltejs/adapter-static": "^3.0.1",

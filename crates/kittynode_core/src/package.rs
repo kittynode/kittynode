@@ -1,20 +1,20 @@
 use eyre::Result;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::fs;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 pub struct Package {
     package: PackageInfo,
     containers: Vec<Container>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 pub struct PackageInfo {
     name: String,
     version: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 pub struct Container {
     image: String,
 }
