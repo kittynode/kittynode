@@ -1,6 +1,6 @@
 use eyre::Result;
 use serde::{Deserialize, Serialize};
-use std::fs;
+use std::collections::HashMap;
 
 #[derive(Deserialize, Serialize)]
 pub struct Package {
@@ -19,22 +19,32 @@ pub struct Container {
     image: String,
 }
 
-pub fn parse_package(path: &str) -> Result<Package> {
-    let package: Package = toml::from_str(&fs::read_to_string(path)?)?;
-    Ok(package)
-}
+pub fn get_packages() -> Result<HashMap<String, Package>> {
+    let mut packages = HashMap::new();
 
-pub fn get_packages() -> Result<Vec<Package>> {
-    let packages_dir = format!("{}/../../packages", env!("CARGO_MANIFEST_DIR"));
-    let packages = fs::read_dir(packages_dir)?
-        .filter_map(|entry| {
-            let path = entry.ok()?.path();
-            let package_toml_path = path.join("package.toml");
-            package_toml_path
-                .to_str()
-                .and_then(|path_str| parse_package(path_str).ok())
-        })
-        .collect();
+    // Add packages here
+    let reth = Package {
+        package: PackageInfo {
+            name: "Reth".to_string(),
+            version: "0.1.0".to_string(),
+        },
+        containers: vec![Container {
+            image: "ghcr.io/paradigmxyz/reth".to_string(),
+        }],
+    };
+
+    let lighthouse = Package {
+        package: PackageInfo {
+            name: "Lighthouse".to_string(),
+            version: "0.1.0".to_string(),
+        },
+        containers: vec![Container {
+            image: "sigp/lighthouse".to_string(),
+        }],
+    };
+
+    packages.insert(reth.package.name.clone(), reth);
+    packages.insert(lighthouse.package.name.clone(), lighthouse);
     Ok(packages)
 }
 
@@ -43,23 +53,14 @@ mod tests {
     use super::*;
 
     #[test]
-    fn it_parses_reth_package() {
-        let path = format!(
-            "{}/../../packages/reth/package.toml",
-            env!("CARGO_MANIFEST_DIR")
-        );
-        assert!(parse_package(&path).is_ok());
-    }
-
-    #[test]
     fn it_prints_all_packages() {
-        let packages = get_packages().expect("Failed to get packages");
-        for package in packages {
+        let registry = get_packages().expect("Failed to get registry");
+        for package in registry.values() {
             println!(
                 "Package: {}, Version: {}",
                 package.package.name, package.package.version
             );
-            for container in package.containers {
+            for container in package.containers.iter() {
                 println!("Container Image: {}", container.image);
             }
         }

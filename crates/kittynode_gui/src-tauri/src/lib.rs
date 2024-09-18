@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use eyre::{Result, WrapErr};
 use tracing::info;
 
@@ -20,10 +22,10 @@ fn install_node() -> Result<(), String> {
 }
 
 #[tauri::command]
-fn get_packages() -> Result<Vec<kittynode_core::package::Package>, String> {
+fn get_packages() -> Result<HashMap<String, kittynode_core::package::Package>, String> {
     info!("Getting packages");
     let packages = kittynode_core::package::get_packages()
-        .wrap_err("Error getting packages")
+        .wrap_err("Error getting registry")
         .map_err(|e| e.to_string())?;
     Ok(packages)
 }
@@ -46,7 +48,7 @@ pub fn run() {
             check_running_nodes,
             install_node,
             check_docker_version,
-            get_packages
+            get_packages,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

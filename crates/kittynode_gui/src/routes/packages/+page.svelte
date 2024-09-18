@@ -1,13 +1,13 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { invokeWithValidation } from "$lib/api";
-  import { getPackagesSchema, type Package } from "$lib/schemas";
+  import { invoke } from "@tauri-apps/api/core";
+  import { type Package } from "$lib/types";
 
-  let packages: Package[] = [];
+  let packages: Record<string, Package> = {};
 
   async function getPackages() {
     try {
-      packages = await invokeWithValidation("get_packages", getPackagesSchema);
+      packages = await invoke("get_packages");
     } catch (error) {
       console.error("Failed to fetch packages", error);
     }
@@ -18,11 +18,12 @@
   });
 </script>
 
-{#if packages.length > 0}
-  {#each packages as pkg}
+{#if Object.keys([packages]).length > 0}
+  {#each Object.keys(packages) as key}
     <article>
-      <h2>{pkg.package.name} - {pkg.package.version}</h2>
-      <button>Install {pkg.package.name}</button>
+      <h3>{key}</h3>
+      <p>Version: {packages[key].package.version}</p>
+      <button>Install {key}</button>
     </article>
   {/each}
 {/if}
