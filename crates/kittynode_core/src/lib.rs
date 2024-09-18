@@ -57,6 +57,6 @@ mod tests {
 
     #[test]
     fn check_running_nodes_returns_zero() {
-        assert_eq!(check_running_nodes().unwrap(), 0);
+        assert!(matches!(check_running_nodes(), Ok(0)));
     }
 }
