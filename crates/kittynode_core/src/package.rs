@@ -1,4 +1,3 @@
-use eyre::Result;
 use serde::Serialize;
 use std::fmt;
 
@@ -33,7 +32,7 @@ impl fmt::Display for Package {
     }
 }
 
-pub fn get_packages() -> Result<Vec<Package>> {
+pub fn get_packages() -> eyre::Result<Vec<Package>> {
     let packages: Vec<Package> = vec![
         Package {
             package: PackageInfo {
