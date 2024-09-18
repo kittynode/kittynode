@@ -1,6 +1,0 @@
-[package]
-name = "Lighthouse"
-version = "0.1.0"
-
-[[containers]]
-image = "sigp/lighthouse"

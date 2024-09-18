@@ -1,6 +1,0 @@
-[package]
-name = "Reth"
-version = "0.1.0"
-
-[[containers]]
-image = "ghcr.io/paradigmxyz/reth"
