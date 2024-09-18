@@ -1,4 +1,3 @@
-// src/lib/api.ts
 import { invoke } from "@tauri-apps/api/core";
 import type { InvokeArgs } from "@tauri-apps/api/core";
 import { ZodSchema } from "zod";
