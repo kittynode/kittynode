@@ -21,13 +21,13 @@ pub struct Container {
 
 impl fmt::Display for Package {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(
+        writeln!(
             f,
-            "Package: {}, Version: {}\n",
+            "Package: {}, Version: {}",
             self.package.name, self.package.version
         )?;
         for container in &self.containers {
-            write!(f, "Container Image: {}\n", container.image)?;
+            writeln!(f, "Container Image: {}", container.image)?;
         }
         Ok(())
     }
