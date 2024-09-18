@@ -13,14 +13,14 @@ crate-type = ["lib", "cdylib", "staticlib"]
 name = "kittynode_gui_lib"
 
 [build-dependencies]
-tauri-build = {version = "2.0.0-rc", features = []}
+tauri-build = { version = "2.0.0-rc", features = [] }
 
 [dependencies]
 eyre = "0.6.12"
-kittynode_core = {version = "^0.2.0", path = "../../kittynode_core"}
-serde = {version = "1", features = ["derive"]}
+kittynode_core = { version = "^0.2.0", path = "../../kittynode_core" }
+serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-tauri = {version = "2.0.0-rc", features = []}
+tauri = { version = "2.0.0-rc", features = [] }
 tauri-plugin-shell = "2.0.0-rc"
 tracing = "0.1.40"
 tracing-subscriber = "0.3.18"
