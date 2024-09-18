@@ -9,9 +9,7 @@ pub fn create_kittynode_directory() -> Result<()> {
     info!("Creating .kittynode directory");
     let home_dir = env::var("HOME").wrap_err("Failed to read HOME environment variable")?;
     let path = Path::new(&home_dir).join(crate::constants::KITTYNODE_PATH);
-    fs::create_dir_all(&path)
-        .wrap_err_with(|| format!("Failed to create directory at {:?}", path))?;
-    info!(".kittynode directory created");
+    fs::create_dir_all(&path)?;
     Ok(())
 }
 
@@ -23,14 +21,13 @@ pub fn install() -> Result<()> {
 
 pub fn check_running_nodes() -> Result<i32> {
     info!("Checking running nodes");
-    Ok(4)
+    Ok(0)
 }
 
 pub async fn check_docker_version() -> Result<()> {
     info!("Checking Docker version");
     let docker = Docker::connect_with_local_defaults()
         .wrap_err("Failed to connect to Docker with local defaults")?;
-    info!("Connected to Docker");
     let version = docker
         .version()
         .await
@@ -60,6 +57,6 @@ mod tests {
 
     #[test]
     fn check_running_nodes_returns_zero() {
-        matches!(check_running_nodes(), Ok(1));
+        assert_eq!(check_running_nodes().unwrap(), 0);
     }
 }
