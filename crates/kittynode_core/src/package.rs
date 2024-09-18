@@ -50,12 +50,12 @@ mod tests {
     #[test]
     fn it_prints_all_packages() {
         let packages = get_packages().expect("Failed to get packages");
-        for package in &packages {
+        for p in &packages {
             println!(
                 "Package: {}, Version: {}",
-                package.package.name, package.package.version
+                p.package.name, p.package.version
             );
-            for container in package.containers.iter() {
+            for container in p.containers.iter() {
                 println!("Container Image: {}", container.image);
             }
         }
