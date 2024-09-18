@@ -1,4 +1,4 @@
-pub mod constants;
+mod constants;
 pub mod package;
 use bollard::Docker;
 use eyre::{Result, WrapErr};
