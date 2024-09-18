@@ -3,7 +3,7 @@
   import { invoke } from "@tauri-apps/api/core";
   import { type Package } from "$lib/types";
 
-  let packages: Record<string, Package> = {};
+  let packages: Package[] = [];
 
   async function getPackages() {
     try {
@@ -18,12 +18,12 @@
   });
 </script>
 
-{#if Object.keys([packages]).length > 0}
-  {#each Object.keys(packages) as key}
+{#if packages.length > 0}
+  {#each packages as p}
     <article>
-      <h3>{key}</h3>
-      <p>Version: {packages[key].package.version}</p>
-      <button>Install {key}</button>
+      <h3>{p.package.name}</h3>
+      <p>Version: {p.package.version}</p>
+      <button>Install {p.package.name}</button>
     </article>
   {/each}
 {/if}

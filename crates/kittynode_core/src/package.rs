@@ -1,50 +1,45 @@
 use eyre::Result;
-use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use serde::Serialize;
 
-#[derive(Deserialize, Serialize)]
+#[derive(Serialize)]
 pub struct Package {
     package: PackageInfo,
     containers: Vec<Container>,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Serialize)]
 pub struct PackageInfo {
-    name: String,
-    version: String,
+    name: &'static str,
+    version: &'static str,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Serialize)]
 pub struct Container {
-    image: String,
+    image: &'static str,
 }
 
-pub fn get_packages() -> Result<HashMap<String, Package>> {
-    let mut packages = HashMap::new();
-
-    // Add packages here
-    let reth = Package {
-        package: PackageInfo {
-            name: "Reth".to_string(),
-            version: "0.1.0".to_string(),
+pub fn get_packages() -> Result<Vec<Package>> {
+    let packages: Vec<Package> = vec![
+        Package {
+            package: PackageInfo {
+                name: "Reth",
+                version: "0.1.0",
+            },
+            containers: vec![Container {
+                image: "ghcr.io/paradigmxyz/reth",
+            }],
         },
-        containers: vec![Container {
-            image: "ghcr.io/paradigmxyz/reth".to_string(),
-        }],
-    };
-
-    let lighthouse = Package {
-        package: PackageInfo {
-            name: "Lighthouse".to_string(),
-            version: "0.1.0".to_string(),
+        Package {
+            package: PackageInfo {
+                name: "Lighthouse",
+                version: "0.1.0",
+            },
+            containers: vec![Container {
+                image: "sigp/lighthouse",
+            }],
         },
-        containers: vec![Container {
-            image: "sigp/lighthouse".to_string(),
-        }],
-    };
+    ];
 
-    packages.insert(reth.package.name.clone(), reth);
-    packages.insert(lighthouse.package.name.clone(), lighthouse);
     Ok(packages)
 }
 
@@ -54,8 +49,8 @@ mod tests {
 
     #[test]
     fn it_prints_all_packages() {
-        let registry = get_packages().expect("Failed to get registry");
-        for package in registry.values() {
+        let packages = get_packages().expect("Failed to get packages");
+        for package in &packages {
             println!(
                 "Package: {}, Version: {}",
                 package.package.name, package.package.version

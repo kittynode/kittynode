@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use eyre::{Result, WrapErr};
 use tracing::info;
 
@@ -22,7 +20,7 @@ fn install_node() -> Result<(), String> {
 }
 
 #[tauri::command]
-fn get_packages() -> Result<HashMap<String, kittynode_core::package::Package>, String> {
+fn get_packages() -> Result<Vec<kittynode_core::package::Package>, String> {
     info!("Getting packages");
     let packages = kittynode_core::package::get_packages()
         .wrap_err("Error getting registry")
