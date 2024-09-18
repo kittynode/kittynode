@@ -14,7 +14,7 @@ eyre = { version = "0.6", default-features = false, features = [
     "auto-install",
     "track-caller",
 ] }
-kittynode_core = { version = "^0.2.0", path = "../kittynode_core" }
+kittynode_core = { version = "0", path = "../kittynode_core" }
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 
 [dev-dependencies]

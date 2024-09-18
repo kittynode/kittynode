@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.3.0]
+
+### 🚀 Features
+
+- Introduce packages (#280)
+
+### 🧪 Testing
+
+- Add integration tests for cli
+
 ## [v0.2.1]
 
 ### 🐛 Bug Fixes

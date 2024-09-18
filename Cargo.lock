@@ -1916,7 +1916,7 @@ dependencies = [
 
 [[package]]
 name = "kittynode"
-version = "0.2.1"
+version = "0.3.0"
 dependencies = [
  "assert_cmd",
  "axoupdater",
@@ -1929,7 +1929,7 @@ dependencies = [
 
 [[package]]
 name = "kittynode_core"
-version = "0.2.1"
+version = "0.3.0"
 dependencies = [
  "bollard",
  "eyre",
@@ -1941,7 +1941,7 @@ dependencies = [
 
 [[package]]
 name = "kittynode_gui"
-version = "0.2.1"
+version = "0.3.0"
 dependencies = [
  "eyre",
  "kittynode_core",
