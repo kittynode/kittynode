@@ -3,7 +3,7 @@ name: Tauri Build
 on:
   push:
     tags:
-      - "v*"
+      - "disable" # Disable this for now
 
 jobs:
   publish-tauri:
