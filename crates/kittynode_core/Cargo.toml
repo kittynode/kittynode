@@ -1,15 +1,17 @@
 [package]
-name = "kittynode_core"
 description.workspace = true
-license.workspace = true
-version.workspace = true
 edition.workspace = true
-repository.workspace = true
+license.workspace = true
+name = "kittynode_core"
 readme.workspace = true
+repository.workspace = true
+version.workspace = true
 
 [dependencies]
 bollard = "0.17.1"
 eyre = "0.6.12"
+serde = {version = "1.0.210", features = ["derive"]}
+toml = "0.8.19"
 tracing = "0.1.40"
 
 [dev-dependencies]

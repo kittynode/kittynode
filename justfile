@@ -1,5 +1,5 @@
 test:
-  cargo nextest run
+  cargo nextest run --no-capture
 
 covtest:
   cargo llvm-cov nextest
