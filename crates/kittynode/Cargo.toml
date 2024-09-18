@@ -16,3 +16,7 @@ eyre = { version = "0.6", default-features = false, features = [
 ] }
 kittynode_core = { version = "^0.2.0", path = "../kittynode_core" }
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+
+[dev-dependencies]
+assert_cmd = "2.0.12"
+predicates = "3.0.3"
