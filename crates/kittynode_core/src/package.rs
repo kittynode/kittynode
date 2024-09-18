@@ -1,5 +1,6 @@
 use eyre::Result;
 use serde::Serialize;
+use std::fmt;
 
 #[derive(Serialize)]
 pub struct Package {
@@ -16,6 +17,20 @@ pub struct PackageInfo {
 #[derive(Serialize)]
 pub struct Container {
     image: &'static str,
+}
+
+impl fmt::Display for Package {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "Package: {}, Version: {}\n",
+            self.package.name, self.package.version
+        )?;
+        for container in &self.containers {
+            write!(f, "Container Image: {}\n", container.image)?;
+        }
+        Ok(())
+    }
 }
 
 pub fn get_packages() -> Result<Vec<Package>> {
@@ -39,7 +54,6 @@ pub fn get_packages() -> Result<Vec<Package>> {
             }],
         },
     ];
-
     Ok(packages)
 }
 
@@ -50,14 +64,8 @@ mod tests {
     #[test]
     fn it_prints_all_packages() {
         let packages = get_packages().expect("Failed to get packages");
-        for p in &packages {
-            println!(
-                "Package: {}, Version: {}",
-                p.package.name, p.package.version
-            );
-            for container in p.containers.iter() {
-                println!("Container Image: {}", container.image);
-            }
+        for package in packages {
+            println!("{}", package);
         }
     }
 }

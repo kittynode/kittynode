@@ -1,15 +1,16 @@
 pub mod constants;
 pub mod package;
-
 use bollard::Docker;
-use eyre::Result;
+use eyre::{Result, WrapErr};
 use std::{env, fs, path::Path};
 use tracing::info;
 
 pub fn create_kittynode_directory() -> Result<()> {
     info!("Creating .kittynode directory");
-    let path = Path::new(&env::var("HOME")?).join(crate::constants::KITTYNODE_PATH);
-    fs::create_dir_all(&path)?;
+    let home_dir = env::var("HOME").wrap_err("Failed to read HOME environment variable")?;
+    let path = Path::new(&home_dir).join(crate::constants::KITTYNODE_PATH);
+    fs::create_dir_all(&path)
+        .wrap_err_with(|| format!("Failed to create directory at {:?}", path))?;
     info!(".kittynode directory created");
     Ok(())
 }
@@ -27,9 +28,13 @@ pub fn check_running_nodes() -> Result<i32> {
 
 pub async fn check_docker_version() -> Result<()> {
     info!("Checking Docker version");
-    let docker = Docker::connect_with_local_defaults()?;
+    let docker = Docker::connect_with_local_defaults()
+        .wrap_err("Failed to connect to Docker with local defaults")?;
     info!("Connected to Docker");
-    let version = docker.version().await?;
+    let version = docker
+        .version()
+        .await
+        .wrap_err("Failed to fetch Docker version")?;
     info!("Docker version: {:?}", version.version);
     Ok(())
 }

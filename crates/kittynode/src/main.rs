@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 use eyre::Result;
-use kittynode_core::{check_docker_version, install};
+mod commands;
 
 #[derive(Parser)]
 #[command(about, version)]
@@ -11,19 +11,15 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    Install,
-    Check,
+    GetPackages,
 }
 
 #[tokio::main]
 async fn main() -> Result<()> {
     let cli: Cli = Cli::parse();
     match cli.command {
-        Commands::Install => {
-            install()?;
-        }
-        Commands::Check => {
-            check_docker_version().await?;
+        Commands::GetPackages => {
+            commands::get_packages_command().await?;
         }
     }
     Ok(())
