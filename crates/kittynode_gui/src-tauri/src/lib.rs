@@ -1,22 +1,25 @@
-use eyre::{Result, WrapErr};
+use eyre::Result;
 use tracing::info;
 
 #[tauri::command]
 fn check_running_nodes() -> Result<i32, String> {
     info!("Checking running nodes");
-    let num_nodes = kittynode_core::check_running_nodes()
-        .wrap_err("Error checking running nodes")
-        .map_err(|e| e.to_string())?;
+    let num_nodes = kittynode_core::check_running_nodes().map_err(|e| e.to_string())?;
     Ok(num_nodes)
 }
 
 #[tauri::command]
 fn install_node() -> Result<(), String> {
     info!("Installing node");
-    kittynode_core::install()
-        .wrap_err("Error installing node")
-        .map_err(|e| e.to_string())?;
+    kittynode_core::install().map_err(|e| e.to_string())?;
     Ok(())
+}
+
+#[tauri::command]
+fn get_packages() -> Result<Vec<kittynode_core::package::Package>, String> {
+    info!("Getting packages");
+    let packages = kittynode_core::package::get_packages().map_err(|e| e.to_string())?;
+    Ok(packages)
 }
 
 #[tauri::command]
@@ -24,7 +27,6 @@ async fn check_docker_version() -> Result<(), String> {
     info!("Checking docker version");
     kittynode_core::check_docker_version()
         .await
-        .wrap_err("Error checking docker version")
         .map_err(|e| e.to_string())?;
     Ok(())
 }
@@ -36,7 +38,8 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             check_running_nodes,
             install_node,
-            check_docker_version
+            check_docker_version,
+            get_packages,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

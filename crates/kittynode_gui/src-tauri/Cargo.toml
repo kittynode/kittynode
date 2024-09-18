@@ -1,29 +1,26 @@
 [package]
-name = "kittynode_gui"
 description.workspace = true
-license.workspace = true
-version.workspace = true
 edition.workspace = true
-repository.workspace = true
-readme.workspace = true
+license.workspace = true
+name = "kittynode_gui"
 publish = false
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+readme.workspace = true
+repository.workspace = true
+version.workspace = true
 
 [lib]
-name = "kittynode_gui_lib"
 crate-type = ["lib", "cdylib", "staticlib"]
+name = "kittynode_gui_lib"
 
 [build-dependencies]
 tauri-build = { version = "2.0.0-rc", features = [] }
 
 [dependencies]
-tauri = { version = "2.0.0-rc", features = [] }
-tauri-plugin-shell = "2.0.0-rc"
+eyre = "0.6.12"
+kittynode_core = { version = "^0.2.0", path = "../../kittynode_core" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-kittynode_core = { version = "^0.2.0", path = "../../kittynode_core" }
-eyre = "0.6.12"
+tauri = { version = "2.0.0-rc", features = [] }
+tauri-plugin-shell = "2.0.0-rc"
 tracing = "0.1.40"
 tracing-subscriber = "0.3.18"
-
