@@ -1,0 +1,12 @@
+[package]
+name = "src-web"
+description.workspace = true
+license.workspace = true
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+readme.workspace = true
+
+[dependencies]
+rocket = "0.5.1"
+
