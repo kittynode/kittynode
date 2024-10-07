@@ -10,6 +10,9 @@ covtest:
 kittynode *args:
   ./target/debug/kittynode {{args}}
 
+docs:
+  @cd ./docs && bun run dev
+
 tauri:
   @cd ./crates/kittynode_gui && bun run tauri dev
 
