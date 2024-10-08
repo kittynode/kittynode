@@ -4,6 +4,7 @@ import starlight from "@astrojs/starlight";
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://kittynode.io",
   integrations: [
     starlight({
       title: "Kittynode Docs",
