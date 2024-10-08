@@ -9,6 +9,7 @@ export default defineConfig({
     starlight({
       title: "Kittynode Docs",
       customCss: ["./src/styles/custom.css"],
+      favicon: "/images/favicon.ico",
       social: {
         github: "https://github.com/kittynode/kittynode",
       },
