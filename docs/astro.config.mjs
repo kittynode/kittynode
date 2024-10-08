@@ -7,7 +7,7 @@ export default defineConfig({
   site: "https://kittynode.io",
   integrations: [
     starlight({
-      title: "Kittynode Docs",
+      title: "Kittynode",
       customCss: ["./src/styles/custom.css"],
       favicon: "/images/favicon.ico",
       social: {
