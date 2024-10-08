@@ -6,8 +6,8 @@
 
 # kittynode
 
-A tool for managing decentralized node infrastructure at home.
+A tool for managing decentralized node infrastructure.
 
 ## Contributing
 
-Kittynode is open to everyone. For contributing information see [`docs/contributing.md`](docs/contributing.md).
+Kittynode is open to everyone. For contributing information see [`CONTRIBUTING.md`](CONTRIBUTING.md).

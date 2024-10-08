@@ -1,6 +1,7 @@
 {
   "name": "kittynode",
   "workspaces": [
-    "crates/kittynode_gui"
+    "crates/kittynode_gui",
+    "docs"
   ]
 }
