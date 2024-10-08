@@ -8,6 +8,9 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "Kittynode",
+      logo: {
+        src: "./src/assets/icon.png",
+      },
       customCss: ["./src/styles/custom.css"],
       favicon: "/images/favicon.ico",
       social: {
