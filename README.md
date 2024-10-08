@@ -6,7 +6,7 @@
 
 # kittynode
 
-A tool for managing decentralized node infrastructure at home.
+A tool for managing decentralized node infrastructure.
 
 ## Contributing
 
