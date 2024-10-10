@@ -3,7 +3,7 @@
   import { invoke } from "@tauri-apps/api/core";
   import { type Package } from "$lib/types";
 
-  let packages: Package[] = [];
+  let packages: { [name: string]: Package } = {};
 
   async function getPackages() {
     try {
@@ -13,17 +13,25 @@
     }
   }
 
+  async function installPackage(name: string) {
+    try {
+        await invoke("install_package", { name });
+    } catch (error) {
+      console.error("Failed to install package", error);
+    }
+  }
+
   onMount(() => {
     getPackages();
   });
 </script>
 
-{#if packages.length > 0}
-  {#each packages as p}
+{#if Object.keys(packages).length > 0}
+  {#each Object.entries(packages).sort(([nameA], [nameB]) => nameA.localeCompare(nameB)) as [name, p]}
     <article>
-      <h3>{p.package.name}</h3>
-      <p>Version: {p.package.version}</p>
-      <button>Install {p.package.name}</button>
+      <h3>{name}</h3>
+      <p>Version: {p.version}</p>
+      <button on:click={() => installPackage(name)}>Install</button>
     </article>
   {/each}
 {/if}

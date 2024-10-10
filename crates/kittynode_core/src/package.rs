@@ -1,16 +1,13 @@
+use eyre::{Context, Result};
 use serde::Serialize;
+use std::collections::HashMap;
 use std::fmt;
+use tracing::info;
 
 #[derive(Serialize)]
 pub struct Package {
-    package: PackageInfo,
-    containers: Vec<Container>,
-}
-
-#[derive(Serialize)]
-pub struct PackageInfo {
-    name: &'static str,
     version: &'static str,
+    containers: Vec<Container>,
 }
 
 #[derive(Serialize)]
@@ -20,11 +17,7 @@ pub struct Container {
 
 impl fmt::Display for Package {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        writeln!(
-            f,
-            "Package: {}, Version: {}",
-            self.package.name, self.package.version
-        )?;
+        writeln!(f, "Version: {}", self.version)?;
         for container in &self.containers {
             writeln!(f, "Container Image: {}", container.image)?;
         }
@@ -32,28 +25,37 @@ impl fmt::Display for Package {
     }
 }
 
-pub fn get_packages() -> eyre::Result<Vec<Package>> {
-    let packages: Vec<Package> = vec![
-        Package {
-            package: PackageInfo {
-                name: "Reth",
+pub fn get_packages() -> Result<HashMap<&'static str, Package>> {
+    let packages = HashMap::from([
+        (
+            "Reth",
+            Package {
                 version: "0.1.0",
+                containers: vec![Container {
+                    image: "ghcr.io/paradigmxyz/reth",
+                }],
             },
-            containers: vec![Container {
-                image: "ghcr.io/paradigmxyz/reth",
-            }],
-        },
-        Package {
-            package: PackageInfo {
-                name: "Lighthouse",
+        ),
+        (
+            "Lighthouse",
+            Package {
                 version: "0.1.0",
+                containers: vec![Container {
+                    image: "sigp/lighthouse",
+                }],
             },
-            containers: vec![Container {
-                image: "sigp/lighthouse",
-            }],
-        },
-    ];
+        ),
+    ]);
     Ok(packages)
+}
+
+pub fn install_package(name: &str) -> Result<()> {
+    let packages = get_packages().wrap_err("Failed to retrieve packages")?;
+    let package = packages
+        .get(name)
+        .ok_or_else(|| eyre::eyre!("Package '{}' not found", name))?;
+    info!("Installing package: {}", package);
+    Ok(())
 }
 
 #[cfg(test)]
@@ -63,8 +65,8 @@ mod tests {
     #[test]
     fn it_prints_all_packages() {
         let packages = get_packages().expect("Failed to get packages");
-        for package in packages {
-            println!("{}", package);
+        for (name, package) in packages {
+            println!("Package: {}\n{}", name, package);
         }
     }
 }
