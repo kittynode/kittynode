@@ -7,19 +7,19 @@ description: Learn about what Kittynode is and how it works.
 This page describes Kittynode's current design; it doesn't reflect the current implementation progress.
 :::
 
-Kittynode is a safe and easy to use tool for running Ethereum nodes. Let's go over the motivation, design and features of Kittynode.
+Kittynode is a safe and easy to use tool for running Ethereum nodes. Let's go over the motivation, design, and features of Kittynode.
 
 ## Motivation
 
 #### Node operators are important
 
-The motivation behind Kittynode starts at the user. We believe that for Ethereum to direct power away from centralized entities and back into the hands of users, users must verify the correctness of the shared database through operating a node.
+We believe that for Ethereum to direct power away from centralized entities and back into the hands of users, users must verify the correctness of the shared database through operating a node.
 
-Additionally, a major part of Ethereum's security is bolstered by the consensus layer. Kittynode recognizes the importance of supporting node operators, and provides a tool that is easy and secure by default, while being flexible to meet the needs of the user.
+Additionally, a major part of Ethereum's security is bolstered its consensus set. Kittynode recognizes the importance of supporting this set of node operators, by providing a tool that is easy-to-use and secure by default, while being flexible to meet the demands of the operator.
 
 #### User freedom above all
 
-There is a motivation that goes beyond Ethereum itself. We believe that humans have the right to operate software in a way that upholds their freedom. This is important because Kittynode is not Ethereum maximalist, it is freedom maximalist. We use Ethereum because we believe Ethereum to be the best tool to achieve this goal. However, we happily accept other decentralized networks to extend Kittynode with their own packages for node operators to utilize. This further pushes Ethereum to prove itself while offering users maximum software freedom.
+We believe that humans have the right to operate software in a way that safeguards their freedom. Kittynode is not Ethereum or blockchain maximalist, it is user freedom maximalist. We believe Ethereum to be the best tool to achieve this goal, but happily accept other decentralized networks to add their packages to Kittynode. This means Kittynode is credibly neutral to any network, and can be used to support any network.
 
 ## Design
 
