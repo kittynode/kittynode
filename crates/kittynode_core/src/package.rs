@@ -1,3 +1,4 @@
+use crate::file;
 use eyre::{Context, Result};
 use serde::Serialize;
 use std::collections::HashMap;
@@ -55,6 +56,9 @@ pub fn install_package(name: &str) -> Result<()> {
         .get(name)
         .ok_or_else(|| eyre::eyre!("Package '{}' not found", name))?;
     info!("Installing package: {}", package);
+
+    // Generate shared JWT secret
+    file::generate_jwt_secret().wrap_err("Failed to generate JWT secret")?;
     Ok(())
 }
 

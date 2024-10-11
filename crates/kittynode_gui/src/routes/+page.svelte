@@ -18,4 +18,3 @@
 </script>
 
 <p>Docker is <mark>{isDockerRunning === null ? "" : (isDockerRunning ? "running" : "not running")}</mark></p>
-<button on:click={checkDocker}>Check Docker</button>
