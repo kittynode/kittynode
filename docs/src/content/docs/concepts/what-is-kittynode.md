@@ -13,9 +13,9 @@ Kittynode is an easy-to-use and secure-by-default tool for running Ethereum node
 
 ### Easy-to-use and secure
 
-The workflow for Kittynode is designed to make it as easy as possible for the user to get started, while making the right recommendations for them along their operator journey. For example, a user may download Kittynode and sync an Ethereum testnet node in just a few clicks to get feet wet.
+The workflow for Kittynode is designed to make it as easy as possible for the user to get started, while making the right recommendations for them along their operator journey. For example, a user may download Kittynode and sync an Ethereum testnet node in just a few clicks to get their feet wet.
 
-However, they may later decide to become an independent staker on Ethereum mainnet, which requires a lot more security checks. Kittynode will guide the user through the necessary steps to get there, while removing any initial barriers to entry.
+However, they may later decide to become an independent staker on Ethereum mainnet, which requires a lot more security checks. Kittynode will guide the user through the necessary steps to get there, while keeping the low initial barrier to entry.
 
 ### Modular core library
 
@@ -31,10 +31,10 @@ Kittynode is architected as a backend library in Rust, providing several benefit
 
 Kittynode supports a package ecosystem. Ethereum nodes are simply packages which are executed and managed by Kittynode. Developers can create their own packages easily with Kittynode's package API. Kittynode supports Docker images but also supports direct binary executables. Kittynode may also support other languages and executable scripts in the future.
 
-The design goals of the package ecosystem are to ensure installs:
+The design goals of the package ecosystem are to ensure installs are:
 
 - **Secure**: Packages are securely isolated from each other.
-- **Consistent**: Packages run the same on all systems.
+- **Consistent**: Packages behave the same on all systems.
 - **Atomic**: Package installs and uninstalls are atomic, without polluting the system.
 
 ### Port manager
