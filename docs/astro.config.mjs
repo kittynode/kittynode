@@ -9,7 +9,9 @@ export default defineConfig({
     starlight({
       title: "Kittynode",
       logo: {
-        src: "./src/assets/icon.png",
+        light: "./src/assets/kittynode-light.png",
+        dark: "./src/assets/kittynode-dark.png",
+        replacesTitle: true,
       },
       customCss: ["./src/styles/custom.css"],
       favicon: "/images/favicon.ico",
