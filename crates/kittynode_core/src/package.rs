@@ -1,4 +1,5 @@
 use crate::file;
+use bollard::secret::PortBinding;
 use eyre::{Context, Result};
 use serde::Serialize;
 use std::collections::HashMap;
@@ -7,18 +8,18 @@ use tracing::info;
 
 #[derive(Serialize)]
 pub struct Package {
-    version: &'static str,
+    description: &'static str,
     containers: Vec<Container>,
 }
 
 #[derive(Serialize)]
 pub struct Container {
     image: &'static str,
+    port_bindings: HashMap<&'static str, Vec<PortBinding>>,
 }
 
 impl fmt::Display for Package {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        writeln!(f, "Version: {}", self.version)?;
         for container in &self.containers {
             writeln!(f, "Container Image: {}", container.image)?;
         }
@@ -27,26 +28,73 @@ impl fmt::Display for Package {
 }
 
 pub fn get_packages() -> Result<HashMap<&'static str, Package>> {
-    let packages = HashMap::from([
-        (
-            "Reth",
-            Package {
-                version: "0.1.0",
-                containers: vec![Container {
+    let packages = HashMap::from([(
+        "Reth + Lighthouse (Holesky)",
+        Package {
+            description: "This package installs a Reth execution client and a Lighthouse consensus client on the Holesky network with Docker.",
+            containers: vec![
+                Container {
                     image: "ghcr.io/paradigmxyz/reth",
-                }],
-            },
-        ),
-        (
-            "Lighthouse",
-            Package {
-                version: "0.1.0",
-                containers: vec![Container {
+                    port_bindings: HashMap::from([
+                        (
+                            "9001/tcp",
+                            vec![PortBinding {
+                                host_ip: Some("0.0.0.0".to_string()),
+                                host_port: Some("9001".to_string()),
+                            }],
+                        ),
+                        (
+                            "30303/tcp",
+                            vec![PortBinding {
+                                host_ip: Some("0.0.0.0".to_string()),
+                                host_port: Some("30303".to_string()),
+                            }],
+                        ),
+                        (
+                            "30303/udp",
+                            vec![PortBinding {
+                                host_ip: Some("0.0.0.0".to_string()),
+                                host_port: Some("30303".to_string()),
+                            }],
+                        ),
+                    ]),
+                },
+                Container {
                     image: "sigp/lighthouse",
-                }],
-            },
-        ),
-    ]);
+                    port_bindings: HashMap::from([
+                        (
+                            "9000/tcp",
+                            vec![PortBinding {
+                                host_ip: Some("0.0.0.0".to_string()),
+                                host_port: Some("9000".to_string()),
+                            }],
+                        ),
+                        (
+                            "9000/udp",
+                            vec![PortBinding {
+                                host_ip: Some("0.0.0.0".to_string()),
+                                host_port: Some("9000".to_string()),
+                            }],
+                        ),
+                        (
+                            "9001/udp",
+                            vec![PortBinding {
+                                host_ip: Some("0.0.0.0".to_string()),
+                                host_port: Some("9001".to_string()),
+                            }],
+                        ),
+                        (
+                            "5052/tcp",
+                            vec![PortBinding {
+                                host_ip: Some("127.0.0.1".to_string()),
+                                host_port: Some("5052".to_string()),
+                            }],
+                        ),
+                    ]),
+                },
+            ],
+        },
+    )]);
     Ok(packages)
 }
 

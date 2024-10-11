@@ -19,15 +19,6 @@
           >Packages</a
         >
       </li>
-      <li>
-        <a href="/ports" aria-current={$page.url.pathname === "/ports"}>Ports</a
-        >
-      </li>
-      <li>
-        <a href="/settings" aria-current={$page.url.pathname === "/settings"}
-          >Settings</a
-        >
-      </li>
     </ul>
   </nav>
 </header>

@@ -30,7 +30,7 @@
   {#each Object.entries(packages).sort(([nameA], [nameB]) => nameA.localeCompare(nameB)) as [name, p]}
     <article>
       <h3>{name}</h3>
-      <p>Version: {p.version}</p>
+      <p>{p.description}</p>
       <button on:click={() => installPackage(name)}>Install</button>
     </article>
   {/each}

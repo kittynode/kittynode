@@ -1,5 +1,5 @@
 export type Package = {
-  version: string;
+  description: string;
   containers: Container[];
 };
 
