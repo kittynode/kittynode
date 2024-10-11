@@ -7,7 +7,7 @@ description: Learn about what Kittynode is and how it works.
 This page describes Kittynode's current design; it doesn't reflect the current implementation progress.
 :::
 
-Kittynode is a safe and easy to use tool for running Ethereum nodes.
+Kittynode is a safe and easy to use tool for running Ethereum nodes. Let's go over the motivation, design and features of Kittynode.
 
 ## Motivation
 
@@ -19,15 +19,21 @@ Additionally, a major part of Ethereum's security is bolstered by the consensus 
 
 #### User freedom above all
 
-There is a motivation that goes beyond Ethereum itself. We believe that humans have the right to operate software in a way that upholds their freedom. This is important because Kittynode is not Ethereum maximalist, it is freedom maximalist. We use Ethereum because we believe Ethereum to be the best tool to achieve this goal. However, we happily accept other blockchains to extend Kittynode with their own packages for node operators to utilize.
+There is a motivation that goes beyond Ethereum itself. We believe that humans have the right to operate software in a way that upholds their freedom. This is important because Kittynode is not Ethereum maximalist, it is freedom maximalist. We use Ethereum because we believe Ethereum to be the best tool to achieve this goal. However, we happily accept other decentralized networks to extend Kittynode with their own packages for node operators to utilize. This further pushes Ethereum to prove itself while offering users maximum software freedom.
 
-## Components
+## Design
+
+#### Easy to use and secure by default
+
+The workflow for Kittynode is designed to make it as easy as possible for the user to get started, while making the right recommendations for them along their journey. For example, a user may download Kittynode just to try syncing an Ethereum testnet node to get their feet wet. However, they may later decide to become an independent staker on Ethereum, which requires a lot more security checks. Kittynode will guide the user through the necessary steps to get there, while removing any initial barriers to entry.
 
 #### Modular core library
 
 Kittynode is architected as a library in Rust. This means that the desktop application is merely a consumer of the core library. To start with, Kittynode supports a desktop app as a frontend. However, Kittynode can easily be extended to support a CLI, or mobile apps.
 
 Rust was chosen for safety and performance, as well as the ability to support multiple platforms. Kittynode easily runs on Windows, MacOS, and Linux.
+
+## Features
 
 #### Package ecosystem
 
@@ -51,8 +57,6 @@ The system checker is a utility within Kittynode that checks the system prerequi
 - Checking the firewall and other security settings.
 - Checking if WiFi is enabled or disabled.
 
-#### Remote access
+#### Remote mobile access
 
-The workflow for Kittynode is designed to make it as easy as possible for the user to get started, while making the right recommendations for them along their journey. For example, a user may download Kittynode just to try syncing an Ethereum testnet node to get their feet wet. However, they may later decide to become an independent staker on Ethereum, which requires a lot more security checks. Additionally, the user would likely want to monitor their node from a mobile phone or other device like their personal laptop.
-
-Thus, Kittynode supports Wireguard, which will allow users to monitor their node from trusted devices. The other reason why this is important is to make it easy for users to upgrade their client software, which is effectively voting on Ethereum changes. Giving an easy UX for users here is important.
+Kittynode supports remote access. This means you can setup and monitor your node from a phone or desktop. This is done through Wireguard, which will allow users to monitor their node from trusted devices. The other reason why this is important is to make it easy for users to upgrade their client software, which is effectively voting on Ethereum changes. Giving an easy UX for users here is important.
