@@ -3,4 +3,54 @@ title: What is Kittynode?
 description: Learn about what Kittynode is and how it works.
 ---
 
-Kittynode is a tool for managing decentralized node infrastructure.
+:::note
+This page describes Kittynode's current design; it doesn't reflect the current implementation progress.
+:::
+
+Kittynode is an easy-to-use and secure-by-default tool for running Ethereum nodes. Let's go over the [design](#design) and [features](#features) of Kittynode.
+
+## Design
+
+### Easy-to-use and secure
+
+The workflow for Kittynode is designed to make it as easy as possible for the user to get started, while making the right recommendations for them along their operator journey. For example, a user may download Kittynode and sync an Ethereum testnet node in just a few clicks to get their feet wet.
+
+However, they may later decide to become an independent staker on Ethereum mainnet, which requires a lot more security checks. Kittynode will guide the user through the necessary steps to get there, while keeping the low initial barrier to entry.
+
+### Modular core library
+
+Kittynode is architected as a backend library in Rust, providing several benefits:
+
+- **Reusable core**: The desktop application is a consumer of this core library, with Tauri used to bind commands to the library.
+- **Cross-platform support**: Kittynode supports a cross-platform desktop and mobile application as a frontend, along with a CLI that reuses the same core library.
+- **Safety and performance**: Rust was chosen for its safety, performance, and cross-platform compatibility, making Kittynode easy to run on Windows, MacOS, and Linux.
+
+## Features
+
+### Package ecosystem
+
+Kittynode supports a package ecosystem. Ethereum nodes are simply packages which are executed and managed by Kittynode. Developers can create their own packages easily with Kittynode's package API. Kittynode supports Docker images but also supports direct binary executables. Kittynode may also support other languages and executable scripts in the future.
+
+The design goals of the package ecosystem are to ensure installs are:
+
+- **Secure**: Packages are securely isolated from each other.
+- **Consistent**: Packages behave the same on all systems.
+- **Atomic**: Package installs and uninstalls are atomic, without polluting the system.
+
+### Port manager
+
+The port manager is a utility within Kittynode that manages the inbound and outbound ports for Kittynode packages. It is a central point where the user can configure the ports for their packages. Users can easily view and manage what ports their system is exposing to the outside world and also between packages.
+
+### System checker
+
+The system checker is a utility within Kittynode that checks the system prerequisites for running a node, along with other system checks. A short list of some checks are:
+
+- **System resources**: Checking the available storage, CPU, and RAM.
+- **Network settings**: Checking the firewall and internet connectivity.
+- **Security settings**: Checking file permissions and other system security settings.
+
+The system checker is important in several areas of Kittynode. For example, when creating a validator key it is important to ensure WiFi is disabled, and file permissions are properly set on the key file.
+
+### Remote access
+
+Kittynode supports remote access. This means you can setup and monitor your node from a phone or desktop. This is done via secure connections with Wireguard, which allows users to monitor their node from trusted devices. This is also important so that users can easily upgrade their nodes, which is effectively voting on Ethereum's future.
