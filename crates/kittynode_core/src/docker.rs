@@ -1,5 +1,4 @@
-use std::collections::HashMap;
-
+use crate::package::Container;
 use bollard::{
     container::{Config, CreateContainerOptions, StartContainerOptions},
     image::CreateImageOptions,
@@ -8,14 +7,9 @@ use bollard::{
     Docker,
 };
 use eyre::{Context, Result};
+use std::collections::HashMap;
 use tokio_stream::StreamExt;
 use tracing::{error, info};
-
-use crate::package::Container;
-
-pub fn is_docker_running() -> Result<bool> {
-    get_docker_instance().map(|_| true).or_else(|_| Ok(false))
-}
 
 pub(crate) fn get_docker_instance() -> Result<Docker> {
     Docker::connect_with_local_defaults().wrap_err("Failed to connect to Docker")
@@ -51,6 +45,10 @@ pub(crate) async fn create_or_recreate_network(docker: &Docker, network_name: &s
         .wrap_err("Failed to create network")?;
     info!("Created network: {}", network_name);
     Ok(())
+}
+
+pub fn is_docker_running() -> Result<bool> {
+    get_docker_instance().map(|_| true).or_else(|_| Ok(false))
 }
 
 pub async fn find_container(docker: &Docker, name: &str) -> Result<Option<ContainerSummary>> {

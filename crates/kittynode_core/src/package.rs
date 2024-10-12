@@ -12,18 +12,18 @@ use tracing::info;
 
 #[derive(Serialize)]
 pub struct Package {
-    pub description: &'static str,
-    pub network_name: &'static str,
-    pub containers: Vec<Container>,
+    pub(crate) description: &'static str,
+    pub(crate) network_name: &'static str,
+    pub(crate) containers: Vec<Container>,
 }
 
 #[derive(Serialize)]
 pub struct Container {
-    pub name: &'static str,
-    pub image: &'static str,
-    pub cmd: Vec<&'static str>,
-    pub port_bindings: HashMap<&'static str, Vec<PortBinding>>,
-    pub volume_bindings: Vec<String>,
+    pub(crate) name: &'static str,
+    pub(crate) image: &'static str,
+    pub(crate) cmd: Vec<&'static str>,
+    pub(crate) port_bindings: HashMap<&'static str, Vec<PortBinding>>,
+    pub(crate) volume_bindings: Vec<String>,
 }
 
 impl fmt::Display for Package {
