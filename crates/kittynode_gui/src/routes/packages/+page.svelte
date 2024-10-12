@@ -4,6 +4,7 @@
   import { type Package } from "$lib/types";
 
   let packages: { [name: string]: Package } = {};
+  let isDockerRunning: null | boolean = null;
 
   async function getPackages() {
     try {
@@ -21,7 +22,16 @@
     }
   }
 
+  async function checkDocker() {
+    try {
+      isDockerRunning = await invoke("is_docker_running");
+    } catch (error) {
+      console.error("Failed to check Docker", error);
+    }
+  }
+
   onMount(() => {
+    checkDocker();
     getPackages();
   });
 </script>
@@ -30,8 +40,11 @@
   {#each Object.entries(packages).sort(([nameA], [nameB]) => nameA.localeCompare(nameB)) as [name, p]}
     <article>
       <h3>{name}</h3>
+      {#if !isDockerRunning}
+        <p><mark>Turn on Docker to install this package.</mark></p>
+      {/if}
       <p>{p.description}</p>
-      <button on:click={() => installPackage(name)}>Install</button>
+      <button on:click={() => installPackage(name)} disabled={!isDockerRunning}>Install</button>
     </article>
   {/each}
 {/if}

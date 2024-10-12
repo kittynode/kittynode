@@ -2,10 +2,6 @@ use bollard::{network::CreateNetworkOptions, Docker};
 use eyre::{Context, Result};
 use tracing::info;
 
-fn get_docker_instance() -> Result<Docker> {
-    Docker::connect_with_local_defaults().wrap_err("Failed to connect to Docker")
-}
-
 pub fn is_docker_running() -> Result<bool> {
     match get_docker_instance() {
         Ok(_) => Ok(true),
@@ -13,7 +9,24 @@ pub fn is_docker_running() -> Result<bool> {
     }
 }
 
-async fn create_network(docker: &Docker, network_name: &str) -> Result<String> {
+pub(crate) fn get_docker_instance() -> Result<Docker> {
+    Docker::connect_with_local_defaults().wrap_err("Failed to connect to Docker")
+}
+
+pub(crate) async fn create_or_recreate_network(docker: &Docker, network_name: &str) -> Result<()> {
+    if let Ok(networks) = docker.list_networks::<String>(None).await {
+        if networks
+            .iter()
+            .any(|n| n.name == Some(network_name.to_string()))
+        {
+            docker
+                .remove_network(network_name)
+                .await
+                .wrap_err("Failed to remove existing network")?;
+            info!("Removed existing network: {}", network_name);
+        }
+    }
+
     let network_options = CreateNetworkOptions {
         name: network_name,
         check_duplicate: true,
@@ -21,13 +34,11 @@ async fn create_network(docker: &Docker, network_name: &str) -> Result<String> {
         ..Default::default()
     };
 
-    let network_id = docker
+    docker
         .create_network(network_options)
-        .await?
-        .id
-        .ok_or_else(|| eyre::eyre!("Network creation succeeded but no ID was returned"))?;
+        .await
+        .wrap_err("Failed to create network")?;
 
-    info!("Docker network created: {}", network_id);
-
-    Ok(network_id)
+    info!("Created network: {}", network_name);
+    Ok(())
 }

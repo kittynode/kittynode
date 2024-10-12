@@ -16,7 +16,9 @@ fn get_packages() -> Result<HashMap<String, kittynode_core::package::Package>, S
 #[tauri::command]
 async fn install_package(name: String) -> Result<(), String> {
     info!("Installing package: {}", name);
-    kittynode_core::package::install_package(&name).map_err(|e| e.to_string())?;
+    kittynode_core::package::install_package(&name)
+        .await
+        .map_err(|e| e.to_string())?;
     Ok(())
 }
 
