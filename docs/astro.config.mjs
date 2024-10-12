@@ -16,7 +16,8 @@ export default defineConfig({
       customCss: ["./src/styles/custom.css"],
       favicon: "/images/favicon.ico",
       social: {
-        github: "https://github.com/kittynode/kittynode",
+        github: "https://github.com/kittynode",
+        youtube: "https://youtube.com/@kittynode",
       },
       sidebar: [
         {
