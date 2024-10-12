@@ -14,6 +14,15 @@ fn get_packages() -> Result<HashMap<String, kittynode_core::package::Package>, S
 }
 
 #[tauri::command]
+async fn get_installed_packages() -> Result<Vec<String>, String> {
+    info!("Getting installed packages");
+    let installed = kittynode_core::package::get_installed_packages()
+        .await
+        .map_err(|e| e.to_string())?;
+    Ok(installed)
+}
+
+#[tauri::command]
 async fn install_package(name: String) -> Result<(), String> {
     info!("Installing package: {}", name);
     kittynode_core::package::install_package(&name)
@@ -29,6 +38,15 @@ fn is_docker_running() -> Result<bool, String> {
     Ok(is_running)
 }
 
+#[tauri::command]
+async fn delete_package(name: String) -> Result<(), String> {
+    info!("Deleting package: {}", name);
+    kittynode_core::package::delete_package(&name)
+        .await
+        .map_err(|e| e.to_string())?;
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -36,7 +54,9 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             is_docker_running,
             get_packages,
-            install_package
+            install_package,
+            get_installed_packages,
+            delete_package
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

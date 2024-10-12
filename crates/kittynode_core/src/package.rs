@@ -1,31 +1,29 @@
-use crate::docker::{create_or_recreate_network, get_docker_instance};
+use crate::docker::{
+    create_or_recreate_network, find_container, get_docker_instance, pull_and_start_container,
+    remove_container,
+};
 use crate::file::{generate_jwt_secret, kittynode_path};
-use bollard::container::{Config, CreateContainerOptions, StartContainerOptions};
-use bollard::image::CreateImageOptions;
-use bollard::network::ConnectNetworkOptions;
-use bollard::secret::{HostConfig, PortBinding};
-use bollard::Docker;
+use bollard::secret::PortBinding;
 use eyre::{Context, Result};
 use serde::Serialize;
 use std::collections::HashMap;
 use std::fmt;
-use tokio_stream::StreamExt;
-use tracing::{error, info};
+use tracing::info;
 
 #[derive(Serialize)]
 pub struct Package {
-    description: &'static str,
-    network_name: &'static str,
-    containers: Vec<Container>,
+    pub description: &'static str,
+    pub network_name: &'static str,
+    pub containers: Vec<Container>,
 }
 
 #[derive(Serialize)]
 pub struct Container {
-    name: &'static str,
-    image: &'static str,
-    cmd: Vec<&'static str>,
-    port_bindings: HashMap<&'static str, Vec<PortBinding>>,
-    volume_bindings: Vec<String>,
+    pub name: &'static str,
+    pub image: &'static str,
+    pub cmd: Vec<&'static str>,
+    pub port_bindings: HashMap<&'static str, Vec<PortBinding>>,
+    pub volume_bindings: Vec<String>,
 }
 
 impl fmt::Display for Package {
@@ -52,6 +50,8 @@ pub fn get_packages() -> Result<HashMap<&'static str, Package>> {
                     image: "ghcr.io/paradigmxyz/reth",
                     cmd: vec![
                         "node",
+                        "--chain",
+                        "holesky",
                         "--metrics",
                         "0.0.0.0:9001",
                         "--authrpc.addr",
@@ -83,8 +83,8 @@ pub fn get_packages() -> Result<HashMap<&'static str, Package>> {
                         ),
                     ]),
                     volume_bindings: vec![
-                        "rethdata:/root/.local/share/reth/mainnet".to_string(),
-                        format!("{}:/root/.local/share/reth/mainnet/jwt.hex:ro", jwt_path.display()),
+                        "rethdata:/root/.local/share/reth/holesky".to_string(),
+                        format!("{}:/root/.local/share/reth/holesky/jwt.hex:ro", jwt_path.display()),
                     ],
                 },
                 Container {
@@ -93,15 +93,15 @@ pub fn get_packages() -> Result<HashMap<&'static str, Package>> {
                     cmd: vec![
                         "lighthouse",
                         "--network",
-                        "mainnet",
+                        "holesky",
                         "beacon",
                         "--http",
                         "--http-address",
                         "0.0.0.0",
                         "--checkpoint-sync-url",
-                        "https://mainnet.checkpoint.sigp.io",
+                        "https://checkpoint-sync.holesky.ethpandaops.io",
                         "--execution-jwt",
-                        "/root/.lighthouse/mainnet/jwt.hex",
+                        "/root/.lighthouse/holesky/jwt.hex",
                         "--execution-endpoint",
                         "http://reth-node:8551",
                     ],
@@ -137,7 +137,7 @@ pub fn get_packages() -> Result<HashMap<&'static str, Package>> {
                     ]),
                     volume_bindings: vec![
                         format!("{}/.lighthouse:/root/.lighthouse", kittynode_path.display()),
-                        format!("{}:/root/.lighthouse/mainnet/jwt.hex:ro", jwt_path.display()),
+                        format!("{}:/root/.lighthouse/holesky/jwt.hex:ro", jwt_path.display()),
                     ],
                 },
             ],
@@ -146,13 +146,37 @@ pub fn get_packages() -> Result<HashMap<&'static str, Package>> {
     Ok(packages)
 }
 
+pub async fn get_installed_packages() -> Result<Vec<String>> {
+    let docker = get_docker_instance()?;
+    let packages = get_packages().wrap_err("Failed to retrieve packages")?;
+
+    let mut installed = Vec::new();
+
+    // Check if containers for each package exist
+    for (name, package) in packages {
+        let mut all_containers_running = true;
+
+        // Ensure all containers for the package are running
+        for container in &package.containers {
+            if find_container(&docker, container.name).await?.is_none() {
+                all_containers_running = false;
+                break;
+            }
+        }
+
+        if all_containers_running {
+            installed.push(name.to_string());
+        }
+    }
+
+    Ok(installed)
+}
+
 pub async fn install_package(name: &str) -> Result<()> {
-    // Initialize Docker instance (note: should inject this and/or handle in docker.rs)
     let docker = get_docker_instance()?;
 
     info!("Installing package: {}", name);
 
-    // Generate JWT secret
     generate_jwt_secret().wrap_err("Failed to generate JWT secret")?;
 
     let packages = get_packages().wrap_err("Failed to retrieve packages")?;
@@ -160,118 +184,30 @@ pub async fn install_package(name: &str) -> Result<()> {
         .get(name)
         .ok_or_else(|| eyre::eyre!("Package '{}' not found", name))?;
 
-    if package_exists(&docker, package).await? {
-        return Err(eyre::eyre!("Package '{}' already exists", name));
-    }
-
-    create_or_recreate_network(&docker, package.network_name).await?;
+    let network_name = package.network_name;
+    create_or_recreate_network(&docker, network_name).await?;
 
     for container in &package.containers {
-        pull_and_start_container(&docker, container, package.network_name).await?;
+        pull_and_start_container(&docker, container, network_name).await?;
     }
 
+    info!("Package '{}' installed successfully.", name);
     Ok(())
 }
 
-async fn package_exists(docker: &Docker, package: &Package) -> Result<bool> {
-    let containers = docker.list_containers::<String>(None).await?;
+pub async fn delete_package(name: &str) -> Result<()> {
+    let docker = get_docker_instance()?;
+    let packages = get_packages().wrap_err("Failed to retrieve packages")?;
+    let package = packages
+        .get(name)
+        .ok_or_else(|| eyre::eyre!("Package '{}' not found", name))?;
 
-    for container in &package.containers {
-        if containers.iter().any(|c| {
-            c.names
-                .as_ref() // Get reference to the Option<Vec<String>>
-                .map_or(false, |names| {
-                    names.contains(&format!("/{}", container.name))
-                }) // Check if the name exists
-        }) {
-            return Ok(true);
-        }
+    let container_names: Vec<&str> = package.containers.iter().map(|c| c.name).collect();
+
+    for container_name in container_names {
+        remove_container(&docker, container_name).await?;
     }
 
-    Ok(false)
-}
-
-async fn pull_and_start_container(
-    docker: &Docker,
-    container: &Container,
-    network_name: &str,
-) -> Result<()> {
-    // Pull the container image
-    let options = Some(CreateImageOptions {
-        from_image: container.image,
-        tag: "latest",
-        ..Default::default()
-    });
-
-    let mut stream = docker.create_image(options, None, None);
-    while let Some(item) = stream.next().await {
-        match item {
-            Ok(info) => info!("Pulling image info: {:?}", info),
-            Err(e) => error!("Error pulling image: {:?}", e),
-        }
-    }
-
-    // Convert port bindings to the correct type
-    let port_bindings: HashMap<String, Option<Vec<PortBinding>>> = container
-        .port_bindings
-        .iter()
-        .map(|(k, v)| (k.to_string(), Some(v.clone())))
-        .collect();
-
-    let host_config = HostConfig {
-        binds: Some(container.volume_bindings.clone()),
-        port_bindings: Some(port_bindings), // Use the converted bindings
-        ..Default::default()
-    };
-
-    let config = Config {
-        image: Some(container.image),
-        cmd: Some(container.cmd.clone()),
-        host_config: Some(host_config),
-        ..Default::default()
-    };
-
-    // Create the container
-    let created_container = docker
-        .create_container(
-            Some(CreateContainerOptions {
-                name: container.name,
-                ..Default::default()
-            }),
-            config,
-        )
-        .await?;
-
-    // Start the container
-    docker
-        .start_container(&created_container.id, None::<StartContainerOptions<String>>)
-        .await?;
-
-    info!("Container {} started successfully.", container.name);
-
-    // Connect the container to the network
-    docker
-        .connect_network(
-            network_name,
-            ConnectNetworkOptions {
-                container: container.name,
-                endpoint_config: Default::default(),
-            },
-        )
-        .await?;
-
+    info!("Package '{}' deleted successfully.", name);
     Ok(())
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_prints_all_packages() {
-        let packages = get_packages().expect("Failed to get packages");
-        for (name, package) in packages {
-            println!("Package: {}\n{}", name, package);
-        }
-    }
 }
