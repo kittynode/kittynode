@@ -1,1 +1,8 @@
-<p>Welcome to Kittynode! You're definitely early. This is super duper alpha right now; but we'll get there! Have fun~~</p>
+<p>Welcome to Kittynode!</p>
+<div>
+    &nbsp;∧,,,∧&nbsp;~ ┏━━━━━━━━┓
+    <br>
+    (  ̳• · • ̳)&nbsp;~ ♡&nbsp;&nbsp;You’re purrfect&nbsp;&nbsp;♡
+    <br>
+    /&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;づ&nbsp;~ ┗━━━━━━━━┛
+</div>

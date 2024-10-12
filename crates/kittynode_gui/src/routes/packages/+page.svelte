@@ -41,7 +41,7 @@
     <article>
       <h3>{name}</h3>
       {#if !isDockerRunning}
-        <p><mark>Turn on Docker to install this package.</mark></p>
+        <p><u>Turn on Docker to install this package.</u></p>
       {/if}
       <p>{p.description}</p>
       <button on:click={() => installPackage(name)} disabled={!isDockerRunning}>Install</button>
