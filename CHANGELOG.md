@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.4.0]
+
+### 🚀 Features
+
+- Add docs site (#294)
+- Support reth + lighthouse e2e (#303)
+
+### 📚 Documentation
+
+- Write better architecture docs (#305)
+- Update readme
+- Update contributing
+
 ## [v0.3.0]
 
 ### 🚀 Features
