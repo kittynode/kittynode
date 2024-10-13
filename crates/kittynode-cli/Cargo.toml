@@ -1,0 +1,26 @@
+[package]
+description.workspace = true
+edition.workspace = true
+license.workspace = true
+name = "kittynode-cli"
+readme.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[[bin]]
+name = "kittynode"
+path = "src/main.rs"
+
+[dependencies]
+axoupdater = "0.7.1"
+clap = { version = "4.5.20", features = ["derive"] }
+eyre = { version = "0.6", default-features = false, features = [
+    "auto-install",
+    "track-caller",
+] }
+kittynode-core = { version = "0", path = "../kittynode-core" }
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+
+[dev-dependencies]
+assert_cmd = "2.0.12"
+predicates = "3.0.3"

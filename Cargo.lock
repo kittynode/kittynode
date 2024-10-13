@@ -1895,20 +1895,20 @@ dependencies = [
 ]
 
 [[package]]
-name = "kittynode"
+name = "kittynode-cli"
 version = "0.4.0"
 dependencies = [
  "assert_cmd",
  "axoupdater",
  "clap",
  "eyre",
- "kittynode_core",
+ "kittynode-core",
  "predicates",
  "tokio",
 ]
 
 [[package]]
-name = "kittynode_core"
+name = "kittynode-core"
 version = "0.4.0"
 dependencies = [
  "bollard",
@@ -1921,11 +1921,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "kittynode_gui"
+name = "kittynode-gui"
 version = "0.4.0"
 dependencies = [
  "eyre",
- "kittynode_core",
+ "kittynode-core",
  "serde",
  "serde_json",
  "tauri",

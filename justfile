@@ -14,16 +14,16 @@ docs:
   @cd ./docs && bun run dev
 
 tauri:
-  @cd ./crates/kittynode_gui && bun run tauri dev
+  @cd ./crates/kittynode-gui && bun run tauri dev
 
 release-tauri-apple:
-  @cd ./crates/kittynode_gui && bun run tauri build --target aarch64-apple-darwin
+  @cd ./crates/kittynode-gui && bun run tauri build --target aarch64-apple-darwin
 
 release-tauri-linux:
-  @cd ./crates/kittynode_gui && bun run tauri build --target x86_64-unknown-linux-gnu
+  @cd ./crates/kittynode-gui && bun run tauri build --target x86_64-unknown-linux-gnu
 
 release-changelog:
   git cliff --bump -o
 
 release-crates:
-  cargo publish -p kittynode_core && cargo publish -p kittynode
+  cargo publish -p kittynode-core && cargo publish -p kittynode-cli
