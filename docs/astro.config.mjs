@@ -13,6 +13,9 @@ export default defineConfig({
         dark: "./src/assets/kittynode-dark.png",
         replacesTitle: true,
       },
+      editLink: {
+        baseUrl: "https://github.com/kittynode/kittynode/edit/main/docs/",
+      },
       customCss: ["./src/styles/custom.css"],
       favicon: "/images/favicon.ico",
       social: {
