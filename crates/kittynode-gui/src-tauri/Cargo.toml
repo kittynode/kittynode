@@ -9,7 +9,7 @@ repository.workspace = true
 version.workspace = true
 
 [lib]
-crate-type = ["lib", "cdylib", "staticlib"]
+crate-type = ["staticlib", "cdylib", "rlib"]
 name = "kittynode_gui_lib"
 
 [build-dependencies]
