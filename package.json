@@ -1,5 +1,4 @@
 {
-  "name": "kittynode",
   "workspaces": [
     "crates/kittynode-gui",
     "docs"
