@@ -43,6 +43,15 @@ jobs:
         # If you don't have `beforeBuildCommand` configured you may want to build your frontend here too.
         run: bun install
 
+      - name: Mask sensitive values
+        run: |
+          echo "::add-mask::${{ secrets.CERT_ID }}"
+          echo "::add-mask::${{ secrets.APPLE_ID }}"
+          echo "::add-mask::${{ secrets.APPLE_TEAM_ID }}"
+          echo "::add-mask::${{ secrets.APPLE_CERTIFICATE_PASSWORD }}"
+          echo "::add-mask::${{ secrets.DEVELOPER_ID_NAME }}"
+          echo "::add-mask::/Users/runner/Library/Keychains"
+
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
         env:
