@@ -2,21 +2,21 @@
 description.workspace = true
 edition.workspace = true
 license.workspace = true
-name = "kittynode"
+name = "kittynode-core"
 readme.workspace = true
 repository.workspace = true
 version.workspace = true
 
 [dependencies]
-axoupdater = "0.7.1"
-clap = { version = "4.5.20", features = ["derive"] }
+bollard = "0.17.1"
 eyre = { version = "0.6", default-features = false, features = [
     "auto-install",
     "track-caller",
 ] }
-kittynode_core = { version = "0", path = "../kittynode_core" }
-tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+serde = { version = "1.0.210", features = ["derive"] }
+toml = "0.8.19"
+tracing = "0.1.40"
+tokio-stream = "0.1.16"
 
 [dev-dependencies]
-assert_cmd = "2.0.12"
-predicates = "3.0.3"
+tempfile = "3"
