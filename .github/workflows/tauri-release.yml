@@ -45,9 +45,9 @@ jobs:
 
       - name: Mask sensitive values
         run: |
-          echo "::add-mask::${{ secrets.CERT_ID }}"
           echo "::add-mask::${{ secrets.APPLE_ID }}"
           echo "::add-mask::${{ secrets.APPLE_TEAM_ID }}"
+          echo "::add-mask::${{ secrets.APPLE_CERTIFICATE_KEY_ID }}"
           echo "::add-mask::${{ secrets.APPLE_CERTIFICATE_PASSWORD }}"
           echo "::add-mask::${{ secrets.DEVELOPER_ID_NAME }}"
           echo "::add-mask::/Users/runner/Library/Keychains"
