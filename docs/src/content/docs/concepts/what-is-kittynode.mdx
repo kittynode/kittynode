@@ -33,6 +33,12 @@ Kittynode is architected as a backend library in Rust, providing several benefit
 - **Cross-platform support**: Kittynode supports a cross-platform desktop and mobile application as a frontend, along with a CLI that reuses the same core library.
 - **Safety and performance**: Rust was chosen for its safety, performance, and cross-platform compatibility, making Kittynode easy to run on Windows, MacOS, and Linux.
 
+### Direct container access
+
+Kittynode doesn't use Docker CLI commands on the user's system directly. Instead it has its own module that directly interacts with the Docker engine with Bollard. This improves Kittynode's portability, security, and testability. It also allows for more flexible networking setups between Kittynode packages.
+
+Kittynode also plans to support other free and open source container runtimes in the future, like containerd and moby.
+
 ## Features
 
 ### Package ecosystem
