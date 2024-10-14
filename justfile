@@ -13,14 +13,20 @@ kittynode *args:
 docs:
   @cd ./docs && bun run dev
 
+frontend:
+  @cd ./crates/kittynode-gui && bun run dev
+
+frontend-build:
+  @cd ./crates/kittynode-gui && bun run build
+
 tauri:
-  @cd ./crates/kittynode-gui && bun run tauri dev
+  @cd ./crates/kittynode-tauri && bun run tauri dev
 
-release-tauri-apple:
-  @cd ./crates/kittynode-gui && bun run tauri build --target aarch64-apple-darwin
+tauri-build-apple:
+  @cd ./crates/kittynode-tauri && bun run tauri build --target aarch64-apple-darwin
 
-release-tauri-linux:
-  @cd ./crates/kittynode-gui && bun run tauri build --target x86_64-unknown-linux-gnu
+tauri-build-linux:
+  @cd ./crates/kittynode-tauri && bun run tauri build --target x86_64-unknown-linux-gnu
 
 release-changelog:
   git cliff --bump -o

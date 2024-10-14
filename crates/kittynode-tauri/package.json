@@ -1,0 +1,10 @@
+{
+  "name": "kittynode-tauri",
+  "private": true,
+  "scripts": {
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": ">=2.0.0"
+  }
+}

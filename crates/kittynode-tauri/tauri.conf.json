@@ -3,10 +3,10 @@
   "productName": "kittynode-gui",
   "identifier": "com.kittynode-gui.app",
   "build": {
-    "beforeDevCommand": "bun run dev",
+    "beforeDevCommand": "just frontend",
     "devUrl": "http://localhost:1420",
-    "beforeBuildCommand": "bun run build",
-    "frontendDist": "../build"
+    "beforeBuildCommand": "just frontend-build",
+    "frontendDist": "../kittynode-gui/build"
   },
   "app": {
     "windows": [
