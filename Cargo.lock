@@ -4526,7 +4526,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "kittynode-gui"
+name = "kittynode-tauri"
 version = "0.4.0"
 dependencies = [
  "eyre",

@@ -1,4 +1,4 @@
-name: Tauri Build
+name: Tauri Release
 
 on:
   workflow_dispatch:
@@ -63,5 +63,5 @@ jobs:
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         with:
-          projectPath: "crates/kittynode-gui/src-tauri"
+          projectPath: "crates/kittynode-tauri"
           args: ${{ matrix.args }}

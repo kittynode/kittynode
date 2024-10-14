@@ -2,7 +2,7 @@
 description.workspace = true
 edition.workspace = true
 license.workspace = true
-name = "kittynode-gui"
+name = "kittynode-tauri"
 publish = false
 readme.workspace = true
 repository.workspace = true
@@ -10,7 +10,7 @@ version.workspace = true
 
 [lib]
 crate-type = ["staticlib", "cdylib", "rlib"]
-name = "kittynode_gui_lib"
+name = "kittynode_tauri_lib"
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }

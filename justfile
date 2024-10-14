@@ -7,17 +7,11 @@ test-no-capture:
 covtest:
   cargo llvm-cov nextest
 
-kittynode *args:
-  ./target/debug/kittynode {{args}}
-
 docs:
   @cd ./docs && bun run dev
 
-frontend:
-  @cd ./crates/kittynode-gui && bun run dev
-
-frontend-build:
-  @cd ./crates/kittynode-gui && bun run build
+kittynode *args:
+  ./target/debug/kittynode {{args}}
 
 tauri:
   @cd ./crates/kittynode-tauri && cargo tauri dev
