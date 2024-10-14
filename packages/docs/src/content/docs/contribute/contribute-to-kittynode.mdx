@@ -5,27 +5,25 @@ description: How to contribute to Kittynode.
 
 import { Steps } from '@astrojs/starlight/components';
 
-Kittynode is open to everyone, and happily welcomes any contributions.
+Kittynode is open to everyone, and happily welcomes any contributions! ヽ(・∀・)ﾉ
 
 ## Prerequisites
 
-To work with the repo you'll need [Rust](https://www.rust-lang.org/), [just](https://github.com/casey/just), and [bun](https://bun.sh/).
-
 <Steps>
 
-1. Install Rust
+1. Install [Rust](https://www.rust-lang.org/):
 
     ```bash
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
     ```
 
-2. Install just
+2. Install [just](https://github.com/casey/just):
 
     ```bash
     cargo install just
     ```
 
-3. Install bun
+3. Install [bun](https://bun.sh/):
 
     ```bash
     curl -fsSL https://bun.sh/install | bash
@@ -35,18 +33,36 @@ To work with the repo you'll need [Rust](https://www.rust-lang.org/), [just](htt
 
 ## Development
 
-All repo commands can be found in the [justfile](https://github.com/kittynode/kittynode/blob/main/justfile). Here are some common commands:
+<Steps>
 
-```bash
-# Build the crates
-just build
+1. Clone the repo:
 
-# Run the tests
-just test
+    ```bash
+    git clone git@github.com:kittynode/kittynode.git
+    ```
 
-# Run the app
-just tauri
+2. Install dependencies:
 
-# Run the docs
-just docs
-```
+    ```bash
+    bun install
+    ```
+
+3. Run repo commands with just:
+
+    ```bash
+    # Build the crates
+    just build
+
+    # Run the tests
+    just test
+
+    # Run the app
+    just tauri
+
+    # Run the docs
+    just docs
+    ```
+
+4. See the full list of commands in the [justfile](https://github.com/kittynode/kittynode/blob/main/justfile).
+
+</Steps>
