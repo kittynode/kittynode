@@ -25,9 +25,18 @@ export default defineConfig({
       },
       sidebar: [
         {
-          label: "Concepts",
+          label: "Learn",
           items: [
-            { label: "What is Kittynode?", slug: "concepts/what-is-kittynode" },
+            { label: "What is Kittynode?", slug: "learn/what-is-kittynode" },
+          ],
+        },
+        {
+          label: "Contribute",
+          items: [
+            {
+              label: "Contribute to Kittynode",
+              slug: "contribute/contribute-to-kittynode",
+            },
           ],
         },
       ],
