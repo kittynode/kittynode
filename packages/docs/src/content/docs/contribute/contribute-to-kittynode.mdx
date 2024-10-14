@@ -35,10 +35,10 @@ Kittynode is open to everyone, and happily welcomes any contributions! ヽ(・�
 
 <Steps>
 
-1. Clone the repo:
+1. Clone the repo and change into the directory:
 
     ```bash
-    git clone git@github.com:kittynode/kittynode.git
+    git clone git@github.com:kittynode/kittynode.git && cd kittynode
     ```
 
 2. Install dependencies:
@@ -47,22 +47,16 @@ Kittynode is open to everyone, and happily welcomes any contributions! ヽ(・�
     bun install
     ```
 
-3. Run repo commands with just:
+3. Build the crates:
 
     ```bash
-    # Build the crates
     just build
-
-    # Run the tests
-    just test
-
-    # Run the app
-    just tauri
-
-    # Run the docs
-    just docs
     ```
 
-4. See the full list of commands in the [justfile](https://github.com/kittynode/kittynode/blob/main/justfile).
+4. See the full list of commands:
+
+    ```bash
+    just -l
+    ```
 
 </Steps>
