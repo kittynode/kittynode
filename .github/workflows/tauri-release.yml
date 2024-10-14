@@ -40,7 +40,6 @@ jobs:
         uses: swatinem/rust-cache@v2
 
       - name: Install frontend dependencies
-        # If you don't have `beforeBuildCommand` configured you may want to build your frontend here too.
         run: bun install
 
       - name: Mask sensitive values
@@ -63,5 +62,5 @@ jobs:
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         with:
-          projectPath: "crates/kittynode-tauri"
+          projectPath: "packages/crates/kittynode-tauri"
           args: ${{ matrix.args }}

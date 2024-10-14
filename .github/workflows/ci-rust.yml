@@ -3,9 +3,9 @@ name: CI - Rust
 on:
   push:
     paths:
-      - "crates/kittynode-cli/**"
-      - "crates/kittynode-core/**"
-      - "crates/kittynode-tauri/**"
+      - "packages/crates/kittynode-cli/**"
+      - "packages/crates/kittynode-core/**"
+      - "packages/crates/kittynode-tauri/**"
 
 jobs:
   test:
@@ -20,7 +20,7 @@ jobs:
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
 
       - name: Create dist directory for tauri dev build (workaround)
-        run: mkdir -p ./crates/kittynode-gui/build
+        run: mkdir -p ./packages/kittynode-gui/build
 
       - name: Cache Cargo dependencies
         uses: Swatinem/rust-cache@v2
@@ -51,7 +51,7 @@ jobs:
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
 
       - name: Create dist directory for tauri dev build (workaround)
-        run: mkdir -p ./crates/kittynode-gui/build
+        run: mkdir -p ./packages/kittynode-gui/build
 
       - name: Cache Cargo dependencies
         uses: Swatinem/rust-cache@v2

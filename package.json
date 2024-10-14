@@ -1,6 +1,6 @@
 {
   "workspaces": [
-    "crates/kittynode-gui",
-    "docs"
+    "packages/docs",
+    "packages/kittynode-gui"
   ]
 }
