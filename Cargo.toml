@@ -2,7 +2,7 @@
 members = [
     "crates/kittynode-cli",
     "crates/kittynode-core",
-    "crates/kittynode-gui/src-tauri",
+    "crates/kittynode-tauri",
 ]
 resolver = "2"
 

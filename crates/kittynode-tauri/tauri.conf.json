@@ -1,17 +1,17 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0.0",
-  "productName": "kittynode-gui",
-  "identifier": "com.kittynode-gui.app",
+  "productName": "kittynode",
+  "identifier": "com.kittynode.app",
   "build": {
-    "beforeDevCommand": "bun run dev",
+    "beforeDevCommand": "bun --filter kittynode-gui dev",
     "devUrl": "http://localhost:1420",
-    "beforeBuildCommand": "bun run build",
-    "frontendDist": "../build"
+    "beforeBuildCommand": "bun --filter kittynode-gui build",
+    "frontendDist": "../kittynode-gui/build"
   },
   "app": {
     "windows": [
       {
-        "title": "kittynode-gui",
+        "title": "kittynode",
         "width": 800,
         "height": 600
       }

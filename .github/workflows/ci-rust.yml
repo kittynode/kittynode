@@ -5,7 +5,7 @@ on:
     paths:
       - "crates/kittynode-cli/**"
       - "crates/kittynode-core/**"
-      - "crates/kittynode-gui/src-tauri/**"
+      - "crates/kittynode-tauri/**"
 
 jobs:
   test:

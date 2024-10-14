@@ -3,5 +3,5 @@
 
 fn main() {
     tracing_subscriber::fmt::init();
-    kittynode_gui_lib::run()
+    kittynode_tauri_lib::run()
 }
