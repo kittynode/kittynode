@@ -1,8 +1,8 @@
 [workspace]
 members = [
-    "crates/kittynode-cli",
-    "crates/kittynode-core",
-    "crates/kittynode-tauri",
+    "./packages/crates/kittynode-cli",
+    "./packages/crates/kittynode-core",
+    "./packages/crates/kittynode-tauri",
 ]
 resolver = "2"
 
