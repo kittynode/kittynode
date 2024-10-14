@@ -14,13 +14,13 @@ kittynode *args:
   ./target/debug/kittynode {{args}}
 
 tauri:
-  @cd ./packages/crates/kittynode-tauri && cargo tauri dev
+  @cd ./crates/kittynode-tauri && cargo tauri dev
 
 tauri-build-apple:
-  @cd ./packages/crates/kittynode-tauri && cargo tauri build --target aarch64-apple-darwin
+  @cd ./crates/kittynode-tauri && cargo tauri build --target aarch64-apple-darwin
 
 tauri-build-linux:
-  @cd ./packages/crates/kittynode-tauri && cargo tauri build --target x86_64-unknown-linux-gnu
+  @cd ./crates/kittynode-tauri && cargo tauri build --target x86_64-unknown-linux-gnu
 
 release-changelog:
   git cliff --bump -o

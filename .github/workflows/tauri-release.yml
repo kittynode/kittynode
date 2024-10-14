@@ -62,5 +62,5 @@ jobs:
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         with:
-          projectPath: "packages/crates/kittynode-tauri"
+          projectPath: "crates/kittynode-tauri"
           args: ${{ matrix.args }}

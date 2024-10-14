@@ -6,7 +6,7 @@
     "beforeDevCommand": "bun --filter kittynode-gui dev",
     "devUrl": "http://localhost:1420",
     "beforeBuildCommand": "bun --filter kittynode-gui build",
-    "frontendDist": "../../kittynode-gui/build"
+    "frontendDist": "packages/kittynode-gui/build"
   },
   "app": {
     "windows": [
