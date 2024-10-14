@@ -2,10 +2,6 @@
 build:
   cargo build
 
-# run the tests with coverage
-covtest:
-  cargo llvm-cov nextest
-
 # start the docs dev server
 docs:
   @cd packages/docs && bun run dev
@@ -33,6 +29,10 @@ tauri-build-linux:
 # run the tests
 test:
   cargo nextest run
+
+# run the tests with coverage
+test-coverage:
+  cargo llvm-cov nextest
 
 # run the tests without capturing output
 test-no-capture:
