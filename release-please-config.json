@@ -1,0 +1,22 @@
+{
+  "packages": {
+    "apps/kittynode-cli": {
+      "release-type": "rust",
+      "changelog-path": "../../CHANGELOG.md"
+    },
+    "apps/kittynode-gui": {
+      "release-type": "simple",
+      "extra-files": [
+        {
+          "type": "toml",
+          "path": "apps/kittynode-gui/kittynode-tauri/Cargo.toml"
+        }
+      ],
+      "changelog-path": "../../CHANGELOG.md"
+    },
+    "crates/kittynode-core": {
+      "release-type": "rust",
+      "changelog-path": "../../CHANGELOG.md"
+    }
+  }
+}
