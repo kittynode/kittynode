@@ -4,10 +4,17 @@
       "release-type": "rust",
       "skip-changelog": true
     },
-    "apps/kittynode-gui/kittynode-tauri": {
+    "apps/kittynode-gui": {
       "package-name": "kittynode-gui",
-      "release-type": "rust",
-      "skip-changelog": true
+      "release-type": "simple",
+      "skip-changelog": true,
+      "extra-files": [
+        {
+          "type": "toml",
+          "path": "apps/kittynode-gui/kittynode-tauri/Cargo.toml",
+          "jsonpath": "$.package.version"
+        }
+      ]
     },
     "crates/kittynode-core": {
       "release-type": "rust",
