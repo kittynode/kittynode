@@ -5,8 +5,9 @@
       "skip-changelog": true
     },
     "apps/kittynode-gui": {
-      "release-type": "node",
-      "skip-changelog": true
+      "release-type": "simple",
+      "skip-changelog": true,
+      "extra-files": ["apps/kittynode-gui/kittynode-tauri/Cargo.toml"]
     },
     "crates/kittynode-core": {
       "release-type": "rust",
