@@ -1,0 +1,5 @@
+{
+  "apps/kittynode-cli": "0.4.0",
+  "apps/kittynode-gui": "0.4.0",
+  "crates/kittynode-core": "0.4.0"
+}

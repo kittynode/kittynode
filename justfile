@@ -4,7 +4,7 @@ build:
 
 # start the docs dev server
 docs:
-  @cd packages/docs && bun run dev
+  @cd docs && bun run dev
 
 # run the kittynode cli with the given args
 kittynode *args:
@@ -16,15 +16,15 @@ publish-crates:
 
 # start the tauri dev app
 tauri:
-  @cd crates/kittynode-tauri && cargo tauri dev
+  @cd apps/kittynode-gui/kittynode-tauri && cargo tauri dev
 
 # build the tauri app for macOS
 tauri-build-apple:
-  @cd crates/kittynode-tauri && cargo tauri build --target aarch64-apple-darwin
+  @cd apps/kittynode-gui/kittynode-tauri && cargo tauri build --target aarch64-apple-darwin
 
 # build the tauri app for Linux
 tauri-build-linux:
-  @cd crates/kittynode-tauri && cargo tauri build --target x86_64-unknown-linux-gnu
+  @cd apps/kittynode-gui/kittynode-tauri && cargo tauri build --target x86_64-unknown-linux-gnu
 
 # run the tests
 test:
