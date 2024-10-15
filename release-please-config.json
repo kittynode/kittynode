@@ -14,5 +14,6 @@
       "skip-changelog": true
     }
   },
-  "separate-pull-requests": true
+  "separate-pull-requests": true,
+  "skip-github-release": true
 }
