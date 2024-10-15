@@ -16,6 +16,12 @@ jobs:
     steps:
       - uses: amannn/action-semantic-pull-request@v5
         with:
+          requireScope: true
+          scopes: |
+            cli
+            core
+            gui
+            repo
           subjectPattern: ^(?![A-Z]).+$
           subjectPatternError: |
             The subject "{subject}" found in the pull request title "{title}"
