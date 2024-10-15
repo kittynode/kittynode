@@ -1,0 +1,47 @@
+name: Tag Release on PR Merge
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  create_tag:
+    if: ${{ github.event.pull_request.merged == true }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Allows pushing tags to the repository
+    steps:
+      - name: Extract component and version
+        id: extract
+        shell: bash
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          if [[ "$PR_TITLE" =~ ^chore\(main\):\ release\ ([^ ]+)\ ([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+            COMPONENT="${BASH_REMATCH[1]}"
+            VERSION="${BASH_REMATCH[2]}"
+            echo "component=$COMPONENT" >> $GITHUB_OUTPUT
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "should_tag=true" >> $GITHUB_OUTPUT
+          else
+            echo "PR title does not match expected pattern. Skipping tagging."
+            echo "should_tag=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Checkout code
+        if: ${{ steps.extract.outputs.should_tag == 'true' }}
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Ensures all tags are fetched
+
+      - name: Configure git user
+        if: ${{ steps.extract.outputs.should_tag == 'true' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create and push tag
+        if: ${{ steps.extract.outputs.should_tag == 'true' }}
+        run: |
+          TAG_NAME="${{ steps.extract.outputs.component }}-v${{ steps.extract.outputs.version }}"
+          git tag -a "$TAG_NAME" -m "Release $TAG_NAME"
+          git push origin "$TAG_NAME"
