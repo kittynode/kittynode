@@ -4,15 +4,9 @@
       "release-type": "rust",
       "skip-changelog": true
     },
-    "apps/kittynode-gui": {
-      "release-type": "simple",
+    "apps/kittynode-gui/kittynode-tauri": {
       "package-name": "kittynode-gui",
-      "extra-files": [
-        {
-          "type": "toml",
-          "path": "apps/kittynode-gui/kittynode-tauri/Cargo.toml"
-        }
-      ],
+      "release-type": "rust",
       "skip-changelog": true
     },
     "crates/kittynode-core": {
