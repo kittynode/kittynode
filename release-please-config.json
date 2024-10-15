@@ -2,7 +2,7 @@
   "packages": {
     "apps/kittynode-cli": {
       "release-type": "rust",
-      "changelog-path": "../../CHANGELOG.md"
+      "skip-changelog": true
     },
     "apps/kittynode-gui": {
       "release-type": "simple",
@@ -12,11 +12,11 @@
           "path": "apps/kittynode-gui/kittynode-tauri/Cargo.toml"
         }
       ],
-      "changelog-path": "../../CHANGELOG.md"
+      "skip-changelog": true
     },
     "crates/kittynode-core": {
       "release-type": "rust",
-      "changelog-path": "../../CHANGELOG.md"
+      "skip-changelog": true
     }
   }
 }
