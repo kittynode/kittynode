@@ -6,6 +6,7 @@
     },
     "apps/kittynode-gui": {
       "release-type": "simple",
+      "package-name": "kittynode-gui",
       "extra-files": [
         {
           "type": "toml",
@@ -18,5 +19,6 @@
       "release-type": "rust",
       "skip-changelog": true
     }
-  }
+  },
+  "separate-pull-requests": true
 }
