@@ -2,10 +2,10 @@ name: CI - Rust
 
 on:
   push:
-    # paths:
-    #   - "crates/kittynode-cli/**"
-    #   - "crates/kittynode-core/**"
-    #   - "crates/kittynode-tauri/**"
+    paths:
+      - "crates/kittynode-cli/**"
+      - "crates/kittynode-core/**"
+      - "crates/kittynode-tauri/**"
 
 jobs:
   test:
@@ -22,15 +22,8 @@ jobs:
       - name: Create dist directory for tauri dev build (workaround)
         run: mkdir -p ./apps/kittynode-gui/kittynode-frontend/build
 
-      # - name: Cache Cargo dependencies
-      #   uses: Swatinem/rust-cache@v2
-
       - name: Cache Cargo dependencies
         uses: Swatinem/rust-cache@v2
-        with:
-          key: cargo-cache-v2-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}-invalidate-001
-          restore-keys: |
-            cargo-cache-v2-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov
@@ -62,10 +55,6 @@ jobs:
 
       - name: Cache Cargo dependencies
         uses: Swatinem/rust-cache@v2
-        with:
-          key: cargo-cache-v2-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}-invalidate-001
-          restore-keys: |
-            cargo-cache-v2-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Check code formatting
         run: cargo fmt --all -- --check
