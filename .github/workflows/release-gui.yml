@@ -54,6 +54,8 @@ jobs:
       - name: Create release
         id: create_release
         uses: softprops/action-gh-release@v2
+        with:
+          draft: true
 
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
