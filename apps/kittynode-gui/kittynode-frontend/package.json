@@ -1,5 +1,5 @@
 {
-  "name": "kittynode-gui",
+  "name": "kittynode-frontend",
   "private": true,
   "type": "module",
   "scripts": {

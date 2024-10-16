@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - "packages/docs/**"
+      - "docs/**"
 
 permissions:
   contents: read
@@ -20,7 +20,7 @@ jobs:
       - name: Install, build, and upload your site
         uses: withastro/action@v3
         with:
-          path: packages/docs
+          path: docs
           package-manager: bun
 
   deploy:
