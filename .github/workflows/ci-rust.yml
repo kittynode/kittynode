@@ -22,9 +22,6 @@ jobs:
       - name: Create dist directory for tauri dev build (workaround)
         run: mkdir -p ./apps/kittynode-gui/kittynode-frontend/build
 
-      - name: Cache Cargo dependencies
-        uses: Swatinem/rust-cache@v2
-
       - name: Install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov
 
@@ -52,9 +49,6 @@ jobs:
 
       - name: Create dist directory for tauri dev build (workaround)
         run: mkdir -p ./apps/kittynode-gui/kittynode-frontend/build
-
-      - name: Cache Cargo dependencies
-        uses: Swatinem/rust-cache@v2
 
       - name: Check code formatting
         run: cargo fmt --all -- --check
