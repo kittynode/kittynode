@@ -107,7 +107,7 @@ pub async fn pull_and_start_container(
         .collect();
 
     let host_config = HostConfig {
-        binds: Some(container.volume_bindings.clone()),
+        binds: Some(container.bindings.clone()),
         port_bindings: Some(port_bindings),
         ..Default::default()
     };
