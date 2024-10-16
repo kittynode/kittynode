@@ -2,10 +2,10 @@ name: CI - Rust
 
 on:
   push:
-    paths:
-      - "crates/kittynode-cli/**"
-      - "crates/kittynode-core/**"
-      - "crates/kittynode-tauri/**"
+    # paths:
+    #   - "crates/kittynode-cli/**"
+    #   - "crates/kittynode-core/**"
+    #   - "crates/kittynode-tauri/**"
 
 jobs:
   test:
