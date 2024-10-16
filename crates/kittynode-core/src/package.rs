@@ -272,6 +272,14 @@ pub async fn delete_package(package_name: &str) -> Result<()> {
         info!("Volume '{}' removed successfully.", volume_name);
     }
 
+    // Remove the Docker network
+    info!("Removing network: {}", package.network_name);
+    docker
+        .remove_network(package.network_name)
+        .await
+        .wrap_err_with(|| format!("Failed to remove network '{}'", package.network_name))?;
+    info!("Network '{}' removed successfully.", package.network_name);
+
     info!("Package '{}' deleted successfully.", package_name);
     Ok(())
 }
