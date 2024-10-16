@@ -1,4 +1,4 @@
-name: Tauri Release
+name: Release GUI
 
 on:
   workflow_dispatch:
@@ -51,6 +51,10 @@ jobs:
           echo "::add-mask::${{ secrets.APPLE_PASSWORD }}"
           echo "::add-mask::${{ secrets.APPLE_TEAM_ID }}"
 
+      - name: Create release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
         env:
@@ -61,5 +65,7 @@ jobs:
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         with:
+          releaseId: ${{ steps.create_release.outputs.id }}
+          tagName: ${{ github.ref_name }}
           projectPath: "apps/kittynode-gui/kittynode-tauri"
           args: ${{ matrix.args }}
