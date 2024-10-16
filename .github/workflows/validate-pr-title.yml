@@ -20,6 +20,7 @@ jobs:
           scopes: |
             cli
             core
+            docs
             gui
             repo
           subjectPattern: ^(?![A-Z]).+$
