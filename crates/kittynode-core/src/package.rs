@@ -6,8 +6,8 @@ use crate::file::{generate_jwt_secret, kittynode_path};
 use bollard::secret::PortBinding;
 use eyre::{Context, Result};
 use serde::Serialize;
-use std::collections::HashMap;
-use std::fmt;
+use std::collections::{HashMap, HashSet};
+use std::{fmt, fs};
 use tracing::info;
 
 #[derive(Serialize)]
@@ -23,7 +23,7 @@ pub struct Container {
     pub(crate) image: &'static str,
     pub(crate) cmd: Vec<&'static str>,
     pub(crate) port_bindings: HashMap<&'static str, Vec<PortBinding>>,
-    pub(crate) volume_bindings: Vec<String>,
+    pub(crate) bindings: Vec<String>,
 }
 
 impl fmt::Display for Package {
@@ -82,7 +82,7 @@ pub fn get_packages() -> Result<HashMap<&'static str, Package>> {
                             }],
                         ),
                     ]),
-                    volume_bindings: vec![
+                    bindings: vec![
                         "rethdata:/root/.local/share/reth/holesky".to_string(),
                         format!("{}:/root/.local/share/reth/holesky/jwt.hex:ro", jwt_path.display()),
                     ],
@@ -135,7 +135,7 @@ pub fn get_packages() -> Result<HashMap<&'static str, Package>> {
                             }],
                         ),
                     ]),
-                    volume_bindings: vec![
+                    bindings: vec![
                         format!("{}/.lighthouse:/root/.lighthouse", kittynode_path.display()),
                         format!("{}:/root/.lighthouse/holesky/jwt.hex:ro", jwt_path.display()),
                     ],
@@ -195,19 +195,83 @@ pub async fn install_package(name: &str) -> Result<()> {
     Ok(())
 }
 
-pub async fn delete_package(name: &str) -> Result<()> {
+pub async fn delete_package(package_name: &str) -> Result<()> {
     let docker = get_docker_instance()?;
     let packages = get_packages().wrap_err("Failed to retrieve packages")?;
     let package = packages
-        .get(name)
-        .ok_or_else(|| eyre::eyre!("Package '{}' not found", name))?;
+        .get(package_name)
+        .ok_or_else(|| eyre::eyre!("Package '{}' not found", package_name))?;
 
-    let container_names: Vec<&str> = package.containers.iter().map(|c| c.name).collect();
+    let mut image_names: Vec<String> = Vec::new();
+    let mut file_paths: HashSet<String> = HashSet::new();
+    let mut directory_paths: HashSet<String> = HashSet::new();
+    let mut volume_names: Vec<String> = Vec::new();
 
-    for container_name in container_names {
-        remove_container(&docker, container_name).await?;
+    for container in &package.containers {
+        // Collect the container's image name
+        image_names.push(container.image.to_string());
+
+        // Collect the container's bindings
+        for binding in &container.bindings {
+            // Extract the binding name (format: "source:destination[:options]")
+            if let Some(binding_name) = binding.split(':').next() {
+                if binding_name.starts_with('/') {
+                    // Collect file or directory mount paths
+                    let metadata = fs::metadata(binding_name);
+                    if let Ok(meta) = metadata {
+                        if meta.is_dir() {
+                            directory_paths.insert(binding_name.to_string());
+                        } else {
+                            file_paths.insert(binding_name.to_string());
+                        }
+                    }
+                } else {
+                    // Collect volume mount names
+                    volume_names.push(binding_name.to_string());
+                }
+            }
+        }
+        // Remove the container
+        remove_container(&docker, container.name)
+            .await
+            .wrap_err_with(|| format!("Failed to remove container '{}'", container.name))?;
     }
 
-    info!("Package '{}' deleted successfully.", name);
+    // Remove the container images
+    for image_name in image_names {
+        info!("Removing image: {}", image_name);
+        docker
+            .remove_image(&image_name, None, None)
+            .await
+            .wrap_err_with(|| format!("Failed to remove image '{}'", image_name))?;
+        info!("Image '{}' removed successfully.", image_name);
+    }
+
+    // Remove the files
+    for file_path in &file_paths {
+        info!("Removing file: {}", file_path);
+        fs::remove_file(file_path).wrap_err(format!("Failed to remove file '{}'", file_path))?;
+        info!("File '{}' removed successfully.", file_path);
+    }
+
+    // Remove the directories after all files have been deleted
+    for dir_path in &directory_paths {
+        info!("Removing directory: {}", dir_path);
+        fs::remove_dir_all(dir_path)
+            .wrap_err(format!("Failed to remove directory '{}'", dir_path))?;
+        info!("Directory '{}' removed successfully.", dir_path);
+    }
+
+    // Remove the Docker volumes
+    for volume_name in volume_names {
+        info!("Removing volume: {}", volume_name);
+        docker
+            .remove_volume(&volume_name, None)
+            .await
+            .wrap_err_with(|| format!("Failed to remove volume '{}'", volume_name))?;
+        info!("Volume '{}' removed successfully.", volume_name);
+    }
+
+    info!("Package '{}' deleted successfully.", package_name);
     Ok(())
 }
