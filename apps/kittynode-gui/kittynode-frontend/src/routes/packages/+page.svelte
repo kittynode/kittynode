@@ -3,12 +3,12 @@
   import { invoke } from "@tauri-apps/api/core";
   import { type Package } from "$lib/types";
 
-  let packages: { [name: string]: Package } = {};
-  let isDockerRunning: boolean | null = null;
-  let installedPackages: Set<string> = new Set();
-  let installLoading: string | null = null; // Track which package is being installed
-  let deleteLoading: string | null = null; // Track which package is being deleted
-  let ready = false; // Track when state checks are complete
+  let packages: { [name: string]: Package } = $state({});
+  let isDockerRunning: boolean | null = $state(null);
+  let installedPackages: Set<string> = $state(new Set());
+  let installLoading: string | null = $state(null); // Track which package is being installed
+  let deleteLoading: string | null = $state(null); // Track which package is being deleted
+  let ready = $state(false); // Track when state checks are complete
 
   async function loadPackages() {
     try {
@@ -19,7 +19,7 @@
       alert("Failed to load packages.");
       console.error(error);
     } finally {
-      ready = true; // Mark the state as ready
+      ready = true;
     }
   }
 
@@ -27,7 +27,7 @@
     installLoading = name;
     try {
       await invoke("install_package", { name });
-      await loadPackages(); // Refetch state after installation
+      await loadPackages();
     } catch (error) {
       alert(`Failed to install ${name}.`);
       console.error(error);
@@ -40,7 +40,7 @@
     deleteLoading = name;
     try {
       await invoke("delete_package", { name });
-      await loadPackages(); // Refetch state after deletion
+      await loadPackages();
     } catch (error) {
       alert(`Failed to delete ${name}.`);
       console.error(error);
@@ -73,7 +73,7 @@
       {/if}
       <p>{p.description}</p>
       <button
-        on:click={() => installPackage(name)}
+        onclick={() => installPackage(name)}
         disabled={!ready || !isDockerRunning || installedPackages.has(name) || installLoading === name || deleteLoading === name}
       >
         {installLoading === name ? "Installing..." : "Install"}
@@ -82,7 +82,7 @@
       {#if installedPackages.has(name)}
         <button
           class="secondary"
-          on:click={() => deletePackage(name)}
+          onclick={() => deletePackage(name)}
           disabled={!isDockerRunning || deleteLoading === name}
         >
           {deleteLoading === name ? "Deleting..." : "Delete"}
