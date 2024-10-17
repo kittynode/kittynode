@@ -32,13 +32,13 @@
   img.logo {
     height: 1.5em;
     vertical-align: middle;
-    content: url('/images/kittynode-light.png');
+    content: url("/images/kittynode-light.png");
   }
 
   /* Change logo in dark mode */
   @media (prefers-color-scheme: dark) {
     img.logo {
-      content: url('/images/kittynode-dark.png');
+      content: url("/images/kittynode-dark.png");
     }
   }
 </style>
