@@ -1,7 +1,6 @@
 <script lang="ts">
   import "@picocss/pico/css/pico.purple.min.css";
   import { page } from "$app/stores";
-  import logo from '$lib/images/kittynode-dark.png';
 </script>
 
 <header class="container">
@@ -9,7 +8,7 @@
     <ul>
       <li>
         <a href="/">
-          <img src={logo} alt="Kittynode Logo" style="height: 1.5em; vertical-align: middle;" />
+          <img class="logo" alt="Kittynode Logo" />
         </a>
       </li>
     </ul>
@@ -27,3 +26,19 @@
 <main class="container" style="margin-top: 1rem;">
   <slot />
 </main>
+
+<style>
+  /* Default logo for light mode */
+  img.logo {
+    height: 1.5em;
+    vertical-align: middle;
+    content: url("/images/kittynode-light.png");
+  }
+
+  /* Change logo in dark mode */
+  @media (prefers-color-scheme: dark) {
+    img.logo {
+      content: url("/images/kittynode-dark.png");
+    }
+  }
+</style>
