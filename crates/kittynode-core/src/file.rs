@@ -1,10 +1,11 @@
-use eyre::{Context, Result};
-use std::{env, fs, path::PathBuf};
+use eyre::{Context, ContextCompat, Result};
+use hex;
+use openssl::rand::rand_bytes;
+use std::{fs, path::PathBuf};
 use tracing::info;
 
 pub(crate) fn kittynode_path() -> Result<PathBuf> {
-    env::var("HOME")
-        .map(PathBuf::from)
+    home::home_dir()
         .map(|home| home.join(".kittynode"))
         .wrap_err("Failed to determine the .kittynode path")
 }
@@ -18,28 +19,29 @@ pub(crate) fn generate_jwt_secret() -> Result<String> {
     }
 
     info!("Generating JWT secret using OpenSSL");
-    let output = std::process::Command::new("openssl")
-        .args(["rand", "-hex", "32"])
-        .output()
-        .wrap_err("Failed to generate JWT secret with openssl")?;
 
-    if !output.status.success() {
-        return Err(eyre::eyre!("openssl command failed: {:?}", output));
-    }
+    // Generate 32 random bytes
+    let mut buf = [0u8; 32];
+    rand_bytes(&mut buf).wrap_err("Failed to generate random bytes")?;
 
-    let secret = String::from_utf8(output.stdout)?.trim().to_string();
+    // Convert the random bytes to hex
+    let secret = hex::encode(buf);
+
+    // Write the secret to the path
     fs::write(path.join("jwt.hex"), &secret).wrap_err("Failed to write JWT secret to file")?;
 
     info!(
         "JWT secret successfully generated and written to {:?}",
         path.join("jwt.hex")
     );
+
     Ok(secret)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::env;
     use tempfile::tempdir;
 
     #[test]
