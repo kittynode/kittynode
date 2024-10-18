@@ -48,14 +48,14 @@ pub(crate) async fn create_or_recreate_network(docker: &Docker, network_name: &s
 }
 
 pub async fn is_docker_running() -> Result<bool> {
-  if let Ok(connection) = get_docker_instance() {
-      match connection.ping().await {
-          Ok(_) => Ok(true),    // Ping successful, Docker is running
-          Err(_) => Ok(false),  // Ping failed, Docker is not running
-      }
-  } else {
-      Ok(false) // Docker connection failed
-  }
+    if let Ok(connection) = get_docker_instance() {
+        match connection.ping().await {
+            Ok(_) => Ok(true),   // Ping successful, Docker is running
+            Err(_) => Ok(false), // Ping failed, Docker is not running
+        }
+    } else {
+        Ok(false) // Docker connection failed
+    }
 }
 
 pub async fn find_container(docker: &Docker, name: &str) -> Result<Option<ContainerSummary>> {
