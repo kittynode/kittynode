@@ -22,10 +22,6 @@ tauri-build-apple:
 tauri-build-linux:
     cd apps/kittynode-gui/kittynode-tauri && cargo tauri build --target x86_64-unknown-linux-gnu
 
-# build the tauri app for windows:
-tauri-build-windows:
-    cd apps/kittynode-gui/kittynode-tauri && cargo tauri build --target x86_64-pc-windows-msvc
-
 # run the tests
 test:
     cargo nextest run
