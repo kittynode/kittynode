@@ -17,6 +17,9 @@ serde = { version = "1.0.210", features = ["derive"] }
 toml = "0.8.19"
 tracing = "0.1.40"
 tokio-stream = "0.1.16"
+home = "0.5.9"
+openssl = "0.10.68"
+hex = "0.4.3"
 
 [dev-dependencies]
 tempfile = "3"
