@@ -1,5 +1,4 @@
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
-import { tick } from "svelte";
 
 let shown = $state(false);
 
