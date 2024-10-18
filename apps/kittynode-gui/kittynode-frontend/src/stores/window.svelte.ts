@@ -9,7 +9,8 @@ export const window = {
   },
   async show() {
     if (!shown) {
-      await tick();
+      // Workaround for https://github.com/tauri-apps/tauri/issues/6027
+      await new Promise((resolve) => setTimeout(resolve, 42));
       await getCurrentWebviewWindow().show();
       shown = true;
     }

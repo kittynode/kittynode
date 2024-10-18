@@ -3,8 +3,8 @@
   import { window } from "../stores/window.svelte.ts";
   import { Kaomoji } from "../components";
 
-  onMount(async () => {
-    await window.show();
+  onMount(() => {
+    window.show();
   });
 </script>
 
