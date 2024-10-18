@@ -32,9 +32,9 @@ async fn install_package(name: String) -> Result<(), String> {
 }
 
 #[tauri::command]
-fn is_docker_running() -> Result<bool, String> {
+async fn is_docker_running() -> Result<bool, String> {
     info!("Checking if Docker is running");
-    let is_running = kittynode_core::docker::is_docker_running().map_err(|e| e.to_string())?;
+    let is_running = kittynode_core::docker::is_docker_running().await.map_err(|e| e.to_string())?;
     Ok(is_running)
 }
 
