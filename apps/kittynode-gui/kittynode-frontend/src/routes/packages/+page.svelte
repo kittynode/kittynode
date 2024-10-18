@@ -13,7 +13,7 @@
   async function loadPackages() {
     try {
       packages = await invoke("get_packages");
-      if (false) {
+      if (isDockerRunning) {
         installedPackages = new Set(await invoke("get_installed_packages"));
       }
     } catch (error) {
