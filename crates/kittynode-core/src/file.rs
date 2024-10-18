@@ -1,6 +1,6 @@
 use eyre::{Context, ContextCompat, Result};
 use hex;
-use openssl::rand::rand_bytes;
+use rand::RngCore;
 use std::{fs, path::PathBuf};
 use tracing::info;
 
@@ -18,11 +18,11 @@ pub(crate) fn generate_jwt_secret() -> Result<String> {
         fs::create_dir_all(&path).wrap_err("Failed to create .kittynode directory")?;
     }
 
-    info!("Generating JWT secret using OpenSSL");
+    info!("Generating JWT secret using OS random number generator");
 
     // Generate 32 random bytes
     let mut buf = [0u8; 32];
-    rand_bytes(&mut buf).wrap_err("Failed to generate random bytes")?;
+    rand::rngs::OsRng.fill_bytes(&mut buf);
 
     // Convert the random bytes to hex
     let secret = hex::encode(buf);
