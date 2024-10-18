@@ -13,8 +13,9 @@
   async function loadPackages() {
     try {
       packages = await invoke("get_packages");
-      const installed = await invoke<string[]>("get_installed_packages");
-      installedPackages = new Set(installed);
+      if (isDockerRunning) {
+        installedPackages = new Set(await invoke("get_installed_packages"));
+      }
     } catch (error) {
       alert("Failed to load packages.");
       console.error(error);
