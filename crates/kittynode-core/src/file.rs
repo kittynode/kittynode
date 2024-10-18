@@ -18,16 +18,16 @@ pub(crate) fn generate_jwt_secret() -> Result<String> {
         fs::create_dir_all(&path).wrap_err("Failed to create .kittynode directory")?;
     }
 
-    info!("Generating JWT secret using OpenSSL crate");
+    info!("Generating JWT secret using OpenSSL");
 
     // Generate 32 random bytes
     let mut buf = [0u8; 32];
     rand_bytes(&mut buf).wrap_err("Failed to generate random bytes")?;
 
-    // Convert the random bytes to a hexadecimal string
-    let secret = hex::encode(&buf);
+    // Convert the random bytes to hex
+    let secret = hex::encode(buf);
 
-    // Write the secret to a file
+    // Write the secret to the path
     fs::write(path.join("jwt.hex"), &secret).wrap_err("Failed to write JWT secret to file")?;
 
     info!(
