@@ -1,17 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { window } from "../stores/window.svelte.ts";
+  import { Kaomoji } from "../components";
 
-  onMount(() => {
-    window.show();
+  onMount(async () => {
+    await window.show();
   });
 </script>
 
 <p>Welcome to Kittynode!</p>
-<div>
-    &nbsp;∧,,,∧&nbsp;~ ┏━━━━━━━━┓
-    <br>
-    (  ̳• · • ̳)&nbsp;~ ♡&nbsp;&nbsp;You’re purrfect&nbsp;&nbsp;♡
-    <br>
-    /&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;づ&nbsp;~ ┗━━━━━━━━┛
-</div>
+<Kaomoji />
