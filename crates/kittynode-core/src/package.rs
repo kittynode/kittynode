@@ -23,7 +23,8 @@ pub struct Container {
     pub(crate) image: &'static str,
     pub(crate) cmd: Vec<&'static str>,
     pub(crate) port_bindings: HashMap<&'static str, Vec<PortBinding>>,
-    pub(crate) bindings: Vec<String>,
+    pub(crate) volume_bindings: Vec<String>,
+    pub(crate) file_bindings: Vec<String>,
 }
 
 impl fmt::Display for Package {
@@ -82,8 +83,10 @@ pub fn get_packages() -> Result<HashMap<&'static str, Package>> {
                             }],
                         ),
                     ]),
-                    bindings: vec![
+                    volume_bindings: vec![
                         "rethdata:/root/.local/share/reth/holesky".to_string(),
+                    ],
+                    file_bindings: vec![
                         format!("{}:/root/.local/share/reth/holesky/jwt.hex:ro", jwt_path.display()),
                     ],
                 },
@@ -135,7 +138,8 @@ pub fn get_packages() -> Result<HashMap<&'static str, Package>> {
                             }],
                         ),
                     ]),
-                    bindings: vec![
+                    volume_bindings: vec![],
+                    file_bindings: vec![
                         format!("{}/.lighthouse:/root/.lighthouse", kittynode_path.display()),
                         format!("{}:/root/.lighthouse/holesky/jwt.hex:ro", jwt_path.display()),
                     ],
@@ -211,26 +215,24 @@ pub async fn delete_package(package_name: &str) -> Result<()> {
         // Collect the container's image name
         image_names.push(container.image.to_string());
 
-        // Collect the container's bindings
-        for binding in &container.bindings {
+        // Collect the container's volume bindings
+        for binding in &container.volume_bindings {
+            volume_names.push(binding.to_string());
+        }
+
+        // Collect the container's file or directory paths
+        for binding in &container.file_bindings {
             // Extract the binding name (format: "source:destination[:options]")
-            if let Some(binding_name) = binding.split(':').next() {
-                if binding_name.starts_with('/') {
-                    // Collect file or directory mount paths
-                    let metadata = fs::metadata(binding_name);
-                    if let Ok(meta) = metadata {
-                        if meta.is_dir() {
-                            directory_paths.insert(binding_name.to_string());
-                        } else {
-                            file_paths.insert(binding_name.to_string());
-                        }
-                    }
-                } else {
-                    // Collect volume mount names
-                    volume_names.push(binding_name.to_string());
-                }
+            let path = binding.split(':').next().unwrap();
+            let metadata =
+                fs::metadata(path).wrap_err(format!("Failed to get metadata for '{}'", path))?;
+            if metadata.is_dir() {
+                directory_paths.insert(path.to_string());
+            } else {
+                file_paths.insert(path.to_string());
             }
         }
+
         // Remove the container
         remove_container(&docker, container.name)
             .await

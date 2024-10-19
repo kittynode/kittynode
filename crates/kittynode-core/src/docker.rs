@@ -113,8 +113,15 @@ pub async fn pull_and_start_container(
         .map(|(k, v)| (k.to_string(), Some(v.clone())))
         .collect();
 
+    let bindings: Vec<String> = container
+        .volume_bindings
+        .iter()
+        .chain(&container.file_bindings)
+        .cloned()
+        .collect();
+
     let host_config = HostConfig {
-        binds: Some(container.bindings.clone()),
+        binds: Some(bindings),
         port_bindings: Some(port_bindings),
         ..Default::default()
     };
