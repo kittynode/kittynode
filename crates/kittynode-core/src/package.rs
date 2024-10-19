@@ -2,13 +2,19 @@ use crate::docker::{
     create_or_recreate_network, find_container, get_docker_instance, pull_and_start_container,
     remove_container,
 };
-use crate::file::{generate_jwt_secret, kittynode_path};
+use crate::file::generate_jwt_secret;
+use crate::packages::reth_lighthouse::RethLighthouse;
 use bollard::secret::PortBinding;
 use eyre::{Context, Result};
 use serde::Serialize;
 use std::collections::{HashMap, HashSet};
 use std::{fmt, fs};
 use tracing::info;
+
+pub trait PackageDefinition {
+    const NAME: &'static str;
+    fn get_package() -> Result<Package>;
+}
 
 #[derive(Serialize)]
 pub struct Package {
@@ -29,9 +35,9 @@ pub struct Container {
 
 #[derive(Serialize)]
 pub struct Binding {
-    source: String,
-    destination: String,
-    options: Option<String>,
+    pub(crate) source: String,
+    pub(crate) destination: String,
+    pub(crate) options: Option<String>,
 }
 
 impl fmt::Display for Package {
@@ -51,133 +57,10 @@ pub(crate) fn create_binding_string(binding: &Binding) -> String {
 }
 
 pub fn get_packages() -> Result<HashMap<&'static str, Package>> {
-    let kittynode_path = kittynode_path()?;
-    let jwt_path = kittynode_path.join("jwt.hex");
-
-    let packages = HashMap::from([(
-        "Reth + Lighthouse (Holesky)",
-        Package {
-            description: "This package installs a Reth execution client and a Lighthouse consensus client on the Holesky network with Docker.",
-            network_name: "reth-lighthouse-holesky-network",
-            containers: vec![
-                Container {
-                    name: "reth-node",
-                    image: "ghcr.io/paradigmxyz/reth",
-                    cmd: vec![
-                        "node",
-                        "--chain",
-                        "holesky",
-                        "--metrics",
-                        "0.0.0.0:9001",
-                        "--authrpc.addr",
-                        "0.0.0.0",
-                        "--authrpc.port",
-                        "8551",
-                    ],
-                    port_bindings: HashMap::from([
-                        (
-                            "9001/tcp",
-                            vec![PortBinding {
-                                host_ip: Some("0.0.0.0".to_string()),
-                                host_port: Some("9001".to_string()),
-                            }],
-                        ),
-                        (
-                            "30303/tcp",
-                            vec![PortBinding {
-                                host_ip: Some("0.0.0.0".to_string()),
-                                host_port: Some("30303".to_string()),
-                            }],
-                        ),
-                        (
-                            "30303/udp",
-                            vec![PortBinding {
-                                host_ip: Some("0.0.0.0".to_string()),
-                                host_port: Some("30303".to_string()),
-                            }],
-                        ),
-                    ]),
-                    volume_bindings: vec![
-                      Binding {
-                        source: "rethdata".to_string(),
-                        destination: "/root/.local/share/reth/holesky".to_string(),
-                        options: None,
-                      }
-                    ],
-                    file_bindings: vec![
-                      Binding {
-                        source: jwt_path.display().to_string(),
-                        destination: "/root/.local/share/reth/holesky/jwt.hex".to_string(),
-                        options: Some("ro".to_string()),
-                        }
-                    ],
-                },
-                Container {
-                    name: "lighthouse-node",
-                    image: "sigp/lighthouse",
-                    cmd: vec![
-                        "lighthouse",
-                        "--network",
-                        "holesky",
-                        "beacon",
-                        "--http",
-                        "--http-address",
-                        "0.0.0.0",
-                        "--checkpoint-sync-url",
-                        "https://checkpoint-sync.holesky.ethpandaops.io",
-                        "--execution-jwt",
-                        "/root/.lighthouse/holesky/jwt.hex",
-                        "--execution-endpoint",
-                        "http://reth-node:8551",
-                    ],
-                    port_bindings: HashMap::from([
-                        (
-                            "9000/tcp",
-                            vec![PortBinding {
-                                host_ip: Some("0.0.0.0".to_string()),
-                                host_port: Some("9000".to_string()),
-                            }],
-                        ),
-                        (
-                            "9000/udp",
-                            vec![PortBinding {
-                                host_ip: Some("0.0.0.0".to_string()),
-                                host_port: Some("9000".to_string()),
-                            }],
-                        ),
-                        (
-                            "9001/udp",
-                            vec![PortBinding {
-                                host_ip: Some("0.0.0.0".to_string()),
-                                host_port: Some("9001".to_string()),
-                            }],
-                        ),
-                        (
-                            "5052/tcp",
-                            vec![PortBinding {
-                                host_ip: Some("127.0.0.1".to_string()),
-                                host_port: Some("5052".to_string()),
-                            }],
-                        ),
-                    ]),
-                    volume_bindings: vec![],
-                    file_bindings: vec![
-                        Binding {
-                            source: kittynode_path.join(".lighthouse").to_string_lossy().to_string(),
-                            destination: "/root/.lighthouse".to_string(),
-                            options: None,
-                        },
-                        Binding {
-                            source: jwt_path.to_string_lossy().to_string(),
-                            destination: "/root/.lighthouse/holesky/jwt.hex".to_string(),
-                            options: Some("ro".to_string()),
-                        }
-                    ],
-                },
-            ],
-        },
-    )]);
-    Ok(packages)
+    Ok(HashMap::from([(
+        RethLighthouse::NAME,
+        RethLighthouse::get_package()?,
+    )]))
 }
 
 pub async fn get_installed_packages() -> Result<Vec<String>> {
