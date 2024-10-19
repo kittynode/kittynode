@@ -217,19 +217,21 @@ pub async fn delete_package(package_name: &str) -> Result<()> {
 
         // Collect the container's volume bindings
         for binding in &container.volume_bindings {
-            volume_names.push(binding.to_string());
+            // Extract the volume name (format: "source:destination[:options]")
+            let volume_name = binding.split(':').next().unwrap();
+            volume_names.push(volume_name.to_string());
         }
 
         // Collect the container's file or directory paths
         for binding in &container.file_bindings {
-            // Extract the binding name (format: "source:destination[:options]")
-            let path = binding.split(':').next().unwrap();
-            let metadata =
-                fs::metadata(path).wrap_err(format!("Failed to get metadata for '{}'", path))?;
+            // Extract the local path (format: "source:destination[:options]")
+            let local_path = binding.split(':').next().unwrap();
+            let metadata = fs::metadata(local_path)
+                .wrap_err(format!("Failed to get metadata for '{}'", local_path))?;
             if metadata.is_dir() {
-                directory_paths.insert(path.to_string());
+                directory_paths.insert(local_path.to_string());
             } else {
-                file_paths.insert(path.to_string());
+                file_paths.insert(local_path.to_string());
             }
         }
 
