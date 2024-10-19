@@ -162,15 +162,15 @@ pub fn get_packages() -> Result<HashMap<&'static str, Package>> {
                     ]),
                     volume_bindings: vec![],
                     file_bindings: vec![
-                      Binding {
-                        source: kittynode_path.display().to_string(),
-                        destination: "/root/.lighthouse".to_string(),
-                        options: None,
-                      },
-                      Binding {
-                        source: jwt_path.display().to_string(),
-                        destination: "/root/.lighthouse/holesky/jwt.hex".to_string(),
-                        options: Some("ro".to_string()),
+                        Binding {
+                            source: kittynode_path.join(".lighthouse").to_string_lossy().to_string(),
+                            destination: "/root/.lighthouse".to_string(),
+                            options: None,
+                        },
+                        Binding {
+                            source: jwt_path.to_string_lossy().to_string(),
+                            destination: "/root/.lighthouse/holesky/jwt.hex".to_string(),
+                            options: Some("ro".to_string()),
                         }
                     ],
                 },
