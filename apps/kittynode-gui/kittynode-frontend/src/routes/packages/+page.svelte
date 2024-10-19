@@ -37,10 +37,10 @@
     }
   }
 
-  async function deletePackage(name: string) {
+  async function deletePackage(name: string, includeImages: boolean) {
     deleteLoading = name;
     try {
-      await invoke("delete_package", { name });
+      await invoke("delete_package", { name, includeImages });
       await loadPackages();
     } catch (error) {
       alert(`Failed to delete ${name}.`);
@@ -83,7 +83,7 @@
       {#if installedPackages.has(name)}
         <button
           class="secondary"
-          onclick={() => deletePackage(name)}
+          onclick={() => deletePackage(name, false)}
           disabled={!isDockerRunning || deleteLoading === name}
         >
           {deleteLoading === name ? "Deleting..." : "Delete"}

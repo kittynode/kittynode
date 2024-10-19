@@ -1,6 +1,6 @@
 use crate::package::{create_binding_string, Container};
 use bollard::{
-    container::{Config, CreateContainerOptions, StartContainerOptions},
+    container::{Config, CreateContainerOptions, ListContainersOptions, StartContainerOptions},
     image::CreateImageOptions,
     network::{ConnectNetworkOptions, CreateNetworkOptions},
     secret::{ContainerSummary, HostConfig, PortBinding},
@@ -49,42 +49,38 @@ pub(crate) async fn create_or_recreate_network(docker: &Docker, network_name: &s
 
 pub async fn is_docker_running() -> Result<bool> {
     if let Ok(connection) = get_docker_instance() {
-        match connection.ping().await {
-            Ok(_) => Ok(true),   // Ping successful, Docker is running
-            Err(_) => Ok(false), // Ping failed, Docker is not running
+        match connection.version().await {
+            Ok(_) => Ok(true),   // Version check successful, Docker is running
+            Err(_) => Ok(false), // Version check failed, Docker is not running
         }
     } else {
         Ok(false) // Docker connection failed
     }
 }
 
-pub async fn find_container(docker: &Docker, name: &str) -> Result<Option<ContainerSummary>> {
+pub async fn find_container(docker: &Docker, name: &str) -> Result<Vec<ContainerSummary>> {
+    let filters = HashMap::from([("name".to_string(), vec![name.to_string()])]);
     let containers = docker
-        .list_containers::<String>(None)
+        .list_containers(Some(ListContainersOptions {
+            all: true,
+            filters,
+            ..Default::default()
+        }))
         .await
-        .wrap_err("Failed to list Docker containers")?;
+        .wrap_err("Failed to list containers")?;
 
-    Ok(containers.into_iter().find(|c| {
-        c.names.as_ref().map_or(false, |names| {
-            names.iter().any(|n| n.as_str() == format!("/{}", name))
-        })
-    }))
+    Ok(containers)
 }
 
-pub async fn remove_container(docker: &Docker, container_name: &str) -> Result<()> {
-    if let Some(container) = find_container(docker, container_name).await? {
-        if let Some(container_id) = container.id.as_deref() {
-            info!("Stopping container: {}", container_name);
-            docker.stop_container(container_id, None).await.ok(); // Ignore stop errors
-            docker
-                .remove_container(container_id, None)
-                .await
-                .wrap_err("Failed to remove container")?;
-            info!("Removed container: {}", container_name);
-        } else {
-            tracing::warn!("Container ID for '{}' was None", container_name);
-        }
+pub async fn remove_container(docker: &Docker, name: &str) -> Result<()> {
+    for container in find_container(docker, name).await? {
+        let id = container
+            .id
+            .ok_or_else(|| eyre::eyre!("Container ID was None"))?;
+        docker.stop_container(&id, None).await.ok(); // Ignore stop errors
+        docker.remove_container(&id, None).await?;
     }
+
     Ok(())
 }
 
