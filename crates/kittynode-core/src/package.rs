@@ -23,8 +23,15 @@ pub struct Container {
     pub(crate) image: &'static str,
     pub(crate) cmd: Vec<&'static str>,
     pub(crate) port_bindings: HashMap<&'static str, Vec<PortBinding>>,
-    pub(crate) volume_bindings: Vec<String>,
-    pub(crate) file_bindings: Vec<String>,
+    pub(crate) volume_bindings: Vec<Binding>,
+    pub(crate) file_bindings: Vec<Binding>,
+}
+
+#[derive(Serialize)]
+pub struct Binding {
+    source: String,
+    destination: String,
+    options: Option<String>,
 }
 
 impl fmt::Display for Package {
@@ -33,6 +40,13 @@ impl fmt::Display for Package {
             writeln!(f, "Container Image: {}", container.image)?;
         }
         Ok(())
+    }
+}
+
+pub(crate) fn create_binding_string(binding: &Binding) -> String {
+    match &binding.options {
+        Some(options) => format!("{}:{}:{}", binding.source, binding.destination, options),
+        None => format!("{}:{}", binding.source, binding.destination),
     }
 }
 
@@ -84,10 +98,18 @@ pub fn get_packages() -> Result<HashMap<&'static str, Package>> {
                         ),
                     ]),
                     volume_bindings: vec![
-                        "rethdata:/root/.local/share/reth/holesky".to_string(),
+                      Binding {
+                        source: "rethdata".to_string(),
+                        destination: "/root/.local/share/reth/holesky".to_string(),
+                        options: None,
+                      }
                     ],
                     file_bindings: vec![
-                        format!("{}:/root/.local/share/reth/holesky/jwt.hex:ro", jwt_path.display()),
+                      Binding {
+                        source: jwt_path.display().to_string(),
+                        destination: "/root/.local/share/reth/holesky/jwt.hex".to_string(),
+                        options: Some("ro".to_string()),
+                        }
                     ],
                 },
                 Container {
@@ -140,8 +162,16 @@ pub fn get_packages() -> Result<HashMap<&'static str, Package>> {
                     ]),
                     volume_bindings: vec![],
                     file_bindings: vec![
-                        format!("{}/.lighthouse:/root/.lighthouse", kittynode_path.display()),
-                        format!("{}:/root/.lighthouse/holesky/jwt.hex:ro", jwt_path.display()),
+                      Binding {
+                        source: kittynode_path.display().to_string(),
+                        destination: "/root/.lighthouse".to_string(),
+                        options: None,
+                      },
+                      Binding {
+                        source: jwt_path.display().to_string(),
+                        destination: "/root/.lighthouse/holesky/jwt.hex".to_string(),
+                        options: Some("ro".to_string()),
+                        }
                     ],
                 },
             ],
@@ -217,15 +247,12 @@ pub async fn delete_package(package_name: &str) -> Result<()> {
 
         // Collect the container's volume bindings
         for binding in &container.volume_bindings {
-            // Extract the volume name (format: "source:destination[:options]")
-            let volume_name = binding.split(':').next().unwrap();
-            volume_names.push(volume_name.to_string());
+            volume_names.push(binding.source.to_string());
         }
 
         // Collect the container's file or directory paths
         for binding in &container.file_bindings {
-            // Extract the local path (format: "source:destination[:options]")
-            let local_path = binding.split(':').next().unwrap();
+            let local_path = &binding.source.to_string();
             let metadata = fs::metadata(local_path)
                 .wrap_err(format!("Failed to get metadata for '{}'", local_path))?;
             if metadata.is_dir() {

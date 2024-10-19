@@ -1,4 +1,4 @@
-use crate::package::Container;
+use crate::package::{create_binding_string, Container};
 use bollard::{
     container::{Config, CreateContainerOptions, StartContainerOptions},
     image::CreateImageOptions,
@@ -117,7 +117,7 @@ pub async fn pull_and_start_container(
         .volume_bindings
         .iter()
         .chain(&container.file_bindings)
-        .cloned()
+        .map(create_binding_string)
         .collect();
 
     let host_config = HostConfig {
