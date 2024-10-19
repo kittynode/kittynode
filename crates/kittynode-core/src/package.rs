@@ -188,17 +188,16 @@ pub async fn get_installed_packages() -> Result<Vec<String>> {
 
     // Check if containers for each package exist
     for (name, package) in packages {
-        let mut all_containers_running = true;
+        let mut all_containers_exist = true;
 
-        // Ensure all containers for the package are running
         for container in &package.containers {
-            if find_container(&docker, container.name).await?.is_none() {
-                all_containers_running = false;
+            if find_container(&docker, container.name).await?.is_empty() {
+                all_containers_exist = false;
                 break;
             }
         }
 
-        if all_containers_running {
+        if all_containers_exist {
             installed.push(name.to_string());
         }
     }
@@ -229,7 +228,7 @@ pub async fn install_package(name: &str) -> Result<()> {
     Ok(())
 }
 
-pub async fn delete_package(package_name: &str) -> Result<()> {
+pub async fn delete_package(package_name: &str, include_images: bool) -> Result<()> {
     let docker = get_docker_instance()?;
     let packages = get_packages().wrap_err("Failed to retrieve packages")?;
     let package = packages
@@ -269,13 +268,15 @@ pub async fn delete_package(package_name: &str) -> Result<()> {
     }
 
     // Remove the container images
-    for image_name in image_names {
-        info!("Removing image: {}", image_name);
-        docker
-            .remove_image(&image_name, None, None)
-            .await
-            .wrap_err_with(|| format!("Failed to remove image '{}'", image_name))?;
-        info!("Image '{}' removed successfully.", image_name);
+    if include_images {
+        for image_name in image_names {
+            info!("Removing image: {}", image_name);
+            docker
+                .remove_image(&image_name, None, None)
+                .await
+                .wrap_err_with(|| format!("Failed to remove image '{}'", image_name))?;
+            info!("Image '{}' removed successfully.", image_name);
+        }
     }
 
     // Remove the files

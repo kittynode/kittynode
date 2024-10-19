@@ -41,9 +41,9 @@ async fn is_docker_running() -> Result<bool, String> {
 }
 
 #[tauri::command]
-async fn delete_package(name: String) -> Result<(), String> {
+async fn delete_package(name: String, include_images: bool) -> Result<(), String> {
     info!("Deleting package: {}", name);
-    kittynode_core::package::delete_package(&name)
+    kittynode_core::package::delete_package(&name, include_images)
         .await
         .map_err(|e| e.to_string())?;
     Ok(())

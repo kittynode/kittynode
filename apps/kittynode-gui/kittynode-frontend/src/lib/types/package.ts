@@ -9,5 +9,12 @@ export interface Container {
   image: string;
   cmd: string[];
   port_bindings: Record<string, { host_ip: string; host_port: string }[]>;
-  bindings: string[];
+  volume_bindings: Binding[];
+  file_bindings: Binding[];
+}
+
+export interface Binding {
+  source: string;
+  destination: string;
+  options?: string;
 }
