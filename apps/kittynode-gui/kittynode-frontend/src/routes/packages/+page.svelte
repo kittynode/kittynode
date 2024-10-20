@@ -111,8 +111,8 @@
 
 <article>
   <h3>Helios</h3>
-  <p>Helios is a package manager for Kittynode.</p>
-  <button class="secondary" onclick={() => runHelios()}>
+  <p>Run a light client for Ethereum Mainnet.</p>
+  <button onclick={() => runHelios()}>
     Run Helios
   </button>
 </article>
