@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { invoke } from "@tauri-apps/api/core";
   import { type Package } from "$lib/types";
+  import { Command } from '@tauri-apps/plugin-shell';
 
   let packages: { [name: string]: Package } = $state({});
   let isDockerRunning: boolean | null = $state(null);
@@ -54,6 +55,26 @@
     isDockerRunning = await invoke("is_docker_running");
   }
 
+  async function runHelios() {
+    try {
+      const command = Command.sidecar('binaries/helios', [
+        "--network",
+        "mainnet",
+        "--consensus-rpc",
+        "https://www.lightclientdata.org",
+        "--execution-rpc",
+        "https://eth-mainnet.g.alchemy.com/v2/M0ylDXFfDTOma_T9zyok6Pn9RcRCnqNq",
+        "--checkpoint",
+        "0xdd851a3983188bb767946aae14a8f3ad1d8884eee800e530e1f7deb229c237dc"
+      ]);
+      const output = await command.execute();
+      console.log(output);
+    } catch (error) {
+      alert("Failed to run Helios.");
+      console.error(error);
+    }
+  }
+
   onMount(async () => {
     await checkDocker();
     await loadPackages();
@@ -87,3 +108,11 @@
     </article>
   {/each}
 {/if}
+
+<article>
+  <h3>Helios</h3>
+  <p>Helios is a package manager for Kittynode.</p>
+  <button class="secondary" onclick={() => runHelios()}>
+    Run Helios
+  </button>
+</article>

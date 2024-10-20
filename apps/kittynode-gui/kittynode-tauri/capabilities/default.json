@@ -3,5 +3,28 @@
   "identifier": "default",
   "description": "Capability for the main window",
   "windows": ["main"],
-  "permissions": ["core:default", "core:window:allow-show", "shell:allow-open"]
+  "permissions": [
+    "core:default",
+    "core:window:allow-show",
+    "shell:allow-open",
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [
+        {
+          "args": [
+            "--network",
+            "mainnet",
+            "--consensus-rpc",
+            "https://www.lightclientdata.org",
+            "--execution-rpc",
+            "https://eth-mainnet.g.alchemy.com/v2/M0ylDXFfDTOma_T9zyok6Pn9RcRCnqNq",
+            "--checkpoint",
+            "0xdd851a3983188bb767946aae14a8f3ad1d8884eee800e530e1f7deb229c237dc"
+          ],
+          "name": "binaries/helios",
+          "sidecar": true
+        }
+      ]
+    }
+  ]
 }
