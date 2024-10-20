@@ -10,6 +10,10 @@ docs:
 kittynode *args:
   target/debug/kittynode {{args}}
 
+# lint the code
+lint:
+  cargo clippy --all-targets --all-features -- -D warnings && cargo fmt --all -- --check
+
 # start the tauri dev app
 tauri:
   cd apps/kittynode-gui/kittynode-tauri && cargo tauri dev
