@@ -13,10 +13,7 @@ use tracing::{error, info};
 
 pub async fn is_docker_running() -> bool {
     if let Ok(connection) = get_docker_instance() {
-        match connection.version().await {
-            Ok(_) => true,
-            Err(_) => false,
-        }
+        connection.version().await.is_ok()
     } else {
         false // Docker connection failed
     }
