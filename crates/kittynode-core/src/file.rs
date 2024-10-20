@@ -1,5 +1,4 @@
 use eyre::{Context, ContextCompat, Result};
-use hex;
 use rand::RngCore;
 use std::{fs, path::PathBuf};
 use tracing::info;
