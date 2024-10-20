@@ -14,9 +14,17 @@ kittynode *args:
 lint:
   cargo clippy --all-targets --all-features -- -D warnings && cargo fmt --all -- --check
 
-# start the tauri dev app
+# start the desktop app
 tauri:
   cd apps/kittynode-gui/kittynode-tauri && cargo tauri dev
+
+# start the ios app
+tauri-ios:
+  cd apps/kittynode-gui/kittynode-tauri && cargo tauri ios dev
+
+# init the ios app
+tauri-ios-init:
+  cd apps/kittynode-gui/kittynode-tauri && cargo tauri ios init
 
 # build the tauri app for macOS
 tauri-build-apple:
