@@ -1,3 +1,7 @@
+// Public exports
 pub mod docker;
-pub mod file;
 pub mod package;
+
+// Private exports
+mod file;
+mod packages;
