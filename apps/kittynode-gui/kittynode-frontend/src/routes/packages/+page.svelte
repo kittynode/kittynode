@@ -51,12 +51,7 @@
   }
 
   async function checkDocker() {
-    try {
-      isDockerRunning = await invoke("is_docker_running");
-    } catch (error) {
-      alert("Failed to check Docker status.");
-      console.error(error);
-    }
+    isDockerRunning = await invoke("is_docker_running");
   }
 
   onMount(async () => {
