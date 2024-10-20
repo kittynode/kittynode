@@ -11,7 +11,7 @@ use std::collections::{HashMap, HashSet};
 use std::{fmt, fs};
 use tracing::info;
 
-pub trait PackageDefinition {
+pub(crate) trait PackageDefinition {
     const NAME: &'static str;
     fn get_package() -> Result<Package>;
 }
@@ -46,13 +46,6 @@ impl fmt::Display for Package {
             writeln!(f, "Container Image: {}", container.image)?;
         }
         Ok(())
-    }
-}
-
-pub(crate) fn create_binding_string(binding: &Binding) -> String {
-    match &binding.options {
-        Some(options) => format!("{}:{}:{}", binding.source, binding.destination, options),
-        None => format!("{}:{}", binding.source, binding.destination),
     }
 }
 
@@ -197,4 +190,11 @@ pub async fn delete_package(package_name: &str, include_images: bool) -> Result<
 
     info!("Package '{}' deleted successfully.", package_name);
     Ok(())
+}
+
+pub(crate) fn create_binding_string(binding: &Binding) -> String {
+    match &binding.options {
+        Some(options) => format!("{}:{}:{}", binding.source, binding.destination, options),
+        None => format!("{}:{}", binding.source, binding.destination),
+    }
 }

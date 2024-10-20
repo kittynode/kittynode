@@ -7,7 +7,7 @@ use crate::{
     package::{Binding, Container, Package, PackageDefinition},
 };
 
-pub struct RethLighthouse;
+pub(crate) struct RethLighthouse;
 
 impl PackageDefinition for RethLighthouse {
     const NAME: &'static str = "Reth + Lighthouse";

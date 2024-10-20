@@ -11,6 +11,17 @@ use std::collections::HashMap;
 use tokio_stream::StreamExt;
 use tracing::{error, info};
 
+pub async fn is_docker_running() -> Result<bool> {
+    if let Ok(connection) = get_docker_instance() {
+        match connection.version().await {
+            Ok(_) => Ok(true),   // Version check successful, Docker is running
+            Err(_) => Ok(false), // Version check failed, Docker is not running
+        }
+    } else {
+        Ok(false) // Docker connection failed
+    }
+}
+
 pub(crate) fn get_docker_instance() -> Result<Docker> {
     Docker::connect_with_local_defaults().wrap_err("Failed to connect to Docker")
 }
@@ -47,18 +58,7 @@ pub(crate) async fn create_or_recreate_network(docker: &Docker, network_name: &s
     Ok(())
 }
 
-pub async fn is_docker_running() -> Result<bool> {
-    if let Ok(connection) = get_docker_instance() {
-        match connection.version().await {
-            Ok(_) => Ok(true),   // Version check successful, Docker is running
-            Err(_) => Ok(false), // Version check failed, Docker is not running
-        }
-    } else {
-        Ok(false) // Docker connection failed
-    }
-}
-
-pub async fn find_container(docker: &Docker, name: &str) -> Result<Vec<ContainerSummary>> {
+pub(crate) async fn find_container(docker: &Docker, name: &str) -> Result<Vec<ContainerSummary>> {
     let filters = HashMap::from([("name".to_string(), vec![name.to_string()])]);
     let containers = docker
         .list_containers(Some(ListContainersOptions {
@@ -72,7 +72,7 @@ pub async fn find_container(docker: &Docker, name: &str) -> Result<Vec<Container
     Ok(containers)
 }
 
-pub async fn remove_container(docker: &Docker, name: &str) -> Result<()> {
+pub(crate) async fn remove_container(docker: &Docker, name: &str) -> Result<()> {
     for container in find_container(docker, name).await? {
         let id = container
             .id
@@ -84,7 +84,7 @@ pub async fn remove_container(docker: &Docker, name: &str) -> Result<()> {
     Ok(())
 }
 
-pub async fn pull_and_start_container(
+pub(crate) async fn pull_and_start_container(
     docker: &Docker,
     container: &Container,
     network_name: &str,
