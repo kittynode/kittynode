@@ -3,58 +3,54 @@ use bollard::{
     container::{Config, CreateContainerOptions, ListContainersOptions, StartContainerOptions},
     image::CreateImageOptions,
     network::{ConnectNetworkOptions, CreateNetworkOptions},
-    secret::{ContainerSummary, HostConfig, PortBinding},
+    secret::{ContainerSummary, HostConfig},
     Docker,
 };
-use eyre::{Context, Result};
+use eyre::{Report, Result};
 use std::collections::HashMap;
 use tokio_stream::StreamExt;
 use tracing::{error, info};
 
-pub async fn is_docker_running() -> Result<bool> {
+pub async fn is_docker_running() -> bool {
     if let Ok(connection) = get_docker_instance() {
         match connection.version().await {
-            Ok(_) => Ok(true),   // Version check successful, Docker is running
-            Err(_) => Ok(false), // Version check failed, Docker is not running
+            Ok(_) => true,
+            Err(_) => false,
         }
     } else {
-        Ok(false) // Docker connection failed
+        false // Docker connection failed
     }
 }
 
 pub(crate) fn get_docker_instance() -> Result<Docker> {
-    Docker::connect_with_local_defaults().wrap_err("Failed to connect to Docker")
+    Docker::connect_with_local_defaults().map_err(Report::from)
 }
 
 pub(crate) async fn create_or_recreate_network(docker: &Docker, network_name: &str) -> Result<()> {
-    let networks = docker
+    // Check if network already exists
+    let network_exists = docker
         .list_networks::<String>(None)
-        .await
-        .wrap_err("Failed to list Docker networks")?;
-
-    if networks
+        .await?
         .iter()
-        .any(|n| n.name.as_deref() == Some(network_name))
-    {
-        info!("Removing existing network: {}", network_name);
-        docker
-            .remove_network(network_name)
-            .await
-            .wrap_err("Failed to remove existing network")?;
+        .any(|n| n.name.as_deref() == Some(network_name));
+
+    // Remove network if it already exists
+    if network_exists {
+        docker.remove_network(network_name).await?;
+        info!("Removed existing network: '{}'", network_name);
     }
 
-    let options = CreateNetworkOptions {
-        name: network_name,
-        check_duplicate: true,
-        driver: "bridge",
-        ..Default::default()
-    };
-
+    // Create new network
     docker
-        .create_network(options)
-        .await
-        .wrap_err("Failed to create network")?;
-    info!("Created network: {}", network_name);
+        .create_network(CreateNetworkOptions {
+            name: network_name,
+            check_duplicate: true,
+            driver: "bridge",
+            ..Default::default()
+        })
+        .await?;
+    info!("Created new network: '{}'", network_name);
+
     Ok(())
 }
 
@@ -66,8 +62,7 @@ pub(crate) async fn find_container(docker: &Docker, name: &str) -> Result<Vec<Co
             filters,
             ..Default::default()
         }))
-        .await
-        .wrap_err("Failed to list containers")?;
+        .await?;
 
     Ok(containers)
 }
@@ -103,13 +98,13 @@ pub(crate) async fn pull_and_start_container(
         }
     }
 
-    let port_bindings: HashMap<String, Option<Vec<PortBinding>>> = container
+    let port_bindings = container
         .port_bindings
         .iter()
         .map(|(k, v)| (k.to_string(), Some(v.clone())))
         .collect();
 
-    let bindings: Vec<String> = container
+    let bindings = container
         .volume_bindings
         .iter()
         .chain(&container.file_bindings)
@@ -137,14 +132,12 @@ pub(crate) async fn pull_and_start_container(
             }),
             config,
         )
-        .await
-        .wrap_err("Failed to create container")?;
+        .await?;
+    info!("Container {} created successfully.", container.name);
 
     docker
         .start_container(&created_container.id, None::<StartContainerOptions<String>>)
-        .await
-        .wrap_err("Failed to start container")?;
-
+        .await?;
     info!("Container {} started successfully.", container.name);
 
     docker
@@ -155,8 +148,11 @@ pub(crate) async fn pull_and_start_container(
                 endpoint_config: Default::default(),
             },
         )
-        .await
-        .wrap_err("Failed to connect container to network")?;
+        .await?;
+    info!(
+        "Container {} connected to network '{}'.",
+        container.name, network_name
+    );
 
     Ok(())
 }
