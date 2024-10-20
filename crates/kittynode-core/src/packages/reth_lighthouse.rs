@@ -10,7 +10,7 @@ use crate::{
 pub struct RethLighthouse;
 
 impl PackageDefinition for RethLighthouse {
-    const NAME: &'static str = "Reth + Lighthouse (Holesky)";
+    const NAME: &'static str = "Reth + Lighthouse";
 
     fn get_package() -> Result<Package> {
         let kittynode_path = kittynode_path()?;
@@ -18,7 +18,7 @@ impl PackageDefinition for RethLighthouse {
 
         Ok(Package {
             description: "This package installs a Reth execution client and a Lighthouse consensus client on the Holesky network with Docker.",
-            network_name: "reth-lighthouse-holesky-network",
+            network_name: "reth-lighthouse-network",
             containers: vec![
                 Container {
                     name: "reth-node",
