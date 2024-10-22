@@ -3,7 +3,7 @@ use crate::docker::{
     remove_container,
 };
 use crate::file::generate_jwt_secret;
-use crate::packages::reth_lighthouse::RethLighthouse;
+use crate::packages::ethereum::Ethereum;
 use bollard::secret::PortBinding;
 use eyre::{Context, Result};
 use serde::Serialize;
@@ -50,10 +50,7 @@ impl fmt::Display for Package {
 }
 
 pub fn get_packages() -> Result<HashMap<&'static str, Package>> {
-    Ok(HashMap::from([(
-        RethLighthouse::NAME,
-        RethLighthouse::get_package()?,
-    )]))
+    Ok(HashMap::from([(Ethereum::NAME, Ethereum::get_package()?)]))
 }
 
 pub async fn get_installed_packages() -> Result<Vec<String>> {

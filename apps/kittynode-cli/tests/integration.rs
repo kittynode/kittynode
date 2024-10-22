@@ -8,5 +8,5 @@ fn test_get_packages_cli() {
     cmd.arg("get-packages")
         .assert()
         .success()
-        .stdout(predicate::str::contains("Package: Reth"));
+        .stdout(predicate::str::contains("Package: Ethereum"));
 }
