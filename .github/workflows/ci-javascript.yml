@@ -1,0 +1,22 @@
+name: CI - JavaScript
+
+on:
+  push:
+    paths:
+      - "apps/kittynode-gui/kittynode-frontend/**"
+
+jobs:
+  format-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install frontend dependencies
+        run: bun install
+
+      - name: Format and lint
+        run: bun --filter kittynode-frontend format-lint

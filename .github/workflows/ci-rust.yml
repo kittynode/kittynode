@@ -42,7 +42,7 @@ jobs:
           files: lcov.info
           fail_ci_if_error: true
 
-  lint:
+  format-lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
