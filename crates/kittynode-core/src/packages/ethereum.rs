@@ -7,10 +7,10 @@ use crate::{
     package::{Binding, Container, Package, PackageDefinition},
 };
 
-pub(crate) struct RethLighthouse;
+pub(crate) struct Ethereum;
 
-impl PackageDefinition for RethLighthouse {
-    const NAME: &'static str = "Reth + Lighthouse";
+impl PackageDefinition for Ethereum {
+    const NAME: &'static str = "Ethereum";
 
     fn get_package() -> Result<Package> {
         let kittynode_path = kittynode_path()?;
@@ -18,7 +18,7 @@ impl PackageDefinition for RethLighthouse {
 
         Ok(Package {
             description: "This package installs a Reth execution client and a Lighthouse consensus client on the Holesky network with Docker.",
-            network_name: "reth-lighthouse-network",
+            network_name: "ethereum-network",
             containers: vec![
                 Container {
                     name: "reth-node",

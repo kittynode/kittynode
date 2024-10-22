@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { invoke } from "@tauri-apps/api/core";
-  import { type Package } from "$lib/types";
+  import type { Package } from "$lib/types";
 
   let packages: { [name: string]: Package } = $state({});
   let isDockerRunning: boolean | null = $state(null);
@@ -63,9 +63,9 @@
 {#if Object.keys(packages).length > 0}
   {#each Object.entries(packages).sort(([a], [b]) => a.localeCompare(b)) as [name, p]}
     <article>
-      <h3>{name}</h3>
+      <h2>{name}</h2>
       {#if !isDockerRunning}
-        <p><u>Turn on Docker to install or delete packages.</u></p>
+        <p><strong>Turn on Docker to use this package. If you need to install Docker, please follow the installation guide <a href="https://docs.docker.com/engine/install/" target="_blank">here</a>.</strong></p>
       {/if}
       <p>{p.description}</p>
       <button

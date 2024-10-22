@@ -1,1 +1,1 @@
-pub(crate) mod reth_lighthouse;
+pub(crate) mod ethereum;
