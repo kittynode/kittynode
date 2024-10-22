@@ -1,6 +1,6 @@
 <script lang="ts">
-  import "@picocss/pico/css/pico.purple.min.css";
-  import { page } from "$app/stores";
+import "@picocss/pico/css/pico.purple.min.css";
+import { page } from "$app/stores";
 </script>
 
 <header class="container">
