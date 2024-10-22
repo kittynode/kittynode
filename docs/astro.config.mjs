@@ -20,6 +20,7 @@ export default defineConfig({
       favicon: "/images/favicon.ico",
       social: {
         github: "https://github.com/kittynode",
+        discord: "https://discord.kittynode.io",
         "x.com": "https://x.com/kittynode",
       },
       sidebar: [
