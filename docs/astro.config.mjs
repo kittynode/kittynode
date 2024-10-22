@@ -16,6 +16,9 @@ export default defineConfig({
       editLink: {
         baseUrl: "https://github.com/kittynode/kittynode/edit/main/docs/",
       },
+      components: {
+        Footer: "./src/components/overrides/Footer.astro",
+      },
       customCss: ["./src/styles/custom.css"],
       favicon: "/images/favicon.ico",
       social: {

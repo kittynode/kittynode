@@ -16,3 +16,20 @@ hero:
       icon: external
       variant: minimal
 ---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+<CardGrid>
+	<Card title="Runs anywhere" icon="laptop">
+		Run Kittynode anywhere with the desktop app, and migrate to a dedicated server when you're ready.
+	</Card>
+	<Card title="Mobile first" icon="rocket">
+		Monitor and update your nodes from your mobile device on Android or iPhone.
+	</Card>
+	<Card title="Secure by default" icon="approve-check-circle">
+		Secure out of the box, we got you covered. Kittynode checks your system ensuring your node setup is secure.
+	</Card>
+	<Card title="Package system" icon="puzzle">
+		Kittynode supports any types of nodes you'd want to run through an extensible package system.
+	</Card>
+</CardGrid>
