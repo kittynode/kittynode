@@ -12,7 +12,10 @@ kittynode *args:
 
 # lint the javascript code
 lint-js:
-  bun --filter kittynode-frontend format-lint
+  cd apps/kittynode-gui/kittynode-frontend && bun format-lint
+
+lint-js-fix:
+  cd apps/kittynode-gui/kittynode-frontend && bun format-lint:fix
 
 # lint the rust code
 lint-rs:
