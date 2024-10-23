@@ -10,8 +10,12 @@ docs:
 kittynode *args:
   target/debug/kittynode {{args}}
 
-# lint the code
-lint:
+# lint the javascript code
+lint-js:
+  bun --filter kittynode-frontend format-lint
+
+# lint the rust code
+lint-rs:
   cargo clippy --all-targets --all-features -- -D warnings && cargo fmt --all -- --check
 
 # start the desktop app

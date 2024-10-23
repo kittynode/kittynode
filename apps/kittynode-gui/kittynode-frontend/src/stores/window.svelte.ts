@@ -2,7 +2,7 @@ import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 
 let shown = $state(false);
 
-export const window = {
+export const win = {
   get shown() {
     return shown;
   },

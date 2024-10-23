@@ -60,6 +60,14 @@ onMount(async () => {
 });
 </script>
 
+<h1>Installed nodes:</h1>
+
+{#if installedPackages.length > 0}
+<p>You have no nodes installed. Use a package from the store below to install a node.</p>
+{/if}
+
+<h1>Package store:</h1>
+
 {#if Object.keys(packages).length > 0}
   {#each Object.entries(packages).sort(([a], [b]) => a.localeCompare(b)) as [name, p]}
     <article>
