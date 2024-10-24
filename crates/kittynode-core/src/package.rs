@@ -125,12 +125,15 @@ pub async fn delete_package(package_name: &str, include_images: bool) -> Result<
         // Collect the container's file or directory paths
         for binding in &container.file_bindings {
             let local_path = &binding.source.to_string();
-            let metadata = fs::metadata(local_path)
-                .wrap_err(format!("Failed to get metadata for '{}'", local_path))?;
-            if metadata.is_dir() {
-                directory_paths.insert(local_path.to_string());
+            // Check if the path exists and ignore the error if it doesn't
+            if let Ok(metadata) = fs::metadata(local_path) {
+                if metadata.is_dir() {
+                    directory_paths.insert(local_path.to_string());
+                } else {
+                    file_paths.insert(local_path.to_string());
+                }
             } else {
-                file_paths.insert(local_path.to_string());
+                info!("Path '{}' not found, skipping.", local_path);
             }
         }
 
