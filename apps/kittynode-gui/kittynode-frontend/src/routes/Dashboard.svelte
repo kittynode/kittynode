@@ -5,7 +5,9 @@ export let installedPackages: Set<string>;
 {#if installedPackages.size === 0}
   <p>You have no packages installed.</p>
 {:else}
+<ul>
 {#each installedPackages as name}
-  <p>{name}</p>
+  <li>{name}</li>
 {/each}
+</ul>
 {/if}

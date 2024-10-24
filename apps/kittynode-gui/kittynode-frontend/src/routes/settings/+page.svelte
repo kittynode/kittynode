@@ -19,10 +19,29 @@ async function deleteKittynode() {
 }
 </script>
 
-<p>Connect your mobile device:</p>
-<button onclick={connectMobile}>Connect mobile</button>
-<br>
-<br>
+<h2>Settings</h2>
 
-<p>Delete all Kittynode data:</p>
-<button onclick={deleteKittynode}>Delete data</button>
+<ul class="settings-list">
+  <li>
+    <span>Connect your mobile device</span>
+    <button onclick={connectMobile}>Connect mobile</button>
+  </li>
+  <hr />
+  <li>
+    <span>Delete all Kittynode data</span>
+    <button onclick={deleteKittynode}>Delete data</button>
+  </li>
+</ul>
+
+<style>
+  .settings-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .settings-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+</style>
