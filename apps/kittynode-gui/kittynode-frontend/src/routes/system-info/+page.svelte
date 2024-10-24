@@ -12,7 +12,6 @@ let storage = $state("Loading...");
 async function fetchSystemInfo() {
   try {
     const systemInfo: SystemInfo = await invoke("system_info");
-    // Extract information from the systemInfo object and assign it to the state variables
     processor = systemInfo.processor;
     memory = systemInfo.memory;
     storage = systemInfo.storage;

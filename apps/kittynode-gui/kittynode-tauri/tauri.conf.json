@@ -12,7 +12,8 @@
     "windows": [
       {
         "title": "Kittynode",
-        "visible": false
+        "visible": false,
+        "transparent": true
       }
     ],
     "security": {

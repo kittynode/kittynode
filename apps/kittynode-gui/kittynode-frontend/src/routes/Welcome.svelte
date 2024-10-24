@@ -1,9 +1,10 @@
 <script lang="ts">
-import { invoke } from "@tauri-apps/api/core";
+  import { initializedStore } from "../stores/initialized.svelte";
+  import { goto } from "$app/navigation";
 
-function initKittynode() {
-  invoke("init_kittynode");
-  window.location.href = "/"; // Navigate to home page after invoking
+async function initKittynode() {
+  await initializedStore.initialize();
+  await goto("/");
 }
 </script>
 
