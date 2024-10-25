@@ -1,14 +1,12 @@
 <script lang="ts">
-import { onMount } from "svelte"; // Use this to run when component mounts
+import { onMount } from "svelte";
 import { invoke } from "@tauri-apps/api/core";
 import type { SystemInfo } from "$lib/types/system_info";
 
-// State variables to store system information
 let processor = $state("Loading...");
 let memory = $state("Loading...");
 let storage = $state("Loading...");
 
-// Function to fetch system info from the backend
 async function fetchSystemInfo() {
   try {
     const systemInfo: SystemInfo = await invoke("system_info");
@@ -20,7 +18,6 @@ async function fetchSystemInfo() {
   }
 }
 
-// Fetch system info when the component mounts
 onMount(() => {
   fetchSystemInfo();
 });
