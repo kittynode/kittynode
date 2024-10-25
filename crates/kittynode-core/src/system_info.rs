@@ -5,8 +5,8 @@ use sysinfo::{CpuExt, DiskExt, System, SystemExt};
 #[derive(Serialize, Deserialize)]
 pub struct SystemInfo {
     pub processor: String,
-    pub memory: String,  // We'll show total RAM in GB
-    pub storage: String, // Show total and available disk space
+    pub memory: String,
+    pub storage: String,
 }
 
 pub fn get_system_info() -> Result<SystemInfo> {
@@ -26,12 +26,10 @@ pub fn get_system_info() -> Result<SystemInfo> {
         .first()
         .map(|cpu| cpu.frequency() as f64 / 1000.0) // Convert MHz to GHz
         .unwrap_or(0.0);
-    let cpu_architecture = if cfg!(target_arch = "x86_64") {
-        "x86_64"
-    } else if cfg!(target_arch = "aarch64") {
-        "ARM"
-    } else {
-        "Unknown"
+    let cpu_architecture = match std::env::consts::ARCH {
+        "x86_64" => "x86_64",
+        "aarch64" => "ARM",
+        _ => "Unknown",
     };
 
     let processor = format!(
