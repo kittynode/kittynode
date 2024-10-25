@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { initializedStore } from "../stores/initialized.svelte";
-  import { goto } from "$app/navigation";
+import { initializedStore } from "../stores/initialized.svelte";
+import { goto } from "$app/navigation";
 
 async function initKittynode() {
   await initializedStore.initialize();
