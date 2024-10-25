@@ -14,6 +14,7 @@ kittynode *args:
 lint-js:
   cd apps/kittynode-gui/kittynode-frontend && bun format-lint
 
+# lint and fix the javascript code
 lint-js-fix:
   cd apps/kittynode-gui/kittynode-frontend && bun format-lint:fix
 
