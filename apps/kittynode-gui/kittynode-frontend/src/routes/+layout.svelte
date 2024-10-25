@@ -1,7 +1,7 @@
 <script lang="ts">
 import "@picocss/pico/css/pico.purple.min.css";
 import { onMount } from "svelte";
-import { win } from "../stores/window.svelte.ts";
+import { windowShownStore } from "../stores/windowShown.svelte.ts";
 import { initializedStore } from "../stores/initialized.svelte";
 import Welcome from "./Welcome.svelte";
 import Header from "./Header.svelte";
@@ -9,8 +9,7 @@ import Header from "./Header.svelte";
 const { children } = $props();
 
 onMount(async () => {
-  console.log("initializedStore.initialized", initializedStore.initialized);
-  await win.show();
+  await windowShownStore.show();
 });
 </script>
 

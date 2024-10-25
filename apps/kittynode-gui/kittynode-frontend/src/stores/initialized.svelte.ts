@@ -7,14 +7,10 @@ export const initializedStore = {
     return initialized;
   },
   async initialize() {
-    if (!initialized) {
-      await invoke("init_kittynode");
-      initialized = true;
-    }
+    await invoke("init_kittynode");
+    initialized = true;
   },
   async uninitialize() {
-    if (initialized) {
-      initialized = false;
-    }
+    initialized = false;
   },
 };

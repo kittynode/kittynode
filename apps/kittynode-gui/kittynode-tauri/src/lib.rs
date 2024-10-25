@@ -1,5 +1,4 @@
 use eyre::Result;
-use kittynode_core::system_info::SystemInfo;
 use std::collections::HashMap;
 use tracing::info;
 
@@ -55,7 +54,7 @@ fn delete_kittynode() -> Result<(), String> {
 }
 
 #[tauri::command]
-fn system_info() -> Result<SystemInfo, String> {
+fn system_info() -> Result<kittynode_core::system_info::SystemInfo, String> {
     info!("Getting system info");
     let system_info = kittynode_core::system_info::get_system_info().map_err(|e| e.to_string())?;
     Ok(system_info)
@@ -63,6 +62,7 @@ fn system_info() -> Result<SystemInfo, String> {
 
 #[tauri::command]
 fn is_initialized() -> bool {
+    info!("Checking if Kittynode is initialized");
     kittynode_core::kittynode::is_initialized()
 }
 
