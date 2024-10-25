@@ -3,5 +3,5 @@
   "identifier": "default",
   "description": "Capability for the main window",
   "windows": ["main"],
-  "permissions": ["core:default", "core:window:allow-show", "shell:allow-open"]
+  "permissions": ["core:default", "core:window:allow-show", "dialog:default"]
 }
