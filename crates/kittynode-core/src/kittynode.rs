@@ -11,7 +11,6 @@ pub fn init_kittynode() -> Result<()> {
 pub fn delete_kittynode() -> Result<()> {
     if let Err(e) = fs::remove_dir_all(kittynode_path()?) {
         if e.kind() != ErrorKind::NotFound {
-            info!("Directory not found, no problem.");
             return Err(e.into());
         }
     }
