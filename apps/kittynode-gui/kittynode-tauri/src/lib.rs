@@ -1,3 +1,6 @@
+mod api;
+use crate::api::{root, system_info};
+use axum::{routing::get, Router};
 use eyre::Result;
 use std::collections::HashMap;
 use tracing::info;
@@ -54,13 +57,6 @@ fn delete_kittynode() -> Result<(), String> {
 }
 
 #[tauri::command]
-fn system_info() -> Result<kittynode_core::system_info::SystemInfo, String> {
-    info!("Getting system info");
-    let system_info = kittynode_core::system_info::get_system_info().map_err(|e| e.to_string())?;
-    Ok(system_info)
-}
-
-#[tauri::command]
 fn is_initialized() -> bool {
     info!("Checking if Kittynode is initialized");
     kittynode_core::kittynode::is_initialized()
@@ -76,7 +72,23 @@ fn init_kittynode() -> Result<(), String> {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .setup(|_| {
+            // Set up axum server
+            let port = 3000;
+            tauri::async_runtime::spawn(async move {
+                let app = Router::new()
+                    .route("/", get(root))
+                    .route("/system_info", get(system_info));
+                let listener = tokio::net::TcpListener::bind(format!("127.0.0.1:{}", port))
+                    .await
+                    .map_err(|e| eyre::eyre!(e))?;
+                axum::serve(listener, app).await.map_err(|e| eyre::eyre!(e))
+            });
+            info!("Spawned axum server on port: {}", port);
+            Ok(())
+        })
         .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_http::init())
         .invoke_handler(tauri::generate_handler![
             is_docker_running,
             get_packages,
@@ -84,9 +96,8 @@ pub fn run() {
             get_installed_packages,
             delete_package,
             delete_kittynode,
-            system_info,
             is_initialized,
-            init_kittynode
+            init_kittynode,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

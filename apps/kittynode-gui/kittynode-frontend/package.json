@@ -14,7 +14,8 @@
   "dependencies": {
     "@picocss/pico": "^2.0.6",
     "@tauri-apps/api": ">=2.0.0",
-    "@tauri-apps/plugin-dialog": "^2.0.1"
+    "@tauri-apps/plugin-dialog": "^2.0.1",
+    "@tauri-apps/plugin-http": "^2.0.1"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
