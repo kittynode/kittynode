@@ -2,7 +2,7 @@
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/kittynode/kittynode/ci-rust.yml?branch=main&logo=GitHub%20Actions&label=ci-rust)](https://github.com/kittynode/kittynode/actions/workflows/ci-rust.yml?query=branch:main)
 [![codecov](https://codecov.io/github/kittynode/kittynode/graph/badge.svg?token=TJAUBD8RPT)](https://codecov.io/github/kittynode/kittynode)
 
-# kittynode
+# Kittynode
 
 A tool for managing decentralized node infrastructure.
 
