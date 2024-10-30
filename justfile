@@ -7,8 +7,8 @@ docs:
   cd docs && bun run dev
 
 # run the kittynode cli with the given args
-kittynode *args:
-  target/debug/kittynode {{args}}
+kittynode *args='':
+  @if [ -z "{{args}}" ]; then target/debug/kittynode help; else target/debug/kittynode {{args}}; fi
 
 # lint the javascript code
 lint-js:

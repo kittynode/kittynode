@@ -4789,6 +4789,7 @@ dependencies = [
  "kittynode-core",
  "predicates",
  "tokio",
+ "tracing-subscriber",
 ]
 
 [[package]]
