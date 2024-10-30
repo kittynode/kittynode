@@ -37,8 +37,12 @@ export default defineConfig({
           label: "Contribute",
           items: [
             {
-              label: "Contribute to Kittynode",
-              slug: "contribute/contribute-to-kittynode",
+              label: "Architecture",
+              slug: "contribute/architecture",
+            },
+            {
+              label: "Development guide",
+              slug: "contribute/development-guide",
             },
           ],
         },
