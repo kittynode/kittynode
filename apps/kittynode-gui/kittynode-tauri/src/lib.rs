@@ -1,6 +1,6 @@
 use eyre::Result;
 use std::collections::HashMap;
-use tracing::info;
+use tracing::info; // For mobile HTTP requests
 
 #[tauri::command]
 fn get_packages() -> Result<HashMap<String, kittynode_core::package::Package>, String> {
@@ -23,26 +23,55 @@ async fn get_installed_packages() -> Result<Vec<String>, String> {
 }
 
 #[tauri::command]
-async fn install_package(name: String) -> Result<(), String> {
-    info!("Installing package: {}", name);
-    kittynode_core::package::install_package(&name)
-        .await
-        .map_err(|e| e.to_string())?;
-    Ok(())
-}
-
-#[tauri::command]
 async fn is_docker_running() -> bool {
     info!("Checking if Docker is running");
     kittynode_core::docker::is_docker_running().await
 }
 
 #[tauri::command]
+async fn install_package(name: String) -> Result<(), String> {
+    info!("Installing package: {}", name);
+
+    #[cfg(not(mobile))]
+    {
+        kittynode_core::package::install_package(&name)
+            .await
+            .map_err(|e| e.to_string())?;
+    }
+
+    #[cfg(mobile)]
+    {
+        let url = format!("http://merlin:3000/install_package/{}", name);
+        let res = reqwest::get(&url).await.map_err(|e| e.to_string())?;
+        if !res.status().is_success() {
+            return Err(format!("Failed to install package: {}", res.status()));
+        }
+    }
+
+    Ok(())
+}
+
+#[tauri::command]
 async fn delete_package(name: String, include_images: bool) -> Result<(), String> {
     info!("Deleting package: {}", name);
-    kittynode_core::package::delete_package(&name, include_images)
-        .await
-        .map_err(|e| e.to_string())?;
+
+    #[cfg(not(mobile))]
+    {
+        kittynode_core::package::delete_package(&name, include_images)
+            .await
+            .map_err(|e| e.to_string())?;
+    }
+
+    #[cfg(mobile)]
+    {
+        // ignoring delete image for now
+        let url = format!("http://merlin:3000/delete_package/{}", name);
+        let res = reqwest::get(&url).await.map_err(|e| e.to_string())?;
+        if !res.status().is_success() {
+            return Err(format!("Failed to delete package: {}", res.status()));
+        }
+    }
+
     Ok(())
 }
 
@@ -79,10 +108,10 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_http::init())
         .invoke_handler(tauri::generate_handler![
-            is_docker_running,
             get_packages,
-            install_package,
             get_installed_packages,
+            is_docker_running,
+            install_package,
             delete_package,
             delete_kittynode,
             system_info,
