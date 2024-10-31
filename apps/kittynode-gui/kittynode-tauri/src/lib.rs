@@ -1,6 +1,6 @@
 use eyre::Result;
 use std::collections::HashMap;
-use tracing::info; // For mobile HTTP requests
+use tracing::info;
 
 #[tauri::command]
 fn get_packages() -> Result<HashMap<String, kittynode_core::package::Package>, String> {
@@ -41,8 +41,9 @@ async fn install_package(name: String) -> Result<(), String> {
 
     #[cfg(mobile)]
     {
+        let client = reqwest::Client::new();
         let url = format!("http://merlin:3000/install_package/{}", name);
-        let res = reqwest::get(&url).await.map_err(|e| e.to_string())?;
+        let res = client.post(&url).send().await.map_err(|e| e.to_string())?;
         if !res.status().is_success() {
             return Err(format!("Failed to install package: {}", res.status()));
         }
@@ -65,8 +66,9 @@ async fn delete_package(name: String, include_images: bool) -> Result<(), String
     #[cfg(mobile)]
     {
         // ignoring delete image for now
+        let client = reqwest::Client::new();
         let url = format!("http://merlin:3000/delete_package/{}", name);
-        let res = reqwest::get(&url).await.map_err(|e| e.to_string())?;
+        let res = client.post(&url).send().await.map_err(|e| e.to_string())?;
         if !res.status().is_success() {
             return Err(format!("Failed to delete package: {}", res.status()));
         }
@@ -105,8 +107,8 @@ fn init_kittynode() -> Result<(), String> {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_dialog::init())
-        .plugin(tauri_plugin_http::init())
         .invoke_handler(tauri::generate_handler![
             get_packages,
             get_installed_packages,

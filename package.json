@@ -2,5 +2,8 @@
   "workspaces": [
     "docs",
     "apps/kittynode-gui/kittynode-frontend"
-  ]
+  ],
+  "dependencies": {
+    "@tauri-apps/plugin-os": "~2"
+  }
 }
