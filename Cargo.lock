@@ -4779,6 +4779,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "kittynode-axum"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "kittynode-core",
+ "tokio",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "kittynode-cli"
 version = "0.4.0"
 dependencies = [

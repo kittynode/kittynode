@@ -1,3 +1,7 @@
+# start the axum server
+axum:
+  cd crates/kittynode-axum && cargo run
+
 # build the crates
 build:
   cargo build
