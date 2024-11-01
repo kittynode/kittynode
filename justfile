@@ -32,7 +32,7 @@ tauri:
 
 # start the ios app
 tauri-ios:
-  cd apps/kittynode-gui/kittynode-tauri && cargo tauri ios dev
+  cd apps/kittynode-gui/kittynode-tauri && cargo tauri ios dev --verbose
 
 # init the ios app
 tauri-ios-init:
