@@ -3,7 +3,16 @@ use std::collections::HashMap;
 use tracing::info;
 
 #[cfg(mobile)]
-use tauri_plugin_http::reqwest;
+mod mobile {
+    use once_cell::sync::OnceCell;
+    use tauri_plugin_http::reqwest;
+
+    pub static HTTP_CLIENT: OnceCell<reqwest::Client> = OnceCell::new();
+    pub static SERVER_URL: OnceCell<String> = OnceCell::new();
+}
+
+#[cfg(mobile)]
+use mobile::{HTTP_CLIENT, SERVER_URL};
 
 #[tauri::command]
 fn get_packages() -> Result<HashMap<String, kittynode_core::package::Package>, String> {
@@ -33,42 +42,38 @@ async fn is_docker_running() -> bool {
 
 #[tauri::command]
 async fn install_package(name: String) -> Result<(), String> {
-    info!("Installing package: {}", name);
-
     #[cfg(not(mobile))]
-    {
-        kittynode_core::package::install_package(&name)
-            .await
-            .map_err(|e| e.to_string())?;
-    }
+    kittynode_core::package::install_package(&name)
+        .await
+        .map_err(|e| e.to_string())?;
 
     #[cfg(mobile)]
     {
-        let client = reqwest::Client::new();
-        let url = format!("http://merlin:3000/install_package/{}", name);
+        let client = HTTP_CLIENT.get_or_init(reqwest::Client::new);
+        let server_url = SERVER_URL.get().ok_or("Server URL not set")?;
+        let url = format!("{}/install_package/{}", server_url, name);
         let res = client.post(&url).send().await.map_err(|e| e.to_string())?;
         if !res.status().is_success() {
             return Err(format!("Failed to install package: {}", res.status()));
         }
     }
 
+    info!("Successfully installed package: {}", name);
     Ok(())
 }
 
 #[tauri::command]
 async fn delete_package(name: String, include_images: bool) -> Result<(), String> {
     #[cfg(not(mobile))]
-    {
-        kittynode_core::package::delete_package(&name, include_images)
-            .await
-            .map_err(|e| e.to_string())?;
-    }
+    kittynode_core::package::delete_package(&name, include_images)
+        .await
+        .map_err(|e| e.to_string())?;
 
     #[cfg(mobile)]
     {
-        // ignoring delete image for now
-        let client = reqwest::Client::new();
-        let url = format!("http://merlin:3000/delete_package/{}", name);
+        let client = HTTP_CLIENT.get_or_init(reqwest::Client::new);
+        let server_url = SERVER_URL.get().ok_or("Server URL not set")?;
+        let url = format!("{}/delete_package/{}", server_url, name);
         let res = client.post(&url).send().await.map_err(|e| e.to_string())?;
         if !res.status().is_success() {
             return Err(format!("Failed to delete package: {}", res.status()));
@@ -82,15 +87,13 @@ async fn delete_package(name: String, include_images: bool) -> Result<(), String
 #[tauri::command]
 fn delete_kittynode() -> Result<(), String> {
     info!("Deleting .kittynode directory");
-    kittynode_core::kittynode::delete_kittynode().map_err(|e| e.to_string())?;
-    Ok(())
+    kittynode_core::kittynode::delete_kittynode().map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 fn system_info() -> Result<kittynode_core::system_info::SystemInfo, String> {
     info!("Getting system info");
-    let system_info = kittynode_core::system_info::get_system_info().map_err(|e| e.to_string())?;
-    Ok(system_info)
+    kittynode_core::system_info::get_system_info().map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -102,8 +105,7 @@ fn is_initialized() -> bool {
 #[tauri::command]
 fn init_kittynode() -> Result<(), String> {
     info!("Initializing Kittynode");
-    kittynode_core::kittynode::init_kittynode().map_err(|e| e.to_string())?;
-    Ok(())
+    kittynode_core::kittynode::init_kittynode().map_err(|e| e.to_string())
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
