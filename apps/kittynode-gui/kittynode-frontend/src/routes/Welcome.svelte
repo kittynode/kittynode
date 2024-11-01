@@ -1,7 +1,7 @@
 <script lang="ts">
 import { initializedStore } from "../stores/initialized.svelte";
 import { goto } from "$app/navigation";
-import { platform } from '@tauri-apps/plugin-os';
+import { platform } from "@tauri-apps/plugin-os";
 import { onMount } from "svelte";
 import { invoke } from "@tauri-apps/api/core";
 
