@@ -2,6 +2,9 @@ use eyre::Result;
 use std::collections::HashMap;
 use tracing::info;
 
+#[cfg(mobile)]
+use tauri_plugin_http::reqwest;
+
 #[tauri::command]
 fn get_packages() -> Result<HashMap<String, kittynode_core::package::Package>, String> {
     info!("Getting packages");
@@ -54,8 +57,6 @@ async fn install_package(name: String) -> Result<(), String> {
 
 #[tauri::command]
 async fn delete_package(name: String, include_images: bool) -> Result<(), String> {
-    info!("Deleting package: {}", name);
-
     #[cfg(not(mobile))]
     {
         kittynode_core::package::delete_package(&name, include_images)
@@ -74,6 +75,7 @@ async fn delete_package(name: String, include_images: bool) -> Result<(), String
         }
     }
 
+    info!("Successfully deleted package: {}", name);
     Ok(())
 }
 

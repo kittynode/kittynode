@@ -15,10 +15,9 @@ async function initKittynode() {
 async function installPackage(name: string) {
   try {
     await invoke("install_package", { name });
-    alert("did the install woot");
+    alert(`Successfully installed: ${name}`);
   } catch (error) {
-    alert(`Failed to install ${name} with this error: ${error}`);
-    console.error(error);
+    alert(`Failed to install ${name}: ${error}`);
   }
 }
 
@@ -30,7 +29,7 @@ onMount(async () => {
 <main>
   <img class="logo" src="/images/kittynode-light.png" alt="Kittynode Logo">
   {#if currentPlatform === "ios"}
-  <button onclick={() => installPackage("Ethereum")}>Super secret iOS button installs a package</button>
+  <button onclick={() => installPackage("Ethereum")}>Install Ethereum</button>
   {:else}
   <button onclick={initKittynode}>Get Started</button>
   {/if}

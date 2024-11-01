@@ -5,14 +5,11 @@ import { windowShownStore } from "../stores/windowShown.svelte.ts";
 import { initializedStore } from "../stores/initialized.svelte";
 import Welcome from "./Welcome.svelte";
 import Header from "./Header.svelte";
-import { platform } from "@tauri-apps/plugin-os";
 
 const { children } = $props();
-let currentPlatform: string;
 
 onMount(async () => {
   await windowShownStore.show();
-  currentPlatform = platform();
 });
 </script>
 

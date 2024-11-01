@@ -14,7 +14,6 @@ pub async fn install_package(name: String) -> Result<()> {
     Ok(())
 }
 
-// Deletes package, keeping the Docker images
 pub async fn delete_package(name: String, include_images: bool) -> Result<()> {
     kittynode_core::package::delete_package(&name, include_images).await?;
     Ok(())
