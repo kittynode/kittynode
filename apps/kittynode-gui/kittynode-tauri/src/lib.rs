@@ -111,7 +111,7 @@ pub fn run() {
     tauri::Builder::default()
         .setup(|_| {
             #[cfg(mobile)]
-            SERVER_URL.set("merlin:3000".to_string())?;
+            SERVER_URL.set("http://merlin:3000".to_string())?;
             Ok(()) // do nothing if not mobile
         })
         .plugin(tauri_plugin_os::init())
