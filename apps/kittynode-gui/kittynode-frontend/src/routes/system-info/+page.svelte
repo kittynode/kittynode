@@ -1,7 +1,7 @@
 <script lang="ts">
 import { onMount } from "svelte";
-import { invoke } from "@tauri-apps/api/core";
 import type { SystemInfo } from "$lib/types/system_info";
+import { invoke } from "@tauri-apps/api/core";
 
 let processor = $state("Loading...");
 let memory = $state("Loading...");

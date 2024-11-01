@@ -15,11 +15,12 @@ path = "src/main.rs"
 axoupdater = "0.7.1"
 clap = { version = "4.5.20", features = ["derive"] }
 eyre = { version = "0.6", default-features = false, features = [
-    "auto-install",
-    "track-caller",
+  "auto-install",
+  "track-caller",
 ] }
 kittynode-core = { version = "0.4.0", path = "../../crates/kittynode-core" }
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+tracing-subscriber = "0.3.18"
 
 [dev-dependencies]
 assert_cmd = "2.0.12"

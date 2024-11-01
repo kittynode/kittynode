@@ -1,13 +1,17 @@
 ---
-title: Contribute to Kittynode
-description: How to contribute to Kittynode.
+title: Development guide
+description: Development guide for Kittynode.
 ---
 
 import { Steps } from '@astrojs/starlight/components';
 
 Kittynode is open to everyone, and happily welcomes any contributions!
 
-## Prerequisites
+## Working with the codebase
+
+Get started with the codebase and running development commands.
+
+### Prerequisites
 
 <Steps>
 
@@ -31,7 +35,7 @@ Kittynode is open to everyone, and happily welcomes any contributions!
 
 </Steps>
 
-## Development
+### Development commands
 
 <Steps>
 
@@ -60,3 +64,11 @@ Kittynode is open to everyone, and happily welcomes any contributions!
     ```
 
 </Steps>
+
+## Releases
+
+We push a tag `<package-name>-canary.n` to GitHub, and CI will build and publish a draft release for the package. We auto-generate a changelog with GitHub, and publish a pre-release.
+
+You can find all the latest releases [here](https://github.com/kittynode/kittynode/releases).
+
+We will support package-level changelogs and semantic versioning in the future, but during the rapid development phase we don't want to waste time on that.
