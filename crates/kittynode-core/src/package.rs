@@ -141,6 +141,7 @@ pub async fn delete_package(package_name: &str, include_images: bool) -> Result<
         remove_container(&docker, container.name)
             .await
             .wrap_err_with(|| format!("Failed to remove container '{}'", container.name))?;
+        info!("Container '{}' removed successfully.", container.name);
     }
 
     // Remove the container images

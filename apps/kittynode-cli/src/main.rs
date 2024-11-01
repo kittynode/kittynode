@@ -19,22 +19,26 @@ enum Commands {
     DeletePackage {
         #[arg(value_name = "PACKAGE_NAME")]
         name: String,
+        #[arg(long = "include-images", help = "Whether to include Docker images")]
+        include_images: bool,
     },
 }
 
 #[tokio::main]
 async fn main() -> Result<()> {
     tracing_subscriber::fmt::init();
-    let cli: Cli = Cli::parse();
-    match cli.command {
+    match Cli::parse().command {
         Commands::GetPackages => {
             commands::get_packages_command().await?;
         }
         Commands::InstallPackage { name } => {
             commands::install_package(name).await?;
         }
-        Commands::DeletePackage { name } => {
-            commands::delete_package(name).await?;
+        Commands::DeletePackage {
+            name,
+            include_images,
+        } => {
+            commands::delete_package(name, include_images).await?;
         }
     }
     Ok(())
