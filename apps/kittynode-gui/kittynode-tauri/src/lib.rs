@@ -109,6 +109,11 @@ fn init_kittynode() -> Result<(), String> {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .setup(|_| {
+            #[cfg(mobile)]
+            SERVER_URL.set("merlin:3000".to_string())?;
+            Ok(()) // do nothing if not mobile
+        })
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_dialog::init())
         .invoke_handler(tauri::generate_handler![
