@@ -9,7 +9,3 @@ A tool for managing decentralized node infrastructure.
 ## Documentation
 
 Learn about Kittynode at [kittynode.io](https://kittynode.io).
-
-## Contributing
-
-Kittynode is open to everyone. For contributing information see the [contributing guide](https://kittynode.io/contribute/contribute-to-kittynode).
