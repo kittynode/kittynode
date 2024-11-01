@@ -3,16 +3,14 @@ use std::collections::HashMap;
 use tracing::info;
 
 #[cfg(mobile)]
-mod mobile {
-    use once_cell::sync::OnceCell;
-    use tauri_plugin_http::reqwest;
-
-    pub static HTTP_CLIENT: OnceCell<reqwest::Client> = OnceCell::new();
-    pub static SERVER_URL: OnceCell<String> = OnceCell::new();
-}
+use once_cell::sync::OnceCell;
+#[cfg(mobile)]
+use tauri_plugin_http::reqwest;
 
 #[cfg(mobile)]
-use mobile::{HTTP_CLIENT, SERVER_URL};
+pub static HTTP_CLIENT: OnceCell<reqwest::Client> = OnceCell::new();
+#[cfg(mobile)]
+pub static SERVER_URL: OnceCell<String> = OnceCell::new();
 
 #[tauri::command]
 fn get_packages() -> Result<HashMap<String, kittynode_core::package::Package>, String> {
