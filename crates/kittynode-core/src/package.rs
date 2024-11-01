@@ -81,8 +81,6 @@ pub async fn get_installed_packages() -> Result<Vec<String>> {
 pub async fn install_package(name: &str) -> Result<()> {
     let docker = get_docker_instance()?;
 
-    info!("Installing package: {}", name);
-
     generate_jwt_secret().wrap_err("Failed to generate JWT secret")?;
 
     let packages = get_packages().wrap_err("Failed to retrieve packages")?;

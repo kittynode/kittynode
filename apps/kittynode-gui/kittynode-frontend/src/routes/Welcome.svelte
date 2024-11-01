@@ -21,6 +21,15 @@ async function installPackage(name: string) {
   }
 }
 
+async function deletePackage(name: string) {
+  try {
+    await invoke("delete_package", { name, includeImages: false });
+    alert(`Successfully deleted: ${name}`);
+  } catch (error) {
+    alert(`Failed to delete ${name}: ${error}`);
+  }
+}
+
 onMount(async () => {
   currentPlatform = platform();
 });
@@ -30,6 +39,8 @@ onMount(async () => {
   <img class="logo" src="/images/kittynode-light.png" alt="Kittynode Logo">
   {#if currentPlatform === "ios"}
   <button onclick={() => installPackage("Ethereum")}>Install Ethereum</button>
+  <br />
+  <button onclick={() => deletePackage("Ethereum")}>Delete Ethereum</button>
   {:else}
   <button onclick={initKittynode}>Get Started</button>
   {/if}
