@@ -59,5 +59,5 @@ test-no-capture:
   cargo nextest run --no-capture
 
 # add a shadcn component
-shadcn *args='':
+shadcn-add *args='':
   cd apps/kittynode-gui/kittynode-frontend && bunx shadcn-svelte@next add {{args}}
