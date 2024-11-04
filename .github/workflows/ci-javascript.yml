@@ -3,13 +3,13 @@ name: CI - JavaScript
 on:
   push:
     paths:
-      - "apps/kittynode-gui/kittynode-frontend/**"
+      - apps/kittynode-gui/kittynode-frontend/**
 
 jobs:
   format-lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout the repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Install pnpm

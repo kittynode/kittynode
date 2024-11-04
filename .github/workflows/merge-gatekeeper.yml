@@ -7,7 +7,7 @@ on:
   merge_group: # Trigger in merge queue to pass the required status check
 
 jobs:
-  merge-gatekeeper:
+  verify-status-checks:
     if: github.event_name == 'pull_request' # Skip in merge queue
     runs-on: ubuntu-latest
     permissions:
