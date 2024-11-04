@@ -76,7 +76,12 @@ onMount(async () => {
     <Card.Root>
       <Card.Header>
         <Card.Title>{name}</Card.Title>
-        <Card.Description>{p.description}</Card.Description>
+        <Card.Description>
+          {#if !isDockerRunning}
+            <p><strong>Turn on Docker to use this package. If you need to install Docker, please follow the installation guide <a href="https://docs.docker.com/engine/install/" target="_blank">here</a>.</strong></p>
+          {/if}
+          {p.description}
+        </Card.Description>
       </Card.Header>
       <Card.Content>
         <Button
