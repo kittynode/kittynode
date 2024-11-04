@@ -1,6 +1,7 @@
 {
-  "workspaces": [
-    "docs",
-    "apps/kittynode-gui/kittynode-frontend"
-  ]
+  "name": "kittynode",
+  "private": true,
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4"
+  }
 }

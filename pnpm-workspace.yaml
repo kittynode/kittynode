@@ -1,0 +1,3 @@
+packages:
+  - "apps/kittynode-gui/kittynode-frontend"
+  - "docs"
