@@ -12,7 +12,6 @@
     "format-lint:fix": "biome format src/ --fix && biome lint src/ --fix"
   },
   "dependencies": {
-    "@picocss/pico": "^2.0.6",
     "@tauri-apps/api": "^2.0.3",
     "@tauri-apps/plugin-dialog": "^2.0.1",
     "@tauri-apps/plugin-os": "^2.0.0"
