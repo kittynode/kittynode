@@ -32,7 +32,7 @@ tauri:
 
 # start the ios app
 tauri-ios:
-  cargo tauri ios dev --verbose
+  cargo tauri ios dev
 
 # init the ios app
 tauri-ios-init:
