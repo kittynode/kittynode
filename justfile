@@ -30,6 +30,10 @@ lint-js-fix:
 lint-rs:
   cargo clippy --all-targets --all-features -- -D warnings && cargo fmt --all -- --check
 
+# add a shadcn component
+shadcn-add *args='':
+  cd packages/gui && pnpm dlx shadcn-svelte@next add {{args}} && pnpm format-lint:fix
+
 # start the desktop app
 tauri:
   cargo tauri dev
