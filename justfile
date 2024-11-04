@@ -60,4 +60,4 @@ test-no-capture:
 
 # add a shadcn component
 shadcn-add *args='':
-  pnpm -F kittynode-frontend dlx shadcn-svelte@next add {{args}} && pnpm -F kittynode-frontend format-lint:fix
+  cd apps/kittynode-gui/kittynode-frontend && pnpm dlx shadcn-svelte@next add {{args}} && pnpm format-lint:fix
