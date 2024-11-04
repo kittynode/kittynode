@@ -59,16 +59,16 @@ onMount(async () => {
 
   /* Default logo for light mode */
   img.logo {
-    width: 300px; /* Adjust logo size */
+    width: 300px;
     margin-bottom: 20px;
     vertical-align: middle;
     content: url("/images/kittynode-light.png");
   }
 
-  /* Change logo in dark mode */
+  /* Change logo in dark mode
   @media (prefers-color-scheme: dark) {
     img.logo {
     content: url("/images/kittynode-dark.png");
     }
-  }
+  } */
 </style>
