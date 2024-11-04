@@ -18,6 +18,7 @@ jobs:
         with:
           requireScope: true
           scopes: |
+            axum
             cli
             core
             deps

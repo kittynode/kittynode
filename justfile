@@ -20,11 +20,11 @@ kittynode *args='':
 
 # lint the javascript code
 lint-js:
-  pnpm -F kittynode-frontend format-lint
+  pnpm -F gui format-lint
 
 # lint and fix the javascript code
 lint-js-fix:
-  pnpm -F kittynode-frontend format-lint:fix
+  pnpm -F gui format-lint:fix
 
 # lint the rust code
 lint-rs:

@@ -12,7 +12,28 @@ importers:
         specifier: 1.9.4
         version: 1.9.4
 
-  apps/kittynode-gui/kittynode-frontend:
+  packages/docs:
+    dependencies:
+      '@astrojs/check':
+        specifier: ^0.9.4
+        version: 0.9.4(typescript@5.6.3)
+      '@astrojs/starlight':
+        specifier: ^0.28.5
+        version: 0.28.5(astro@4.16.8(@types/node@18.19.64)(rollup@4.24.4)(typescript@5.6.3))
+      astro:
+        specifier: ^4.16.8
+        version: 4.16.8(@types/node@18.19.64)(rollup@4.24.4)(typescript@5.6.3)
+      astro-embed:
+        specifier: ^0.8.0
+        version: 0.8.0(astro@4.16.8(@types/node@18.19.64)(rollup@4.24.4)(typescript@5.6.3))
+      sharp:
+        specifier: ^0.33.5
+        version: 0.33.5
+      typescript:
+        specifier: ^5.6.3
+        version: 5.6.3
+
+  packages/gui:
     dependencies:
       '@picocss/pico':
         specifier: ^2.0.6
@@ -48,27 +69,6 @@ importers:
       vite:
         specifier: ^5.4.10
         version: 5.4.10(@types/node@18.19.64)
-
-  docs:
-    dependencies:
-      '@astrojs/check':
-        specifier: ^0.9.4
-        version: 0.9.4(typescript@5.6.3)
-      '@astrojs/starlight':
-        specifier: ^0.28.5
-        version: 0.28.5(astro@4.16.8(@types/node@18.19.64)(rollup@4.24.4)(typescript@5.6.3))
-      astro:
-        specifier: ^4.16.8
-        version: 4.16.8(@types/node@18.19.64)(rollup@4.24.4)(typescript@5.6.3)
-      astro-embed:
-        specifier: ^0.8.0
-        version: 0.8.0(astro@4.16.8(@types/node@18.19.64)(rollup@4.24.4)(typescript@5.6.3))
-      sharp:
-        specifier: ^0.33.5
-        version: 0.33.5
-      typescript:
-        specifier: ^5.6.3
-        version: 5.6.3
 
 packages:
 
@@ -3280,7 +3280,7 @@ snapshots:
 
   '@types/sax@1.2.7':
     dependencies:
-      '@types/node': 17.0.45
+      '@types/node': 18.19.64
 
   '@types/unist@2.0.11': {}
 

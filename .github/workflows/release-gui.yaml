@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     tags:
-      - kittynode-gui-*
+      - gui-*
 
 jobs:
   publish-tauri:
@@ -89,5 +89,5 @@ jobs:
         with:
           releaseId: ${{ steps.create_release.outputs.id }}
           tagName: ${{ github.ref_name }}
-          projectPath: "apps/kittynode-gui/kittynode-tauri"
+          projectPath: "packages/gui/src-tauri"
           args: ${{ matrix.args }}
