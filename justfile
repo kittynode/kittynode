@@ -1,6 +1,6 @@
 # start the axum server
 axum:
-  cd crates/kittynode-axum && cargo run
+  cargo run -p kittynode-axum
 
 # build the crates
 build:
@@ -8,7 +8,7 @@ build:
 
 # start the docs dev server
 docs:
-  cd docs && pnpm dev
+  pnpm -F docs dev
 
 # run the kittynode cli with the given args
 kittynode *args='':
@@ -16,11 +16,11 @@ kittynode *args='':
 
 # lint the javascript code
 lint-js:
-  cd apps/kittynode-gui/kittynode-frontend && pnpm format-lint
+  pnpm -F kittynode-frontend format-lint
 
 # lint and fix the javascript code
 lint-js-fix:
-  cd apps/kittynode-gui/kittynode-frontend && pnpm format-lint:fix
+  pnpm -F kittynode-frontend format-lint:fix
 
 # lint the rust code
 lint-rs:
@@ -28,23 +28,23 @@ lint-rs:
 
 # start the desktop app
 tauri:
-  cd apps/kittynode-gui/kittynode-tauri && cargo tauri dev
+  cargo tauri dev
 
 # start the ios app
 tauri-ios:
-  cd apps/kittynode-gui/kittynode-tauri && cargo tauri ios dev --verbose
+  cargo tauri ios dev --verbose
 
 # init the ios app
 tauri-ios-init:
-  cd apps/kittynode-gui/kittynode-tauri && cargo tauri ios init
+  cargo tauri ios init
 
 # build the tauri app for macOS
 tauri-build-apple:
-  cd apps/kittynode-gui/kittynode-tauri && cargo tauri build --target aarch64-apple-darwin
+  cargo tauri build --target aarch64-apple-darwin
 
 # build the tauri app for Linux
 tauri-build-linux:
-  cd apps/kittynode-gui/kittynode-tauri && cargo tauri build --target x86_64-unknown-linux-gnu
+  cargo tauri build --target x86_64-unknown-linux-gnu
 
 # run the tests
 test:
@@ -60,4 +60,4 @@ test-no-capture:
 
 # add a shadcn component
 shadcn-add *args='':
-  cd apps/kittynode-gui/kittynode-frontend && pnpm dlx shadcn-svelte@next add {{args}} && pnpm format-lint:fix
+  pnpm -F kittynode-frontend dlx shadcn-svelte@next add {{args}} && pnpm -F kittynode-frontend format-lint:fix
