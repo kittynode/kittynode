@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     tags:
-      - kittynode-gui-*
+      - gui-*
 
 jobs:
   publish-tauri:
