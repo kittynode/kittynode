@@ -6,13 +6,6 @@ import { page } from "$app/stores";
   <nav>
     <ul>
       <li>
-        <strong>
-          Kittynode
-        </strong>
-      </li>
-    </ul>
-    <ul>
-      <li>
         <a href="/" aria-current={$page.url.pathname === "/"}>Home</a>
       </li>
       <li>
@@ -24,3 +17,9 @@ import { page } from "$app/stores";
     </ul>
   </nav>
 </header>
+
+<style>
+a[aria-current="true"] {
+  font-weight: bold;
+}
+</style>
