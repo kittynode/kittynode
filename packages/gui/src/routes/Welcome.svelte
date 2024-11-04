@@ -4,6 +4,7 @@ import { goto } from "$app/navigation";
 import { platform } from "@tauri-apps/plugin-os";
 import { onMount } from "svelte";
 import { invoke } from "@tauri-apps/api/core";
+import { Button } from "$lib/components/ui/button";
 
 let currentPlatform = $state("");
 
@@ -38,11 +39,11 @@ onMount(async () => {
 <main>
   <img class="logo" src="/images/kittynode-light.png" alt="Kittynode Logo">
   {#if currentPlatform === "ios"}
-  <button onclick={() => installPackage("Ethereum")}>Install Ethereum</button>
+  <Button onclick={() => installPackage("Ethereum")}>Install Ethereum</Button>
   <br />
-  <button onclick={() => deletePackage("Ethereum")}>Delete Ethereum</button>
+  <Button onclick={() => deletePackage("Ethereum")}>Delete Ethereum</Button>
   {:else}
-  <button onclick={initKittynode}>Get Started</button>
+  <Button onclick={initKittynode}>Get Started</Button>
   {/if}
 </main>
 
@@ -58,16 +59,16 @@ onMount(async () => {
 
   /* Default logo for light mode */
   img.logo {
-    width: 300px; /* Adjust logo size */
+    width: 300px;
     margin-bottom: 20px;
     vertical-align: middle;
     content: url("/images/kittynode-light.png");
   }
 
-  /* Change logo in dark mode */
+  /* Change logo in dark mode
   @media (prefers-color-scheme: dark) {
     img.logo {
     content: url("/images/kittynode-dark.png");
     }
-  }
+  } */
 </style>

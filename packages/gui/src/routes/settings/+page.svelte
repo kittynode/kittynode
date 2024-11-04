@@ -2,6 +2,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { message } from "@tauri-apps/plugin-dialog";
 import { initializedStore } from "../../stores/initialized.svelte";
+import { Button } from "$lib/components/ui/button";
 
 async function connectMobile() {
   await message("Coming soon.");
@@ -19,24 +20,21 @@ async function deleteKittynode() {
 }
 </script>
 
-<h2>Settings</h2>
-
 <ul class="settings-list">
   <li>
     <span>Connect your mobile device</span>
-    <button onclick={connectMobile}>Connect mobile</button>
+    <Button onclick={connectMobile}>Connect mobile</Button>
   </li>
   <hr />
   <li>
     <span>Delete all Kittynode data</span>
-    <button onclick={deleteKittynode}>Delete data</button>
+    <Button onclick={deleteKittynode}>Delete data</Button>
   </li>
 </ul>
 
 <style>
-  .settings-list {
-    list-style: none;
-    padding: 0;
+  hr {
+    margin: 8px 0px 8px 0px;
   }
 
   .settings-list li {

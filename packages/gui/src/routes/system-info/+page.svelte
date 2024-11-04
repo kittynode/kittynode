@@ -23,7 +23,6 @@ onMount(() => {
 });
 </script>
 
-<h2>System information</h2>
 <ul>
   <li>Processor: {processor}</li>
   <li>Memory: {memory}</li>

@@ -3,6 +3,8 @@ import { onMount } from "svelte";
 import { invoke } from "@tauri-apps/api/core";
 import type { Package } from "$lib/types";
 import Dashboard from "./Dashboard.svelte";
+import { Button } from "$lib/components/ui/button";
+import * as Card from "$lib/components/ui/card/index.js";
 
 let packages: { [name: string]: Package } = $state({});
 let isDockerRunning: boolean | null = $state(null);
@@ -61,36 +63,44 @@ onMount(async () => {
 });
 </script>
 
-<h2>Dashboard</h2>
+<h2>Dashboard:</h2>
 
 <Dashboard {installedPackages} />
 
-<h2>Package store</h2>
+<br>
+
+<h2>Package store:</h2>
 
 {#if Object.keys(packages).length > 0}
   {#each Object.entries(packages).sort(([a], [b]) => a.localeCompare(b)) as [name, p]}
-    <article>
-      <h3>{name}</h3>
-      {#if !isDockerRunning}
-        <p><strong>Turn on Docker to use this package. If you need to install Docker, please follow the installation guide <a href="https://docs.docker.com/engine/install/" target="_blank">here</a>.</strong></p>
-      {/if}
-      <p>{p.description}</p>
-      <button
+    <Card.Root>
+      <Card.Header>
+        <Card.Title>{name}</Card.Title>
+        <Card.Description>
+          {#if !isDockerRunning}
+            <p><strong>Turn on Docker to use this package. If you need to install Docker, please follow the installation guide <a href="https://docs.docker.com/engine/install/" target="_blank">here</a>.</strong></p>
+          {/if}
+          {p.description}
+        </Card.Description>
+      </Card.Header>
+      <Card.Content>
+        <Button
         onclick={() => installPackage(name)}
         disabled={!ready || !isDockerRunning || installedPackages.has(name) || installLoading === name || deleteLoading === name}
       >
         {installLoading === name ? "Installing..." : "Install"}
-      </button>
+      </Button>
 
       {#if installedPackages.has(name)}
-        <button
+        <Button
           class="secondary"
           onclick={() => deletePackage(name, false)}
           disabled={!isDockerRunning || deleteLoading === name}
         >
           {deleteLoading === name ? "Deleting..." : "Delete"}
-        </button>
+        </Button>
       {/if}
-    </article>
+      </Card.Content>
+    </Card.Root>
   {/each}
 {/if}
