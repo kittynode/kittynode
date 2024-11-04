@@ -3,7 +3,8 @@ name: CI - JavaScript
 on:
   push:
     paths:
-      - apps/kittynode-gui/kittynode-frontend/**
+      - packages/gui/*
+      - packages/gui/src/**
 
 jobs:
   format-lint:
@@ -28,4 +29,4 @@ jobs:
         run: pnpm install
 
       - name: Format and lint
-        run: pnpm -F kittynode-frontend format-lint
+        run: pnpm -F gui format-lint

@@ -1,13 +1,14 @@
 [workspace]
 members = [
-    "apps/kittynode-cli",
-    "apps/kittynode-gui/kittynode-tauri",
-    "crates/*",
+  "packages/axum",
+  "packages/cli",
+  "packages/core",
+  "packages/gui/src-tauri",
 ]
 resolver = "2"
 
 [workspace.package]
-description = "A tool for managing decentralized node infrastructure."
+description = "A control center for node operators."
 license = "MIT"
 edition = "2021"
 repository = "https://github.com/kittynode/kittynode"
