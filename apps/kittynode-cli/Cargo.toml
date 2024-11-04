@@ -12,7 +12,7 @@ name = "kittynode"
 path = "src/main.rs"
 
 [dependencies]
-axoupdater = "0.7.1"
+axoupdater = "0.8.1"
 clap = { version = "4.5.20", features = ["derive"] }
 eyre = { version = "0.6", default-features = false, features = [
   "auto-install",
