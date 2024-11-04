@@ -1,6 +1,0 @@
-{
-  "workspaces": [
-    "docs",
-    "apps/kittynode-gui/kittynode-frontend"
-  ]
-}

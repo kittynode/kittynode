@@ -8,7 +8,7 @@ build:
 
 # start the docs dev server
 docs:
-  cd docs && bun run dev
+  cd docs && pnpm dev
 
 # run the kittynode cli with the given args
 kittynode *args='':
@@ -16,11 +16,11 @@ kittynode *args='':
 
 # lint the javascript code
 lint-js:
-  cd apps/kittynode-gui/kittynode-frontend && bun format-lint
+  cd apps/kittynode-gui/kittynode-frontend && pnpm format-lint
 
 # lint and fix the javascript code
 lint-js-fix:
-  cd apps/kittynode-gui/kittynode-frontend && bun format-lint:fix
+  cd apps/kittynode-gui/kittynode-frontend && pnpm format-lint:fix
 
 # lint the rust code
 lint-rs:
@@ -60,4 +60,4 @@ test-no-capture:
 
 # add a shadcn component
 shadcn-add *args='':
-  cd apps/kittynode-gui/kittynode-frontend && bunx shadcn-svelte@next add {{args}} && bun format-lint:fix
+  cd apps/kittynode-gui/kittynode-frontend && pnpm dlx shadcn-svelte@next add {{args}} && pnpm format-lint:fix

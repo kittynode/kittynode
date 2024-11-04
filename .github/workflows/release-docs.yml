@@ -21,7 +21,7 @@ jobs:
         uses: withastro/action@v3
         with:
           path: docs
-          package-manager: bun
+          package-manager: pnpm
 
   deploy:
     needs: build

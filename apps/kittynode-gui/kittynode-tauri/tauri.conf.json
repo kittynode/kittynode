@@ -3,9 +3,9 @@
   "productName": "Kittynode",
   "identifier": "com.kittynode.app",
   "build": {
-    "beforeDevCommand": "bun --filter kittynode-frontend dev",
+    "beforeDevCommand": "pnpm -F kittynode-frontend dev",
     "devUrl": "http://localhost:1420",
-    "beforeBuildCommand": "bun --filter kittynode-frontend build",
+    "beforeBuildCommand": "pnpm -F kittynode-frontend build",
     "frontendDist": "../kittynode-frontend/build"
   },
   "app": {
