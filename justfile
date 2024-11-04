@@ -57,3 +57,7 @@ test-coverage:
 # run the tests without capturing output
 test-no-capture:
   cargo nextest run --no-capture
+
+# add a shadcn component
+shadcn-add *args='':
+  cd apps/kittynode-gui/kittynode-frontend && bunx shadcn-svelte@next add {{args}} && bun format-lint:fix
