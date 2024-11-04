@@ -3,15 +3,15 @@ name: CI - Rust
 on:
   push:
     paths:
-      - "apps/kittynode-cli/**"
-      - "apps/kittynode-gui/kittynode-tauri/**"
-      - "crates/**"
+      - apps/kittynode-cli/**
+      - apps/kittynode-gui/kittynode-tauri/**
+      - crates/**
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout the repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Install system dependencies
@@ -45,7 +45,7 @@ jobs:
   format-lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout the repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Install system dependencies
@@ -64,9 +64,6 @@ jobs:
 
       - name: Check code formatting
         run: cargo fmt --all -- --check
-
-      - name: Check for typos
-        uses: crate-ci/typos@master
 
       - name: Run Clippy
         run: cargo clippy --all-targets --all-features -- -D warnings

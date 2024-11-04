@@ -9,3 +9,7 @@ A tool for managing decentralized node infrastructure.
 ## Documentation
 
 Learn about Kittynode at [kittynode.io](https://kittynode.io).
+
+## Development
+
+See the [development guide](https://kittynode.io/contribute/development-guide).

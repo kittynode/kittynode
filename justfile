@@ -10,6 +10,10 @@ build:
 docs:
   pnpm -F docs dev
 
+# install dev tools
+install-dev-tools:
+  cargo install cargo-edit cargo-llvm-cov cargo-nextest tauri-cli
+
 # run the kittynode cli with the given args
 kittynode *args='':
   @if [ -z "{{args}}" ]; then target/debug/kittynode help; else target/debug/kittynode {{args}}; fi
