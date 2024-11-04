@@ -1,16 +1,16 @@
 <script lang="ts">
-  import "../app.css";
-  import { onMount } from "svelte";
-  import { windowShownStore } from "../stores/windowShown.svelte.ts";
-  import { initializedStore } from "../stores/initialized.svelte";
-  import Welcome from "./Welcome.svelte";
-  import Header from "./Header.svelte";
+import "../app.css";
+import { onMount } from "svelte";
+import { windowShownStore } from "../stores/windowShown.svelte.ts";
+import { initializedStore } from "../stores/initialized.svelte";
+import Welcome from "./Welcome.svelte";
+import Header from "./Header.svelte";
 
-  const { children } = $props();
+const { children } = $props();
 
-  onMount(async () => {
-    await windowShownStore.show();
-  });
+onMount(async () => {
+  await windowShownStore.show();
+});
 </script>
 
 {#if !initializedStore.initialized}
