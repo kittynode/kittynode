@@ -9,18 +9,18 @@ version = "0.4.0"
 
 [dependencies]
 bollard = "0.17.1"
-eyre = { version = "0.6", default-features = false, features = [
-    "auto-install",
-    "track-caller",
+eyre = { version = "0.6.12", default-features = false, features = [
+  "auto-install",
+  "track-caller",
 ] }
-serde = { version = "1.0.210", features = ["derive"] }
+serde = { version = "1.0.214", features = ["derive"] }
 toml = "0.8.19"
 tracing = "0.1.40"
 tokio-stream = "0.1.16"
 home = "0.5.9"
 hex = "0.4.3"
 rand = "0.8.5"
-sysinfo = "0.29"
+sysinfo = "0.32.0"
 
 [dev-dependencies]
-tempfile = "3"
+tempfile = "3.13.0"
