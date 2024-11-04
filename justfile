@@ -60,4 +60,4 @@ test-no-capture:
 
 # add a shadcn component
 shadcn-add *args='':
-  cd apps/kittynode-gui/kittynode-frontend && bunx shadcn-svelte@next add {{args}}
+  cd apps/kittynode-gui/kittynode-frontend && bunx shadcn-svelte@next add {{args}} && bun format-lint:fix
