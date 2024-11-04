@@ -1,5 +1,5 @@
 <script lang="ts">
-import "../app.css";
+import "@picocss/pico/css/pico.purple.min.css";
 import { onMount } from "svelte";
 import { windowShownStore } from "../stores/windowShown.svelte.ts";
 import { initializedStore } from "../stores/initialized.svelte";
