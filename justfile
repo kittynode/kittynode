@@ -8,7 +8,10 @@ docs:
 
 # install icons
 icons:
-  cargo tauri icon assets/kittynode-logo.png && cargo tauri icon assets/kittynode-logo-no-padding.png -o tmp && mv tmp/ios/* packages/gui/src-tauri/gen/apple/Assets.xcassets/AppIcon.appiconset && rm -rf tmp
+  cargo tauri icon assets/kittynode-logo.png
+  cargo tauri icon assets/kittynode-logo-no-padding.png --ios-color '#A181A7' -o tmp
+  mv tmp/ios/* packages/gui/src-tauri/gen/apple/Assets.xcassets/AppIcon.appiconset
+  rm -rf tmp
 
 # install or update dev tools
 install-dev-tools:
@@ -40,7 +43,13 @@ tauri:
 
 # start the ios app
 tauri-ios:
-  cargo tauri ios dev
+  cargo tauri ios dev --force-ip-prompt -vvv
+
+# clean the ios app
+tauri-ios-clean:
+  rm -rf ~/Library/Developer/Xcode/DerivedData
+  rm -rf ~/Library/Developer/Xcode/Archives
+  rm -rf ~/Library/Developer/Xcode/Projects
 
 # init the ios app
 tauri-ios-init:
