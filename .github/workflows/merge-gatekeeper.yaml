@@ -1,10 +1,16 @@
 name: Merge Gatekeeper
 
 on:
+  merge_group: # Trigger in merge queue to pass the required status check
   pull_request:
     branches:
       - main
-  merge_group: # Trigger in merge queue to pass the required status check
+  pull_request_target:
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
 
 jobs:
   merge-gatekeeper:
