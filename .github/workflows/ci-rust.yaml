@@ -3,10 +3,10 @@ name: CI - Rust
 on:
   push:
     paths:
-      - packages/axum/**
       - packages/cli/**
       - packages/core/**
       - packages/gui/src-tauri/**
+      - packages/web/**
 
 jobs:
   test:
