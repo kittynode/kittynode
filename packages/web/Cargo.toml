@@ -1,5 +1,5 @@
 [package]
-name = "kittynode-axum"
+name = "kittynode-web"
 version = "0.1.0"
 description.workspace = true
 license.workspace = true

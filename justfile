@@ -1,7 +1,3 @@
-# start the axum server
-axum:
-  cargo run -p kittynode-axum
-
 # build the crates
 build:
   cargo build
@@ -65,3 +61,7 @@ test-coverage:
 # run the tests without capturing output
 test-no-capture:
   cargo nextest run --no-capture
+
+# start the web server
+web:
+  cargo run -p kittynode-web

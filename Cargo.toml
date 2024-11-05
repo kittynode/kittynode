@@ -1,9 +1,9 @@
 [workspace]
 members = [
-  "packages/axum",
   "packages/cli",
   "packages/core",
   "packages/gui/src-tauri",
+  "packages/web",
 ]
 resolver = "2"
 
