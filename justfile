@@ -50,6 +50,9 @@ tauri-ios-clean:
   rm -rf ~/Library/Developer/Xcode/DerivedData
   rm -rf ~/Library/Developer/Xcode/Archives
   rm -rf ~/Library/Developer/Xcode/Projects
+  rm -rf packages/gui/src-tauri/gen
+  just tauri-ios-init
+  just icons
 
 # init the ios app
 tauri-ios-init:
