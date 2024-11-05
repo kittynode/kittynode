@@ -6,6 +6,10 @@ build:
 docs:
   pnpm -F docs dev
 
+# install icons
+icons:
+  cargo tauri icon assets/kittynode-logo.png && cargo tauri icon assets/kittynode-logo-no-padding.png -o tmp && mv tmp/ios/* packages/gui/src-tauri/gen/apple/Assets.xcassets/AppIcon.appiconset && rm -rf tmp
+
 # install or update dev tools
 install-dev-tools:
   cargo install cargo-edit cargo-llvm-cov cargo-nextest just tauri-cli
