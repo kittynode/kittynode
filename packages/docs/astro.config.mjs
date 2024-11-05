@@ -14,7 +14,7 @@ export default defineConfig({
         replacesTitle: true,
       },
       editLink: {
-        baseUrl: "https://github.com/kittynode/kittynode/edit/main/docs/",
+        baseUrl: "https://github.com/kittynode/kittynode/edit/main/packages/docs/",
       },
       components: {
         Footer: "./src/components/overrides/Footer.astro",

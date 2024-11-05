@@ -5,10 +5,6 @@ description: Learn about what Kittynode is and how it works.
 
 import { YouTube } from 'astro-embed';
 
-:::note
-This page describes Kittynode's design, not its current state.
-:::
-
 Kittynode is an easy-to-use and secure-by-default tool for running Ethereum nodes.
 
 ## Quick demo
@@ -50,10 +46,6 @@ The design goals of the package ecosystem are to ensure installs are:
 - **Secure**: Packages are securely isolated from each other.
 - **Consistent**: Packages behave the same on all systems.
 - **Atomic**: Package installs and uninstalls are atomic, without polluting the system.
-
-### Port manager
-
-The port manager is a utility within Kittynode that manages the inbound and outbound ports for Kittynode packages. It is a central point where the user can configure the ports for their packages. Users can easily view and manage what ports their system is exposing to the outside world and also between packages.
 
 ### System checker
 
