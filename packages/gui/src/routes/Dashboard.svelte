@@ -1,13 +1,14 @@
 <script lang="ts">
-export let installedPackages: Set<string>;
+  import type { Package } from "$lib/types";
+  export let installedPackages: Package[];
 </script>
 
-{#if installedPackages.size === 0}
+{#if installedPackages.length === 0}
   <p>You have no packages installed.</p>
 {:else}
-<ul>
-{#each installedPackages as name}
-  <li>{name}</li>
-{/each}
-</ul>
+  <ul>
+    {#each installedPackages as pkg}
+      <li>{pkg.name}</li>
+    {/each}
+  </ul>
 {/if}

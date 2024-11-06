@@ -9,7 +9,7 @@
 
   let packages: { [name: string]: Package } = $state({});
   let isDockerRunning: boolean | null = $state(null);
-  let installedPackages: Set<string> = $state(new Set());
+  let installedPackages: Package[] = $state([]);
   let installLoading: string | null = $state(null); // Track which package is being installed
   let deleteLoading: string | null = $state(null); // Track which package is being deleted
   let ready = $state(false); // Track when state checks are complete
@@ -19,7 +19,7 @@
     try {
       packages = await invoke("get_packages");
       if (isDockerRunning || currentPlatform === "ios") {
-        installedPackages = new Set(await invoke("get_installed_packages"));
+        installedPackages = await invoke("get_installed_packages");
       }
     } catch (error) {
       alert("Failed to load packages.");
@@ -101,14 +101,14 @@
           onclick={() => installPackage(name)}
           disabled={!ready ||
             (!isDockerRunning && currentPlatform !== "ios") ||
-            installedPackages.has(name) ||
+            installedPackages.some((pkg) => pkg.name === name) ||
             installLoading === name ||
             deleteLoading === name}
         >
           {installLoading === name ? "Installing..." : "Install"}
         </Button>
 
-        {#if installedPackages.has(name)}
+        {#if installedPackages.some((pkg) => pkg.name === name)}
           <Button
             class="secondary"
             onclick={() => deletePackage(name, false)}

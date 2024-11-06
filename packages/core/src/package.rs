@@ -16,14 +16,15 @@ pub(crate) trait PackageDefinition {
     fn get_package() -> Result<Package>;
 }
 
-#[derive(Serialize)]
+#[derive(Clone, Serialize)]
 pub struct Package {
+    pub(crate) name: &'static str,
     pub(crate) description: &'static str,
     pub(crate) network_name: &'static str,
     pub(crate) containers: Vec<Container>,
 }
 
-#[derive(Serialize)]
+#[derive(Clone, Serialize)]
 pub struct Container {
     pub(crate) name: &'static str,
     pub(crate) image: &'static str,
@@ -33,7 +34,7 @@ pub struct Container {
     pub(crate) file_bindings: Vec<Binding>,
 }
 
-#[derive(Serialize)]
+#[derive(Clone, Serialize)]
 pub struct Binding {
     pub(crate) source: String,
     pub(crate) destination: String,
@@ -53,14 +54,23 @@ pub fn get_packages() -> Result<HashMap<&'static str, Package>> {
     Ok(HashMap::from([(Ethereum::NAME, Ethereum::get_package()?)]))
 }
 
-pub async fn get_installed_packages() -> Result<Vec<String>> {
+pub fn get_package(name: &str) -> Result<Package> {
+    let packages = get_packages()?;
+    packages
+        .get(name)
+        .cloned()
+        .ok_or_else(|| eyre::eyre!("Package not found"))
+}
+
+pub async fn get_installed_packages() -> Result<Vec<Package>> {
     let docker = get_docker_instance()?;
+    // Get all packages
     let packages = get_packages().wrap_err("Failed to retrieve packages")?;
 
     let mut installed = Vec::new();
 
-    // Check if containers for each package exist
-    for (name, package) in packages {
+    // For each package, check if all containers exist
+    for (name, package) in packages.iter() {
         let mut all_containers_exist = true;
 
         for container in &package.containers {
@@ -70,8 +80,13 @@ pub async fn get_installed_packages() -> Result<Vec<String>> {
             }
         }
 
+        // If they do, add the package to the list
         if all_containers_exist {
-            installed.push(name.to_string());
+            let package = packages
+                .get(name)
+                .cloned()
+                .ok_or_else(|| eyre::eyre!("Package not found"))?;
+            installed.push(package);
         }
     }
 
