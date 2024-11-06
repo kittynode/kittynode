@@ -9,7 +9,7 @@ use crate::{
 
 pub(crate) struct Ethereum;
 
-const ETHEREUM_NAME: &str = "ethereum";
+const ETHEREUM_NAME: &str = "Ethereum";
 
 impl PackageDefinition for Ethereum {
     const NAME: &'static str = ETHEREUM_NAME;
