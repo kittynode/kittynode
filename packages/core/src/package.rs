@@ -119,18 +119,18 @@ pub async fn delete_package(package_name: &str, include_images: bool) -> Result<
         .get(package_name)
         .ok_or_else(|| eyre::eyre!("Package '{}' not found", package_name))?;
 
-    let mut image_names: Vec<String> = Vec::new();
-    let mut file_paths: HashSet<String> = HashSet::new();
-    let mut directory_paths: HashSet<String> = HashSet::new();
-    let mut volume_names: Vec<String> = Vec::new();
+    let mut image_names = Vec::new();
+    let mut file_paths = HashSet::new();
+    let mut directory_paths = HashSet::new();
+    let mut volume_names = Vec::new();
 
     for container in &package.containers {
         // Collect the container's image name
-        image_names.push(container.image.clone());
+        image_names.push(&container.image);
 
         // Collect the container's volume bindings
         for binding in &container.volume_bindings {
-            volume_names.push(binding.source.clone());
+            volume_names.push(&binding.source);
         }
 
         // Collect the container's file or directory paths
@@ -139,9 +139,9 @@ pub async fn delete_package(package_name: &str, include_images: bool) -> Result<
             // Check if the path exists and ignore the error if it doesn't
             if let Ok(metadata) = fs::metadata(local_path) {
                 if metadata.is_dir() {
-                    directory_paths.insert(local_path.clone());
+                    directory_paths.insert(local_path);
                 } else {
-                    file_paths.insert(local_path.clone());
+                    file_paths.insert(local_path);
                 }
             } else {
                 info!("Path '{}' not found, skipping.", local_path);
@@ -160,7 +160,7 @@ pub async fn delete_package(package_name: &str, include_images: bool) -> Result<
         for image_name in image_names {
             info!("Removing image: {}", image_name);
             docker
-                .remove_image(&image_name, None, None)
+                .remove_image(image_name, None, None)
                 .await
                 .wrap_err_with(|| format!("Failed to remove image '{}'", image_name))?;
             info!("Image '{}' removed successfully.", image_name);
@@ -168,14 +168,14 @@ pub async fn delete_package(package_name: &str, include_images: bool) -> Result<
     }
 
     // Remove the files
-    for file_path in &file_paths {
+    for file_path in file_paths {
         info!("Removing file: {}", file_path);
         fs::remove_file(file_path).wrap_err(format!("Failed to remove file '{}'", file_path))?;
         info!("File '{}' removed successfully.", file_path);
     }
 
     // Remove the directories after all files have been deleted
-    for dir_path in &directory_paths {
+    for dir_path in directory_paths {
         info!("Removing directory: {}", dir_path);
         fs::remove_dir_all(dir_path)
             .wrap_err(format!("Failed to remove directory '{}'", dir_path))?;
@@ -186,7 +186,7 @@ pub async fn delete_package(package_name: &str, include_images: bool) -> Result<
     for volume_name in volume_names {
         info!("Removing volume: {}", volume_name);
         docker
-            .remove_volume(&volume_name, None)
+            .remove_volume(volume_name, None)
             .await
             .wrap_err_with(|| format!("Failed to remove volume '{}'", volume_name))?;
         info!("Volume '{}' removed successfully.", volume_name);
