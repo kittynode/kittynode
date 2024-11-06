@@ -9,7 +9,7 @@ use crate::{
 
 pub(crate) struct Ethereum;
 
-const ETHEREUM_NAME: &'static str = "Ethereum";
+const ETHEREUM_NAME: &str = "ethereum";
 
 impl PackageDefinition for Ethereum {
     const NAME: &'static str = ETHEREUM_NAME;
@@ -27,7 +27,7 @@ impl PackageDefinition for Ethereum {
                 Container {
                     name: "reth-node".to_string(),
                     image: "ghcr.io/paradigmxyz/reth".to_string(),
-                    cmd: vec![
+                    cmd: [
                         "node",
                         "--chain",
                         "holesky",
