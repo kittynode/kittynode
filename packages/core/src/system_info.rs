@@ -17,7 +17,13 @@ pub fn get_system_info() -> Result<SystemInfo> {
     let cpu_name = system
         .cpus()
         .first()
-        .map(|cpu| cpu.brand().to_string())
+        .and_then(|cpu| {
+            if cpu.brand().is_empty() {
+                None
+            } else {
+                Some(cpu.brand().to_string())
+            }
+        })
         .unwrap_or_else(|| "Unknown".to_string());
 
     let cpu_cores = system.physical_core_count().unwrap_or(1);

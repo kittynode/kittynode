@@ -17,6 +17,34 @@ icons:
 install-dev-tools:
   cargo install cargo-edit cargo-llvm-cov cargo-nextest just tauri-cli
 
+# start the ios app on a physical device
+ios:
+  cargo tauri ios dev --force-ip-prompt -vvv
+
+# make an ios build
+ios-build:
+  cargo tauri ios build
+
+# clean the ios app
+ios-clean:
+  rm -rf ~/Library/Developer/Xcode/DerivedData
+  rm -rf ~/Library/Developer/Xcode/Archives
+  rm -rf ~/Library/Developer/Xcode/Projects
+
+# reset ios simulators
+ios-erase:
+  xcrun simctl erase all
+
+# init the ios app
+ios-init:
+  rm -rf packages/gui/src-tauri/gen
+  cargo tauri ios init
+  just icons
+
+# start the ios app on a virtual device
+ios-virtual:
+  cargo tauri ios dev 'iPhone 16'
+
 # run the kittynode cli with the given args
 kittynode *args='':
   @if [ -z "{{args}}" ]; then target/debug/kittynode help; else target/debug/kittynode {{args}}; fi
@@ -40,23 +68,6 @@ shadcn-add *args='':
 # start the desktop app
 tauri:
   cargo tauri dev
-
-# start the ios app
-tauri-ios:
-  cargo tauri ios dev --force-ip-prompt -vvv
-
-# clean the ios app
-tauri-ios-clean:
-  rm -rf ~/Library/Developer/Xcode/DerivedData
-  rm -rf ~/Library/Developer/Xcode/Archives
-  rm -rf ~/Library/Developer/Xcode/Projects
-  rm -rf packages/gui/src-tauri/gen
-  just tauri-ios-init
-  just icons
-
-# init the ios app
-tauri-ios-init:
-  cargo tauri ios init
 
 # build the tauri app for macOS
 tauri-build-apple:
