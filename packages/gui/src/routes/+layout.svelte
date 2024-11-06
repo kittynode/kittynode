@@ -17,7 +17,16 @@ onMount(async () => {
 <Welcome />
 {:else}
 <Header />
-<main class="container" style="margin-top: 1rem;">
+<br />
+<div class="container mx-auto">
   {@render children()}
-</main>
+</div>
 {/if}
+
+<style>
+  :global(html, body) {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+</style>

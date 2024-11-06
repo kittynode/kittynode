@@ -1,4 +1,5 @@
 export interface Package {
+  name: string;
   description: string;
   network_name: string;
   containers: Container[];

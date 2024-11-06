@@ -70,3 +70,12 @@ We push a tag `<package-name>-canary.n` to GitHub, and CI will build and publish
 You can find all the latest releases [here](https://github.com/kittynode/kittynode/releases).
 
 We will support package-level changelogs and semantic versioning in the future, but during the rapid development phase we don't want to waste time on that.
+
+## Deploying to iOS
+
+Some notes until we get it resolved upstream in Tauri:
+
+1. Make sure the physical device is properly connected and xcode is open.
+2. Make sure any last build is uninstalled from the device.
+3. See the justfile for more clean up commands.
+4. If you don't see the iOS IP, then it's a connection issue.

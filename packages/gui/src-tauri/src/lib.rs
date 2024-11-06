@@ -1,4 +1,5 @@
 use eyre::Result;
+use kittynode_core::package::Package;
 use std::collections::HashMap;
 use tracing::info;
 
@@ -24,12 +25,35 @@ fn get_packages() -> Result<HashMap<String, kittynode_core::package::Package>, S
 }
 
 #[tauri::command]
-async fn get_installed_packages() -> Result<Vec<String>, String> {
+async fn get_installed_packages() -> Result<Vec<Package>, String> {
     info!("Getting installed packages");
-    let installed = kittynode_core::package::get_installed_packages()
-        .await
-        .map_err(|e| e.to_string())?;
-    Ok(installed)
+    #[cfg(not(mobile))]
+    {
+        let installed = kittynode_core::package::get_installed_packages()
+            .await
+            .map_err(|e| e.to_string())?;
+        Ok(installed)
+    }
+    #[cfg(mobile)]
+    {
+        let client = HTTP_CLIENT.get_or_init(reqwest::Client::new);
+        let server_url = SERVER_URL.get().ok_or("Server URL not set")?;
+        let url = format!("{}/get_installed_packages", server_url);
+        let res = client.get(&url).send().await.map_err(|e| e.to_string())?;
+        let status = res.status();
+        if !status.is_success() {
+            let error_text = res.text().await.unwrap_or_default();
+            return Err(format!(
+                "Failed to get installed packages: {} - {}",
+                status, error_text
+            ));
+        }
+        let packages = res
+            .json::<Vec<Package>>()
+            .await
+            .map_err(|e| e.to_string())?;
+        Ok(packages)
+    }
 }
 
 #[tauri::command]
