@@ -66,7 +66,6 @@ pub fn get_package(name: &str) -> Result<Package> {
 
 pub async fn get_installed_packages() -> Result<Vec<Package>> {
     let docker = get_docker_instance()?;
-    // Get all packages
     let packages = get_packages().wrap_err("Failed to retrieve packages")?;
 
     let mut installed = Vec::new();
