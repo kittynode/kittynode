@@ -18,7 +18,7 @@
   async function loadPackages() {
     try {
       packages = await invoke("get_packages");
-      if (isDockerRunning || currentPlatform === "ios") {
+      if (isDockerRunning) {
         installedPackages = await invoke("get_installed_packages");
       }
     } catch (error) {
@@ -58,13 +58,14 @@
   }
 
   async function checkDocker() {
-    isDockerRunning = await invoke("is_docker_running");
+    isDockerRunning =
+      currentPlatform === "ios" ? true : await invoke("is_docker_running");
   }
 
   onMount(async () => {
+    currentPlatform = platform();
     await checkDocker();
     await loadPackages();
-    currentPlatform = platform();
   });
 </script>
 
@@ -100,7 +101,7 @@
         <Button
           onclick={() => installPackage(name)}
           disabled={!ready ||
-            (!isDockerRunning && currentPlatform !== "ios") ||
+            !isDockerRunning ||
             installedPackages.some((pkg) => pkg.name === name) ||
             installLoading === name ||
             deleteLoading === name}
@@ -112,8 +113,7 @@
           <Button
             class="secondary"
             onclick={() => deletePackage(name, false)}
-            disabled={(!isDockerRunning && currentPlatform !== "ios") ||
-              deleteLoading === name}
+            disabled={!isDockerRunning || deleteLoading === name}
           >
             {deleteLoading === name ? "Deleting..." : "Delete"}
           </Button>

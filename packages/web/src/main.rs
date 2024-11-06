@@ -7,10 +7,6 @@ use axum::{
 };
 use kittynode_core::package::Package;
 
-pub(crate) async fn root() -> &'static str {
-    "Hello, World!"
-}
-
 pub(crate) async fn install_package(
     Path(name): Path<String>,
 ) -> Result<StatusCode, (StatusCode, String)> {
@@ -36,15 +32,25 @@ pub(crate) async fn get_installed_packages() -> Result<Json<Vec<Package>>, (Stat
         .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))
 }
 
+pub(crate) async fn is_docker_running() -> Result<StatusCode, (StatusCode, String)> {
+    match kittynode_core::docker::is_docker_running().await {
+        true => Ok(StatusCode::OK),
+        false => Err((
+            StatusCode::SERVICE_UNAVAILABLE,
+            "Docker is not running".to_string(),
+        )),
+    }
+}
+
 #[tokio::main]
 async fn main() {
     tracing_subscriber::fmt::init();
 
     let app = Router::new()
-        .route("/", get(root))
         .route("/install_package/:name", post(install_package))
         .route("/delete_package/:name", post(delete_package))
-        .route("/get_installed_packages", get(get_installed_packages));
+        .route("/get_installed_packages", get(get_installed_packages))
+        .route("/is_docker_running", get(is_docker_running));
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
     axum::serve(listener, app).await.unwrap();
