@@ -1,4 +1,4 @@
-use bollard::secret::PortBinding;
+use bollard::models::PortBinding;
 use eyre::Result;
 use std::collections::HashMap;
 
@@ -19,13 +19,14 @@ impl PackageDefinition for Ethereum {
         let jwt_path = kittynode_path.join("jwt.hex");
 
         Ok(Package {
-            name: ETHEREUM_NAME,
-            description: "This package installs a Reth execution client and a Lighthouse consensus client on the Holesky network with Docker.",
-            network_name: "ethereum-network",
+            name: ETHEREUM_NAME.to_string(),
+            description: "This package installs a Reth execution client and a Lighthouse consensus client on the Holesky network with Docker."
+                .to_string(),
+            network_name: "ethereum-network".to_string(),
             containers: vec![
                 Container {
-                    name: "reth-node",
-                    image: "ghcr.io/paradigmxyz/reth",
+                    name: "reth-node".to_string(),
+                    image: "ghcr.io/paradigmxyz/reth".to_string(),
                     cmd: vec![
                         "node",
                         "--chain",
@@ -36,48 +37,47 @@ impl PackageDefinition for Ethereum {
                         "0.0.0.0",
                         "--authrpc.port",
                         "8551",
-                    ],
+                    ]
+                    .iter()
+                    .map(|&s| s.to_string())
+                    .collect(),
                     port_bindings: HashMap::from([
                         (
-                            "9001/tcp",
+                            "9001/tcp".to_string(),
                             vec![PortBinding {
                                 host_ip: Some("0.0.0.0".to_string()),
                                 host_port: Some("9001".to_string()),
                             }],
                         ),
                         (
-                            "30303/tcp",
+                            "30303/tcp".to_string(),
                             vec![PortBinding {
                                 host_ip: Some("0.0.0.0".to_string()),
                                 host_port: Some("30303".to_string()),
                             }],
                         ),
                         (
-                            "30303/udp",
+                            "30303/udp".to_string(),
                             vec![PortBinding {
                                 host_ip: Some("0.0.0.0".to_string()),
                                 host_port: Some("30303".to_string()),
                             }],
                         ),
                     ]),
-                    volume_bindings: vec![
-                    Binding {
+                    volume_bindings: vec![Binding {
                         source: "rethdata".to_string(),
                         destination: "/root/.local/share/reth/holesky".to_string(),
                         options: None,
-                    }
-                    ],
-                    file_bindings: vec![
-                    Binding {
+                    }],
+                    file_bindings: vec![Binding {
                         source: jwt_path.display().to_string(),
                         destination: "/root/.local/share/reth/holesky/jwt.hex".to_string(),
                         options: Some("ro".to_string()),
-                        }
-                    ],
+                    }],
                 },
                 Container {
-                    name: "lighthouse-node",
-                    image: "sigp/lighthouse",
+                    name: "lighthouse-node".to_string(),
+                    image: "sigp/lighthouse".to_string(),
                     cmd: vec![
                         "lighthouse",
                         "--network",
@@ -92,31 +92,34 @@ impl PackageDefinition for Ethereum {
                         "/root/.lighthouse/holesky/jwt.hex",
                         "--execution-endpoint",
                         "http://reth-node:8551",
-                    ],
+                    ]
+                    .iter()
+                    .map(|&s| s.to_string())
+                    .collect(),
                     port_bindings: HashMap::from([
                         (
-                            "9000/tcp",
+                            "9000/tcp".to_string(),
                             vec![PortBinding {
                                 host_ip: Some("0.0.0.0".to_string()),
                                 host_port: Some("9000".to_string()),
                             }],
                         ),
                         (
-                            "9000/udp",
+                            "9000/udp".to_string(),
                             vec![PortBinding {
                                 host_ip: Some("0.0.0.0".to_string()),
                                 host_port: Some("9000".to_string()),
                             }],
                         ),
                         (
-                            "9001/udp",
+                            "9001/udp".to_string(),
                             vec![PortBinding {
                                 host_ip: Some("0.0.0.0".to_string()),
                                 host_port: Some("9001".to_string()),
                             }],
                         ),
                         (
-                            "5052/tcp",
+                            "5052/tcp".to_string(),
                             vec![PortBinding {
                                 host_ip: Some("127.0.0.1".to_string()),
                                 host_port: Some("5052".to_string()),
@@ -126,7 +129,10 @@ impl PackageDefinition for Ethereum {
                     volume_bindings: vec![],
                     file_bindings: vec![
                         Binding {
-                            source: kittynode_path.join(".lighthouse").to_string_lossy().to_string(),
+                            source: kittynode_path
+                                .join(".lighthouse")
+                                .to_string_lossy()
+                                .to_string(),
                             destination: "/root/.lighthouse".to_string(),
                             options: None,
                         },
@@ -134,10 +140,10 @@ impl PackageDefinition for Ethereum {
                             source: jwt_path.to_string_lossy().to_string(),
                             destination: "/root/.lighthouse/holesky/jwt.hex".to_string(),
                             options: Some("ro".to_string()),
-                        }
+                        },
                     ],
-                }
-            ]
+                },
+            ],
         })
     }
 }

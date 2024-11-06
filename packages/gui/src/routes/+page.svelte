@@ -22,7 +22,7 @@
         installedPackages = await invoke("get_installed_packages");
       }
     } catch (error) {
-      alert("Failed to load packages.");
+      alert(`Failed to load packages: ${error}`);
       console.error(error);
     } finally {
       ready = true;

@@ -82,8 +82,8 @@ pub(crate) async fn pull_and_start_container(
     network_name: &str,
 ) -> Result<()> {
     let options = Some(CreateImageOptions {
-        from_image: container.image,
-        tag: "latest",
+        from_image: container.image.to_string(),
+        tag: "latest".to_string(),
         ..Default::default()
     });
 
@@ -115,7 +115,7 @@ pub(crate) async fn pull_and_start_container(
     };
 
     let config = Config {
-        image: Some(container.image),
+        image: Some(container.image.to_string()),
         cmd: Some(container.cmd.clone()),
         host_config: Some(host_config),
         ..Default::default()
@@ -124,7 +124,7 @@ pub(crate) async fn pull_and_start_container(
     let created_container = docker
         .create_container(
             Some(CreateContainerOptions {
-                name: container.name,
+                name: container.name.to_string(),
                 ..Default::default()
             }),
             config,
@@ -141,7 +141,7 @@ pub(crate) async fn pull_and_start_container(
         .connect_network(
             network_name,
             ConnectNetworkOptions {
-                container: container.name,
+                container: container.name.to_string(),
                 endpoint_config: Default::default(),
             },
         )

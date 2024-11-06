@@ -4,9 +4,9 @@ use crate::docker::{
 };
 use crate::file::generate_jwt_secret;
 use crate::packages::ethereum::Ethereum;
-use bollard::secret::PortBinding;
+use bollard::models::PortBinding;
 use eyre::{Context, Result};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
 use std::{fmt, fs};
 use tracing::info;
@@ -16,25 +16,25 @@ pub(crate) trait PackageDefinition {
     fn get_package() -> Result<Package>;
 }
 
-#[derive(Clone, Serialize)]
+#[derive(Clone, Serialize, Deserialize)]
 pub struct Package {
-    pub(crate) name: &'static str,
-    pub(crate) description: &'static str,
-    pub(crate) network_name: &'static str,
+    pub(crate) name: String,
+    pub(crate) description: String,
+    pub(crate) network_name: String,
     pub(crate) containers: Vec<Container>,
 }
 
-#[derive(Clone, Serialize)]
+#[derive(Clone, Serialize, Deserialize)]
 pub struct Container {
-    pub(crate) name: &'static str,
-    pub(crate) image: &'static str,
-    pub(crate) cmd: Vec<&'static str>,
-    pub(crate) port_bindings: HashMap<&'static str, Vec<PortBinding>>,
+    pub(crate) name: String,
+    pub(crate) image: String,
+    pub(crate) cmd: Vec<String>,
+    pub(crate) port_bindings: HashMap<String, Vec<PortBinding>>,
     pub(crate) volume_bindings: Vec<Binding>,
     pub(crate) file_bindings: Vec<Binding>,
 }
 
-#[derive(Clone, Serialize)]
+#[derive(Clone, Serialize, Deserialize)]
 pub struct Binding {
     pub(crate) source: String,
     pub(crate) destination: String,
@@ -50,8 +50,10 @@ impl fmt::Display for Package {
     }
 }
 
-pub fn get_packages() -> Result<HashMap<&'static str, Package>> {
-    Ok(HashMap::from([(Ethereum::NAME, Ethereum::get_package()?)]))
+pub fn get_packages() -> Result<HashMap<String, Package>> {
+    let mut packages = HashMap::new();
+    packages.insert(Ethereum::NAME.to_string(), Ethereum::get_package()?);
+    Ok(packages)
 }
 
 pub fn get_package(name: &str) -> Result<Package> {
@@ -70,11 +72,11 @@ pub async fn get_installed_packages() -> Result<Vec<Package>> {
     let mut installed = Vec::new();
 
     // For each package, check if all containers exist
-    for (name, package) in packages.iter() {
+    for package in packages.values() {
         let mut all_containers_exist = true;
 
         for container in &package.containers {
-            if find_container(&docker, container.name).await?.is_empty() {
+            if find_container(&docker, &container.name).await?.is_empty() {
                 all_containers_exist = false;
                 break;
             }
@@ -82,11 +84,7 @@ pub async fn get_installed_packages() -> Result<Vec<Package>> {
 
         // If they do, add the package to the list
         if all_containers_exist {
-            let package = packages
-                .get(name)
-                .cloned()
-                .ok_or_else(|| eyre::eyre!("Package not found"))?;
-            installed.push(package);
+            installed.push(package.clone());
         }
     }
 
@@ -103,7 +101,7 @@ pub async fn install_package(name: &str) -> Result<()> {
         .get(name)
         .ok_or_else(|| eyre::eyre!("Package '{}' not found", name))?;
 
-    let network_name = package.network_name;
+    let network_name = &package.network_name;
     create_or_recreate_network(&docker, network_name).await?;
 
     for container in &package.containers {
@@ -128,22 +126,22 @@ pub async fn delete_package(package_name: &str, include_images: bool) -> Result<
 
     for container in &package.containers {
         // Collect the container's image name
-        image_names.push(container.image.to_string());
+        image_names.push(container.image.clone());
 
         // Collect the container's volume bindings
         for binding in &container.volume_bindings {
-            volume_names.push(binding.source.to_string());
+            volume_names.push(binding.source.clone());
         }
 
         // Collect the container's file or directory paths
         for binding in &container.file_bindings {
-            let local_path = &binding.source.to_string();
+            let local_path = &binding.source;
             // Check if the path exists and ignore the error if it doesn't
             if let Ok(metadata) = fs::metadata(local_path) {
                 if metadata.is_dir() {
-                    directory_paths.insert(local_path.to_string());
+                    directory_paths.insert(local_path.clone());
                 } else {
-                    file_paths.insert(local_path.to_string());
+                    file_paths.insert(local_path.clone());
                 }
             } else {
                 info!("Path '{}' not found, skipping.", local_path);
@@ -151,7 +149,7 @@ pub async fn delete_package(package_name: &str, include_images: bool) -> Result<
         }
 
         // Remove the container
-        remove_container(&docker, container.name)
+        remove_container(&docker, &container.name)
             .await
             .wrap_err_with(|| format!("Failed to remove container '{}'", container.name))?;
         info!("Container '{}' removed successfully.", container.name);
@@ -197,7 +195,7 @@ pub async fn delete_package(package_name: &str, include_images: bool) -> Result<
     // Remove the Docker network
     info!("Removing network: {}", package.network_name);
     docker
-        .remove_network(package.network_name)
+        .remove_network(&package.network_name)
         .await
         .wrap_err_with(|| format!("Failed to remove network '{}'", package.network_name))?;
     info!("Network '{}' removed successfully.", package.network_name);
