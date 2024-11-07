@@ -14,14 +14,15 @@
   "dependencies": {
     "@tauri-apps/api": "^2.0.3",
     "@tauri-apps/plugin-dialog": "^2.0.1",
-    "@tauri-apps/plugin-os": "^2.0.0"
+    "@tauri-apps/plugin-os": "^2.0.0",
+    "lucide-svelte": "^0.454.0"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "^3.0.6",
     "@sveltejs/kit": "^2.7.4",
     "@sveltejs/vite-plugin-svelte": "^4.0.0",
     "autoprefixer": "^10.4.20",
-    "bits-ui": "1.0.0-next.42",
+    "bits-ui": "1.0.0-next.46",
     "clsx": "^2.1.1",
     "svelte": "^5.1.9",
     "svelte-check": "^4.0.5",

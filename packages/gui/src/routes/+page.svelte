@@ -69,13 +69,17 @@ onMount(async () => {
 });
 </script>
 
-<h2>Dashboard:</h2>
+<h3 class="scroll-m-20 text-2xl font-semibold tracking-tight mb-4">
+  Dashboard
+</h3>
 
-<Dashboard {installedPackages} />
+<div class="mb-8">
+  <Dashboard {installedPackages} />
+</div>
 
-<br />
-
-<h2>Package store:</h2>
+<h3 class="scroll-m-20 text-2xl font-semibold tracking-tight mb-4">
+  Package store
+</h3>
 
 {#if Object.keys(packages).length > 0}
   {#each Object.entries(packages).sort( ([a], [b]) => a.localeCompare(b), ) as [name, p]}
