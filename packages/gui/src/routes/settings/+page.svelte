@@ -1,34 +1,36 @@
 <script lang="ts">
-import { invoke } from "@tauri-apps/api/core";
-import { message } from "@tauri-apps/plugin-dialog";
-import { initializedStore } from "../../stores/initialized.svelte";
-import { Button } from "$lib/components/ui/button";
-import { platform } from "@tauri-apps/plugin-os";
-import { onMount } from "svelte";
+  import { invoke } from "@tauri-apps/api/core";
+  import { message } from "@tauri-apps/plugin-dialog";
+  import { initializedStore } from "../../stores/initialized.svelte";
+  import { Button } from "$lib/components/ui/button";
+  import { platform } from "@tauri-apps/plugin-os";
+  import { onMount } from "svelte";
 
-let currentPlatform = $state("");
+  let currentPlatform = $state("");
 
-async function connectMobile() {
-  await message("Coming soon.");
-}
-
-async function deleteKittynode() {
-  try {
-    if (currentPlatform !== "ios") {
-      await invoke("delete_kittynode");
-    }
-    await initializedStore.uninitialize();
-    message("Kittynode data has been deleted successfully.");
-  } catch (error) {
-    alert("Failed to delete Kittynode.");
-    console.error(error);
+  async function connectMobile() {
+    await message("Coming soon.");
   }
-}
 
-onMount(async () => {
-  currentPlatform = platform();
-});
+  async function deleteKittynode() {
+    try {
+      if (currentPlatform !== "ios") {
+        await invoke("delete_kittynode");
+      }
+      await initializedStore.uninitialize();
+      message("Kittynode data has been deleted successfully.");
+    } catch (error) {
+      alert("Failed to delete Kittynode.");
+      console.error(error);
+    }
+  }
+
+  onMount(async () => {
+    currentPlatform = platform();
+  });
 </script>
+
+<h3 class="scroll-m-20 text-2xl font-semibold tracking-tight mb-4">Settings</h3>
 
 <ul class="settings-list">
   <li>

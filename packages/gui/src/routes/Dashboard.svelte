@@ -1,6 +1,6 @@
 <script lang="ts">
-import type { Package } from "$lib/types";
-export let installedPackages: Package[];
+  import type { Package } from "$lib/types";
+  export let installedPackages: Package[];
 </script>
 
 {#if installedPackages.length === 0}
