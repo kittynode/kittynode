@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { page } from "$app/stores";
-  import { Separator } from "$lib/components/ui/separator";
-  import { House, HeartPulse, Settings } from "lucide-svelte";
+import { page } from "$app/stores";
+import { Separator } from "$lib/components/ui/separator";
+import { House, HeartPulse, Settings } from "lucide-svelte";
 </script>
 
 <nav>
