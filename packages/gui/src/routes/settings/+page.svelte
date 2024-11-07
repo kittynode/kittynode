@@ -33,11 +33,13 @@
 <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight mb-4">Settings</h3>
 
 <ul class="settings-list">
-  <li>
-    <span>Connect your mobile device</span>
-    <Button onclick={connectMobile}>Connect mobile</Button>
-  </li>
-  <hr />
+  {#if !["ios", "android"].includes(currentPlatform)}
+    <li>
+      <span>Connect your mobile device</span>
+      <Button onclick={connectMobile}>Connect mobile</Button>
+    </li>
+    <hr />
+  {/if}
   <li>
     <span>Delete all Kittynode data</span>
     <Button onclick={deleteKittynode}>Delete data</Button>

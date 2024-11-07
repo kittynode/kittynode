@@ -1,6 +1,7 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import { Separator } from "$lib/components/ui/separator";
+  import { House, HeartPulse, Settings } from "lucide-svelte";
 </script>
 
 <nav>
@@ -8,14 +9,14 @@
   <div
     class="flex h-5 items-center justify-center space-x-4 text-sm font-semibold"
   >
-    <a href="/" aria-current={$page.url.pathname === "/"}>Home</a>
+    <a href="/" aria-current={$page.url.pathname === "/"}><House /></a>
     <Separator orientation="vertical" />
     <a href="/system-info" aria-current={$page.url.pathname === "/system-info"}
-      >System Info</a
+      ><HeartPulse /></a
     >
     <Separator orientation="vertical" />
     <a href="/settings" aria-current={$page.url.pathname === "/settings"}
-      >Settings</a
+      ><Settings /></a
     >
   </div>
 </nav>

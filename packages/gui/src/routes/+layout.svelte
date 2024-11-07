@@ -20,7 +20,7 @@ onMount(async () => {
   <div class="container mx-auto pt-8">
     {@render children()}
   </div>
-  <div class="container mx-auto fixed bottom-8 left-0 right-0">
+  <div class="container mx-auto fixed {["ios", "android"].includes(platform()) ? 'bottom-2' : 'bottom-8'} left-0 right-0">
     <Navigation />
   </div>
 {/if}
