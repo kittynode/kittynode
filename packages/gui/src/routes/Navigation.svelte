@@ -9,14 +9,20 @@ import { House, HeartPulse, Settings } from "lucide-svelte";
   <div
     class="flex h-5 items-center justify-center space-x-4 text-sm font-semibold"
   >
-    <a href="/" aria-current={$page.url.pathname === "/"}><House /></a>
-    <Separator orientation="vertical" />
-    <a href="/system-info" aria-current={$page.url.pathname === "/system-info"}
-      ><HeartPulse /></a
+    <a class="px-2" href="/" aria-current={$page.url.pathname === "/"}
+      ><House /></a
     >
     <Separator orientation="vertical" />
-    <a href="/settings" aria-current={$page.url.pathname === "/settings"}
-      ><Settings /></a
+    <a
+      class="px-2"
+      href="/system-info"
+      aria-current={$page.url.pathname === "/system-info"}><HeartPulse /></a
+    >
+    <Separator orientation="vertical" />
+    <a
+      class="px-2"
+      href="/settings"
+      aria-current={$page.url.pathname === "/settings"}><Settings /></a
     >
   </div>
 </nav>
