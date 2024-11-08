@@ -9,8 +9,8 @@ export default defineConfig({
     starlight({
       title: "Kittynode",
       logo: {
-        light: "./src/assets/kittynode-light.png",
-        dark: "./src/assets/kittynode-dark.png",
+        light: "../assets/kittynode-light.png",
+        dark: "../assets/kittynode-dark.png",
         replacesTitle: true,
       },
       editLink: {
