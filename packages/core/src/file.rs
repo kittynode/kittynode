@@ -1,4 +1,4 @@
-use eyre::{Context, ContextCompat, Result};
+use eyre::{Context, Result};
 use rand::RngCore;
 use std::{fs, path::PathBuf};
 use tracing::info;
@@ -6,7 +6,7 @@ use tracing::info;
 pub(crate) fn kittynode_path() -> Result<PathBuf> {
     home::home_dir()
         .map(|home| home.join(".kittynode"))
-        .wrap_err("Failed to determine the .kittynode path")
+        .ok_or_else(|| eyre::eyre!("Failed to determine the .kittynode path"))
 }
 
 pub(crate) fn generate_jwt_secret() -> Result<String> {

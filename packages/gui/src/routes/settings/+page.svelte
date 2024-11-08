@@ -7,9 +7,23 @@ import { platform } from "@tauri-apps/plugin-os";
 import { onMount } from "svelte";
 
 let currentPlatform = $state("");
+let isRemoteMode = $state(false);
 
 async function connectMobile() {
   await message("Coming soon.");
+}
+
+async function remoteControl() {
+  try {
+    if (isRemoteMode) {
+      await invoke("remove_capability", { name: "remote_control" });
+    } else {
+      await invoke("add_capability", { name: "remote_control" });
+    }
+    isRemoteMode = (await invoke("get_capabilities")).includes("remote_control");
+  } catch (error) {
+    console.error("Failed to update remote control capability:", error);
+  }
 }
 
 async function deleteKittynode() {
@@ -26,7 +40,8 @@ async function deleteKittynode() {
 }
 
 onMount(async () => {
-  currentPlatform = platform();
+  currentPlatform = await platform();
+  isRemoteMode = (await invoke("get_capabilities")).includes("remote_control");
 });
 </script>
 
@@ -40,6 +55,19 @@ onMount(async () => {
     </li>
     <hr />
   {/if}
+  {#if isRemoteMode}
+    <li>
+      <span>Disable remote control</span>
+      <Button onclick={remoteControl}>Disable</Button>
+    </li>
+    <hr />
+  {:else}
+    <li>
+      <span>Enable remote control</span>
+      <Button onclick={remoteControl}>Enable</Button>
+    </li>
+    <hr />
+  {/if}
   <li>
     <span>Delete all Kittynode data</span>
     <Button onclick={deleteKittynode}>Delete data</Button>
@@ -48,7 +76,7 @@ onMount(async () => {
 
 <style>
   hr {
-    margin: 8px 0px 8px 0px;
+    margin: 16px 0px 16px 0px;
   }
 
   .settings-list li {
