@@ -8,7 +8,9 @@ export let installedPackages: Package[];
 {:else}
   <ul>
     {#each installedPackages as pkg}
-      <li>{pkg.name}</li>
+      <ul class="list-disc">
+        <li>{pkg.name}</li>
+      </ul>
     {/each}
   </ul>
 {/if}

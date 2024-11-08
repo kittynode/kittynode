@@ -6,24 +6,32 @@ import { House, HeartPulse, Settings } from "lucide-svelte";
 
 <nav>
   <Separator class="my-4" />
-  <div
-    class="flex h-5 items-center justify-center space-x-4 text-sm font-semibold"
-  >
-    <a class="px-2" href="/" aria-current={$page.url.pathname === "/"}
-      ><House /></a
-    >
-    <Separator orientation="vertical" />
-    <a
-      class="px-2"
-      href="/system-info"
-      aria-current={$page.url.pathname === "/system-info"}><HeartPulse /></a
-    >
-    <Separator orientation="vertical" />
-    <a
-      class="px-2"
-      href="/settings"
-      aria-current={$page.url.pathname === "/settings"}><Settings /></a
-    >
+  <div class="flex h-5 items-center justify-between text-sm font-semibold">
+    <div class="flex-grow flex justify-center">
+      <a class="p-4" href="/" aria-current={$page.url.pathname === "/"}>
+        <House strokeWidth={$page.url.pathname === "/" ? 2.5 : 2} />
+      </a>
+    </div>
+    <div class="flex-grow flex justify-center">
+      <a
+        class="p-4"
+        href="/system-info"
+        aria-current={$page.url.pathname === "/system-info"}
+      >
+        <HeartPulse
+          strokeWidth={$page.url.pathname === "/system-info" ? 2.5 : 2}
+        />
+      </a>
+    </div>
+    <div class="flex-grow flex justify-center">
+      <a
+        class="p-4"
+        href="/settings"
+        aria-current={$page.url.pathname === "/settings"}
+      >
+        <Settings strokeWidth={$page.url.pathname === "/settings" ? 2.5 : 2} />
+      </a>
+    </div>
   </div>
 </nav>
 
