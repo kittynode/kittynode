@@ -9,12 +9,12 @@ export default defineConfig({
     starlight({
       title: "Kittynode",
       logo: {
-        light: "./src/assets/kittynode-light.png",
-        dark: "./src/assets/kittynode-dark.png",
+        light: "../assets/kittynode-light.png",
+        dark: "../assets/kittynode-dark.png",
         replacesTitle: true,
       },
       editLink: {
-        baseUrl: "https://github.com/kittynode/kittynode/edit/main/packages/docs/",
+        baseUrl: "https://github.com/kittynode/kittynode/edit/main/docs/",
       },
       components: {
         Footer: "./src/components/overrides/Footer.astro",

@@ -12,7 +12,7 @@ importers:
         specifier: 1.9.4
         version: 1.9.4
 
-  packages/docs:
+  docs:
     dependencies:
       '@astrojs/check':
         specifier: ^0.9.4
@@ -3627,7 +3627,7 @@ snapshots:
 
   '@types/sax@1.2.7':
     dependencies:
-      '@types/node': 17.0.45
+      '@types/node': 18.19.64
 
   '@types/unist@2.0.11': {}
 
