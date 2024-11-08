@@ -8,7 +8,7 @@ export let installedPackages: Package[];
 {:else}
   <ul>
     {#each installedPackages as pkg}
-      <ul class="list-disc">
+      <ul class="container mx-auto list-disc">
         <li>{pkg.name}</li>
       </ul>
     {/each}
