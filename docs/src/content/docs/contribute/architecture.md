@@ -33,3 +33,10 @@ We believe the local HTTPS server over Wireguard is a convenient and secure appr
 ## A diagram
 
 ![Kittynode architecture diagram](../../../assets/contribute/architecture/diagram.png)
+
+## Technology choices
+
+- Core library written in Rust
+- Frontend written in SvelteKit (Svelte 5)
+- CLI is a cross-platform Rust binary
+- GUI is a cross-platform Tauri app that compiles the core library into the binary along with the frontend into a native webview, communicating with the core library over IPC, while being able to tap into native platform APIs
