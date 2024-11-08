@@ -42,19 +42,23 @@ export default defineConfig({
               slug: "contribute/architecture",
             },
             {
-              label: "Development guide",
-              slug: "contribute/development-guide",
-            },
-            {
-              label: "Questions",
+              label: "Open questions",
               slug: "contribute/questions",
             },
           ],
         },
         {
+          label: "Development",
+          items: [
+            { label: "Development guide", slug: "development/development-guide" },
+            { label: "Project tracking", slug: "development/project-tracking" },
+            { label: "Releases", slug: "development/releases" },
+          ],
+        },
+        {
           label: "Resources",
           items: [
-            { label: "Hardware", slug: "resources/hardware" },
+            { label: "Hardware guide", slug: "resources/hardware-guide" },
           ],
         },
       ],

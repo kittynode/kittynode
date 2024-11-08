@@ -1,5 +1,5 @@
 ---
-title: Hardware
+title: Hardware guide
 description: Learn about Kittynode hardware.
 ---
 
