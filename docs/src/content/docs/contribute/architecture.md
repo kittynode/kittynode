@@ -10,6 +10,13 @@ Kittynode is a command center for node operators. We'll start with a brief one s
 - [kittynode-gui](https://github.com/kittynode/kittynode/tree/main/packages/gui): A GUI frontend that binds to kittynode-core.
 - [kittynode-web](https://github.com/kittynode/kittynode/tree/main/packages/web): An authenticated local web server that binds routes to kittynode-core.
 
+## Technology used
+
+- Core library written in Rust
+- Frontend written in SvelteKit (Svelte 5)
+- CLI is a cross-platform Rust binary
+- GUI is a cross-platform Tauri app that compiles the core library into the binary along with the frontend into a native webview, communicating with the core library over IPC, while being able to tap into native platform APIs
+
 ## User facing apps
 
 Kittynode has two user facing apps:
@@ -33,10 +40,3 @@ We believe the local HTTPS server over Wireguard is a convenient and secure appr
 ## A diagram
 
 ![Kittynode architecture diagram](../../../assets/contribute/architecture/diagram.png)
-
-## Technology choices
-
-- Core library written in Rust
-- Frontend written in SvelteKit (Svelte 5)
-- CLI is a cross-platform Rust binary
-- GUI is a cross-platform Tauri app that compiles the core library into the binary along with the frontend into a native webview, communicating with the core library over IPC, while being able to tap into native platform APIs

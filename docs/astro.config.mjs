@@ -51,6 +51,12 @@ export default defineConfig({
             },
           ],
         },
+        {
+          label: "Resources",
+          items: [
+            { label: "Hardware", slug: "resources/hardware" },
+          ],
+        },
       ],
     }),
   ],
