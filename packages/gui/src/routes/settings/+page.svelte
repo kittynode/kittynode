@@ -20,7 +20,9 @@ async function remoteControl() {
     } else {
       await invoke("add_capability", { name: "remote_control" });
     }
-    isRemoteMode = (await invoke("get_capabilities")).includes("remote_control");
+    isRemoteMode = (await invoke("get_capabilities")).includes(
+      "remote_control",
+    );
   } catch (error) {
     console.error("Failed to update remote control capability:", error);
   }
