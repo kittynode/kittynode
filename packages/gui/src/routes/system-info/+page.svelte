@@ -7,6 +7,7 @@ import { platform } from "@tauri-apps/plugin-os";
 let processor = $state("Loading...");
 let memory = $state("Loading...");
 let storage = $state("Loading...");
+let capabilities: string[] = $state([]);
 
 async function fetchSystemInfo() {
   try {
@@ -19,12 +20,21 @@ async function fetchSystemInfo() {
   }
 }
 
-onMount(() => {
+onMount(async () => {
   if (!["ios", "android"].includes(platform())) {
-    fetchSystemInfo();
+    await fetchSystemInfo();
   }
+  capabilities = await invoke("get_capabilities");
 });
 </script>
+
+<h3 class="scroll-m-20 text-2xl font-semibold tracking-tight mb-4">
+  Capabilities
+</h3>
+
+<ul class="mb-8">
+  <li>Remote control: <strong>{capabilities.includes("remote_control") ? "Enabled" : "Not enabled"}</strong></li>
+</ul>
 
 <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight mb-4">
   System info

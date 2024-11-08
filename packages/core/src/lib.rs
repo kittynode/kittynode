@@ -1,4 +1,5 @@
 // Public exports
+pub mod config;
 pub mod docker;
 pub mod kittynode;
 pub mod package;

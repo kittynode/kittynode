@@ -14,6 +14,24 @@ pub static HTTP_CLIENT: OnceCell<reqwest::Client> = OnceCell::new();
 pub static SERVER_URL: OnceCell<String> = OnceCell::new();
 
 #[tauri::command]
+fn add_capability(name: String) -> Result<(), String> {
+    info!("Adding capability: {}", name);
+    kittynode_core::config::add_capability(&name).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn remove_capability(name: String) -> Result<(), String> {
+    info!("Removing capability: {}", name);
+    kittynode_core::config::remove_capability(&name).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn get_capabilities() -> Result<Vec<String>, String> {
+    info!("Getting capabilities");
+    kittynode_core::config::get_capabilities().map_err(|e| e.to_string())
+}
+
+#[tauri::command]
 fn get_packages() -> Result<HashMap<String, kittynode_core::package::Package>, String> {
     info!("Getting packages");
     let packages = kittynode_core::package::get_packages()
@@ -150,6 +168,9 @@ pub fn run() {
             system_info,
             is_initialized,
             init_kittynode,
+            add_capability,
+            remove_capability,
+            get_capabilities
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
