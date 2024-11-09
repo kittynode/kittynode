@@ -5,9 +5,19 @@ import { initializedStore } from "../../stores/initialized.svelte";
 import { Button } from "$lib/components/ui/button";
 import { platform } from "@tauri-apps/plugin-os";
 import { onMount } from "svelte";
+import { BaseDirectory, exists } from '@tauri-apps/plugin-fs';
 
 let currentPlatform = $state("");
 let isRemoteMode = $state(false);
+
+async function testThingy() {
+  try {
+    const doesExist = await exists('tauri.png', { baseDir: BaseDirectory.Home });
+    alert(`Test thingy: ${doesExist}`);
+  } catch (error) {
+    alert(`Totally an error dawg: ${error}`);
+  }
+}
 
 async function connectMobile() {
   await message("Coming soon.");
@@ -20,7 +30,7 @@ async function remoteControl() {
     } else {
       await invoke("add_capability", { name: "remote_control" });
     }
-    isRemoteMode = (await invoke("get_capabilities")).includes(
+    isRemoteMode = ((await invoke("get_capabilities")) as string[]).includes(
       "remote_control",
     );
   } catch (error) {
@@ -42,8 +52,10 @@ async function deleteKittynode() {
 }
 
 onMount(async () => {
-  currentPlatform = await platform();
-  isRemoteMode = (await invoke("get_capabilities")).includes("remote_control");
+  currentPlatform = platform();
+  isRemoteMode = ((await invoke("get_capabilities")) as string[]).includes(
+    "remote_control",
+  );
 });
 </script>
 
@@ -73,6 +85,11 @@ onMount(async () => {
   <li>
     <span>Delete all Kittynode data</span>
     <Button onclick={deleteKittynode}>Delete data</Button>
+  </li>
+  <hr />
+  <li>
+    <span>Test thingy</span>
+    <Button onclick={testThingy}>Test</Button>
   </li>
 </ul>
 
