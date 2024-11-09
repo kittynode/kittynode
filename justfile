@@ -37,8 +37,8 @@ ios-erase:
 
 # init the ios app
 ios-init:
-  rm -rf packages/gui/src-tauri/gen
   cargo tauri ios init
+  cp -R packages/gui/src-tauri/gen-overrides/gen/* packages/gui/src-tauri/gen
   just icons
 
 # start the ios app on a virtual device
