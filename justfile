@@ -89,6 +89,14 @@ test-coverage:
 test-no-capture:
   cargo nextest run --no-capture
 
+# update all toolchains and dependencies
+update-all:
+  rustup update
+  just install-dev-tools
+  cargo upgrade
+  pnpm self-update
+  pnpm up -r -L
+
 # start the web server
 web:
   cargo run -p kittynode-web
