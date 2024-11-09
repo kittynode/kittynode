@@ -4,6 +4,7 @@ import { goto } from "$app/navigation";
 import { platform } from "@tauri-apps/plugin-os";
 import { onMount } from "svelte";
 import { Button } from "$lib/components/ui/button";
+import { mode } from "mode-watcher";
 
 let currentPlatform = $state("");
 
@@ -22,5 +23,10 @@ onMount(async () => {
 </script>
 
 <main class="flex flex-col justify-center items-center h-full text-center p-4">
+  <img
+    class="logo w-48 mb-4"
+    src={`/images/kittynode-${$mode}.png`}
+    alt="Kittynode Logo"
+  />
   <Button onclick={initKittynode}>Get started</Button>
 </main>

@@ -14,7 +14,10 @@
       "identifier": "fs:allow-exists",
       "allow": [
         {
-          "path": "$HOME/*"
+          "path": "$HOME/taudri.png"
+        },
+        {
+          "path": "$HOME/tauri.png"
         }
       ]
     }
