@@ -16,19 +16,73 @@ pub static SERVER_URL: OnceCell<String> = OnceCell::new();
 #[tauri::command]
 fn add_capability(name: String) -> Result<(), String> {
     info!("Adding capability: {}", name);
-    kittynode_core::config::add_capability(&name).map_err(|e| e.to_string())
+
+    #[cfg(not(mobile))]
+    {
+        kittynode_core::config::add_capability(&name).map_err(|e| e.to_string())
+    }
+
+    #[cfg(mobile)]
+    {
+        let client = HTTP_CLIENT.get_or_init(reqwest::Client::new);
+        let server_url = SERVER_URL.get().ok_or("Server URL not set")?;
+        let url = format!("{}/add_capability/{}", server_url, name);
+        let res = client.post(&url).send().await.map_err(|e| e.to_string())?;
+        if !res.status().is_success() {
+            return Err(format!("Failed to add capability: {}", res.status()));
+        }
+        Ok(())
+    }
 }
 
 #[tauri::command]
 fn remove_capability(name: String) -> Result<(), String> {
     info!("Removing capability: {}", name);
-    kittynode_core::config::remove_capability(&name).map_err(|e| e.to_string())
+
+    #[cfg(not(mobile))]
+    {
+        kittynode_core::config::remove_capability(&name).map_err(|e| e.to_string())
+    }
+
+    #[cfg(mobile)]
+    {
+        let client = HTTP_CLIENT.get_or_init(reqwest::Client::new);
+        let server_url = SERVER_URL.get().ok_or("Server URL not set")?;
+        let url = format!("{}/remove_capability/{}", server_url, name);
+        let res = client.post(&url).send().await.map_err(|e| e.to_string())?;
+        if !res.status().is_success() {
+            return Err(format!("Failed to remove capability: {}", res.status()));
+        }
+        Ok(())
+    }
 }
 
 #[tauri::command]
 fn get_capabilities() -> Result<Vec<String>, String> {
     info!("Getting capabilities");
-    kittynode_core::config::get_capabilities().map_err(|e| e.to_string())
+
+    #[cfg(not(mobile))]
+    {
+        kittynode_core::config::get_capabilities().map_err(|e| e.to_string())
+    }
+
+    #[cfg(mobile)]
+    {
+        let client = HTTP_CLIENT.get_or_init(reqwest::Client::new);
+        let server_url = SERVER_URL.get().ok_or("Server URL not set")?;
+        let url = format!("{}/get_capabilities", server_url);
+        let res = client.get(&url).send().await.map_err(|e| e.to_string())?;
+        let status = res.status();
+        if !status.is_success() {
+            let error_text = res.text().await.unwrap_or_default();
+            return Err(format!(
+                "Failed to get capabilities: {} - {}",
+                status, error_text
+            ));
+        }
+        let capabilities = res.json::<Vec<String>>().await.map_err(|e| e.to_string())?;
+        Ok(capabilities)
+    }
 }
 
 #[tauri::command]
@@ -156,9 +210,9 @@ pub fn run() {
             SERVER_URL.set("http://merlin:3000".to_string())?;
             Ok(()) // do nothing if not mobile
         })
-        .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
+        .plugin(tauri_plugin_os::init())
         .invoke_handler(tauri::generate_handler![
             get_packages,
             get_installed_packages,

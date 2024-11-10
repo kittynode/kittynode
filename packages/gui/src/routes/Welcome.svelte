@@ -23,10 +23,12 @@ onMount(async () => {
 </script>
 
 <main class="flex flex-col justify-center items-center h-full text-center p-4">
-  <img
-    class="logo w-48 mb-4"
-    src={`/images/kittynode-${$mode}.png`}
-    alt="Kittynode Logo"
-  />
+  {#if $mode}
+    <img
+      class="logo w-48 mb-4"
+      src={`/images/kittynode-${$mode}.png`}
+      alt="Kittynode Logo"
+    />
+  {/if}
   <Button onclick={initKittynode}>Get started</Button>
 </main>

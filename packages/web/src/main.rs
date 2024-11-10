@@ -7,6 +7,28 @@ use axum::{
 };
 use kittynode_core::package::Package;
 
+pub(crate) async fn add_capability(
+    Path(name): Path<String>,
+) -> Result<StatusCode, (StatusCode, String)> {
+    kittynode_core::config::add_capability(&name)
+        .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
+    Ok(StatusCode::OK)
+}
+
+pub(crate) async fn remove_capability(
+    Path(name): Path<String>,
+) -> Result<StatusCode, (StatusCode, String)> {
+    kittynode_core::config::remove_capability(&name)
+        .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
+    Ok(StatusCode::OK)
+}
+
+pub(crate) async fn get_capabilities() -> Result<Json<Vec<String>>, (StatusCode, String)> {
+    kittynode_core::config::get_capabilities()
+        .map(Json)
+        .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))
+}
+
 pub(crate) async fn install_package(
     Path(name): Path<String>,
 ) -> Result<StatusCode, (StatusCode, String)> {
@@ -47,6 +69,9 @@ async fn main() {
     tracing_subscriber::fmt::init();
 
     let app = Router::new()
+        .route("/add_capability/:name", post(add_capability))
+        .route("/remove_capability/:name", post(remove_capability))
+        .route("/get_capabilities", get(get_capabilities))
         .route("/install_package/:name", post(install_package))
         .route("/delete_package/:name", post(delete_package))
         .route("/get_installed_packages", get(get_installed_packages))
