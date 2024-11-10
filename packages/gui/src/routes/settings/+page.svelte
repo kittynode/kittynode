@@ -9,6 +9,21 @@ import { onMount } from "svelte";
 let currentPlatform = $state("");
 let isRemoteMode: boolean | null = $state(null);
 
+async function doThing() {
+  try {
+    const resp = await invoke("set_is_remote_flag", { value: false });
+    const anotherResp = await invoke("get_server_url");
+    alert(`Success: ${anotherResp}`);
+  } catch (error) {
+    alert(`Error: ${error}`);
+    console.error("Failed to do thing:", error);
+  }
+}
+
+async function connect() {
+  await message("Coming soon.");
+}
+
 async function connectMobile() {
   await message("Coming soon.");
 }
@@ -76,6 +91,11 @@ onMount(async () => {
   <li>
     <span>Delete all Kittynode data</span>
     <Button onclick={deleteKittynode}>Delete data</Button>
+  </li>
+  <hr />
+  <li>
+    <span>Do thing</span>
+    <Button onclick={doThing}>Do thing</Button>
   </li>
 </ul>
 
