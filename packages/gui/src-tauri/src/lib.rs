@@ -7,13 +7,13 @@ use tauri_plugin_http::reqwest;
 use tracing::info;
 
 /// Global HTTP client instance.
-pub static HTTP_CLIENT: LazyLock<reqwest::Client> = LazyLock::new(|| reqwest::Client::new());
+pub static HTTP_CLIENT: LazyLock<reqwest::Client> = LazyLock::new(reqwest::Client::new);
 
 /// Retrieve SERVER_URL from config.
 pub fn get_server_url() -> Result<String, String> {
     Config::load()
         .map_err(|_| "Failed to load configuration".to_string())?
-        .get_custom_endpoint()
+        .get_remote_url()
         .cloned()
         .ok_or_else(|| "Server URL not set in configuration".to_string())
 }

@@ -6,7 +6,7 @@ use std::{fs, path::PathBuf};
 #[derive(Serialize, Deserialize, Default)]
 pub struct Config {
     pub capabilities: Vec<String>,
-    pub custom_endpoint: Option<String>,
+    pub remote_url: Option<String>,
 }
 
 impl Config {
@@ -58,14 +58,14 @@ impl Config {
         &self.capabilities
     }
 
-    /// Sets the custom endpoint in the configuration.
-    pub fn set_custom_endpoint(&mut self, endpoint: Option<String>) {
-        self.custom_endpoint = endpoint;
+    /// Sets the remote url in the configuration.
+    pub fn set_remote_url(&mut self, endpoint: Option<String>) {
+        self.remote_url = endpoint;
     }
 
-    /// Retrieves the custom endpoint from the configuration.
-    pub fn get_custom_endpoint(&self) -> Option<&String> {
-        self.custom_endpoint.as_ref()
+    /// Retrieves the remote url from the configuration.
+    pub fn get_remote_url(&self) -> Option<&String> {
+        self.remote_url.as_ref()
     }
 }
 
@@ -91,16 +91,16 @@ pub fn get_capabilities() -> Result<Vec<String>> {
     Ok(config.capabilities.clone())
 }
 
-/// Module-level function to set the custom endpoint.
-pub fn set_custom_endpoint(endpoint: Option<String>) -> Result<()> {
+/// Module-level function to set the remote url.
+pub fn set_remote_url(endpoint: Option<String>) -> Result<()> {
     let mut config = Config::load()?;
-    config.set_custom_endpoint(endpoint);
+    config.set_remote_url(endpoint);
     config.save()?;
     Ok(())
 }
 
-/// Module-level function to get the custom endpoint.
-pub fn get_custom_endpoint() -> Result<Option<String>> {
+/// Module-level function to get the remote url.
+pub fn get_remote_url() -> Result<Option<String>> {
     let config = Config::load()?;
-    Ok(config.custom_endpoint)
+    Ok(config.remote_url)
 }
