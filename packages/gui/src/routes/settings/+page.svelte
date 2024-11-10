@@ -7,7 +7,7 @@ import { platform } from "@tauri-apps/plugin-os";
 import { onMount } from "svelte";
 
 let currentPlatform = $state("");
-let isRemoteMode = $state(false);
+let isRemoteMode: boolean | null = $state(null);
 
 async function connectMobile() {
   await message("Coming soon.");
@@ -24,19 +24,18 @@ async function remoteControl() {
       "remote_control",
     );
   } catch (error) {
+    alert(`Error: ${error}`);
     console.error("Failed to update remote control capability:", error);
   }
 }
 
 async function deleteKittynode() {
   try {
-    if (currentPlatform !== "ios") {
-      await invoke("delete_kittynode");
-    }
+    await invoke("delete_kittynode");
     await initializedStore.uninitialize();
     message("Kittynode data has been deleted successfully.");
   } catch (error) {
-    alert("Failed to delete Kittynode.");
+    alert(`Failed to delete Kittynode: ${error}`);
     console.error(error);
   }
 }
@@ -59,7 +58,9 @@ onMount(async () => {
     </li>
     <hr />
   {/if}
-  {#if isRemoteMode}
+  {#if isRemoteMode === null}
+    <li>Loading remote control status...</li>
+  {:else if isRemoteMode}
     <li>
       <span>Disable remote control</span>
       <Button onclick={remoteControl}>Disable</Button>

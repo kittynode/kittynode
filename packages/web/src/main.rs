@@ -7,6 +7,10 @@ use axum::{
 };
 use kittynode_core::package::Package;
 
+pub(crate) async fn hello_world() -> &'static str {
+    "Hello World!"
+}
+
 pub(crate) async fn add_capability(
     Path(name): Path<String>,
 ) -> Result<StatusCode, (StatusCode, String)> {
@@ -64,18 +68,33 @@ pub(crate) async fn is_docker_running() -> Result<StatusCode, (StatusCode, Strin
     }
 }
 
+pub(crate) async fn init_kittynode() -> Result<StatusCode, (StatusCode, String)> {
+    kittynode_core::kittynode::init_kittynode()
+        .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
+    Ok(StatusCode::OK)
+}
+
+pub(crate) async fn delete_kittynode() -> Result<StatusCode, (StatusCode, String)> {
+    kittynode_core::kittynode::delete_kittynode()
+        .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
+    Ok(StatusCode::OK)
+}
+
 #[tokio::main]
 async fn main() {
     tracing_subscriber::fmt::init();
 
     let app = Router::new()
+        .route("/", get(hello_world))
         .route("/add_capability/:name", post(add_capability))
         .route("/remove_capability/:name", post(remove_capability))
         .route("/get_capabilities", get(get_capabilities))
         .route("/install_package/:name", post(install_package))
         .route("/delete_package/:name", post(delete_package))
         .route("/get_installed_packages", get(get_installed_packages))
-        .route("/is_docker_running", get(is_docker_running));
+        .route("/is_docker_running", get(is_docker_running))
+        .route("/init_kittynode", post(init_kittynode))
+        .route("/delete_kittynode", post(delete_kittynode));
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
     axum::serve(listener, app).await.unwrap();

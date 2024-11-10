@@ -10,9 +10,6 @@ export const initializedStore = {
     await invoke("init_kittynode");
     initialized = true;
   },
-  async cheatInitialize() {
-    initialized = !initialized;
-  },
   async uninitialize() {
     initialized = false;
   },

@@ -14,7 +14,7 @@ pub static HTTP_CLIENT: OnceCell<reqwest::Client> = OnceCell::new();
 pub static SERVER_URL: OnceCell<String> = OnceCell::new();
 
 #[tauri::command]
-fn add_capability(name: String) -> Result<(), String> {
+async fn add_capability(name: String) -> Result<(), String> {
     info!("Adding capability: {}", name);
 
     #[cfg(not(mobile))]
@@ -36,7 +36,7 @@ fn add_capability(name: String) -> Result<(), String> {
 }
 
 #[tauri::command]
-fn remove_capability(name: String) -> Result<(), String> {
+async fn remove_capability(name: String) -> Result<(), String> {
     info!("Removing capability: {}", name);
 
     #[cfg(not(mobile))]
@@ -58,7 +58,7 @@ fn remove_capability(name: String) -> Result<(), String> {
 }
 
 #[tauri::command]
-fn get_capabilities() -> Result<Vec<String>, String> {
+async fn get_capabilities() -> Result<Vec<String>, String> {
     info!("Getting capabilities");
 
     #[cfg(not(mobile))]
@@ -179,9 +179,25 @@ async fn delete_package(name: String, include_images: bool) -> Result<(), String
 }
 
 #[tauri::command]
-fn delete_kittynode() -> Result<(), String> {
+async fn delete_kittynode() -> Result<(), String> {
     info!("Deleting .kittynode directory");
-    kittynode_core::kittynode::delete_kittynode().map_err(|e| e.to_string())
+
+    #[cfg(not(mobile))]
+    {
+        kittynode_core::kittynode::delete_kittynode().map_err(|e| e.to_string())
+    }
+
+    #[cfg(mobile)]
+    {
+        let client = HTTP_CLIENT.get_or_init(reqwest::Client::new);
+        let server_url = SERVER_URL.get().ok_or("Server URL not set")?;
+        let url = format!("{}/delete_kittynode", server_url);
+        let res = client.post(&url).send().await.map_err(|e| e.to_string())?;
+        if !res.status().is_success() {
+            return Err(format!("Failed to delete Kittynode: {}", res.status()));
+        }
+        Ok(())
+    }
 }
 
 #[tauri::command]
@@ -197,9 +213,25 @@ fn is_initialized() -> bool {
 }
 
 #[tauri::command]
-fn init_kittynode() -> Result<(), String> {
+async fn init_kittynode() -> Result<(), String> {
     info!("Initializing Kittynode");
-    kittynode_core::kittynode::init_kittynode().map_err(|e| e.to_string())
+
+    #[cfg(not(mobile))]
+    {
+        kittynode_core::kittynode::init_kittynode().map_err(|e| e.to_string())
+    }
+
+    #[cfg(mobile)]
+    {
+        let client = HTTP_CLIENT.get_or_init(reqwest::Client::new);
+        let server_url = SERVER_URL.get().ok_or("Server URL not set")?;
+        let url = format!("{}/init_kittynode", server_url);
+        let res = client.post(&url).send().await.map_err(|e| e.to_string())?;
+        if !res.status().is_success() {
+            return Err(format!("Failed to initialize Kittynode: {}", res.status()));
+        }
+        Ok(())
+    }
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -207,7 +239,7 @@ pub fn run() {
     tauri::Builder::default()
         .setup(|_| {
             #[cfg(mobile)]
-            SERVER_URL.set("http://merlin:3000".to_string())?;
+            SERVER_URL.set("http://lucy:3000".to_string())?;
             Ok(()) // do nothing if not mobile
         })
         .plugin(tauri_plugin_dialog::init())

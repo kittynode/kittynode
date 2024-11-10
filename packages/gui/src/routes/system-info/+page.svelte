@@ -7,7 +7,7 @@ import { platform } from "@tauri-apps/plugin-os";
 let processor = $state("Loading...");
 let memory = $state("Loading...");
 let storage = $state("Loading...");
-let capabilities: string[] = $state([]);
+let capabilities: string[] | null = $state(null);
 
 async function fetchSystemInfo() {
   try {
@@ -33,7 +33,11 @@ onMount(async () => {
 </h3>
 
 <ul class="mb-8">
-  <li>Remote control: <strong>{capabilities.includes("remote_control") ? "Enabled" : "Not enabled"}</strong></li>
+  {#if capabilities === null}
+    <li>Loading capabilities...</li>
+  {:else}
+    <li>Remote control: <strong>{capabilities.includes("remote_control") ? "Enabled" : "Not enabled"}</strong></li>
+  {/if}
 </ul>
 
 <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight mb-4">

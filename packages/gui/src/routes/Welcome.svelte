@@ -9,10 +9,10 @@ import { mode } from "mode-watcher";
 let currentPlatform = $state("");
 
 async function initKittynode() {
-  if (currentPlatform === "ios") {
-    await initializedStore.cheatInitialize();
-  } else {
+  try {
     await initializedStore.initialize();
+  } catch (e) {
+    alert(`Failed to initialize kittynode: ${e}`);
   }
   await goto("/");
 }
