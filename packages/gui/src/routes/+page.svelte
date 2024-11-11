@@ -74,8 +74,11 @@ async function checkDocker() {
 
 onMount(async () => {
   currentPlatform = platform();
-  await checkDocker();
-  await loadPackages();
+
+  if (!["ios", "android"].includes(currentPlatform)) {
+    await checkDocker();
+    await loadPackages();
+  }
 });
 </script>
 
@@ -91,48 +94,66 @@ onMount(async () => {
   Package store
 </h3>
 
-{#if Object.keys(packages).length > 0}
-  {#each Object.entries(packages).sort( ([a], [b]) => a.localeCompare(b), ) as [name, p]}
-    <Card.Root>
-      <Card.Header>
-        <Card.Title>{name}</Card.Title>
-        <Card.Description>
-          {#if !isDockerRunning && currentPlatform !== "ios"}
-            <p>
-              <strong
-                >Turn on Docker to use this package. If you need to install
-                Docker, please follow the installation guide <a
-                  href="https://docs.docker.com/engine/install/"
-                  target="_blank">here</a
-                >.</strong
-              >
-            </p>
-          {/if}
-          {p.description}
-        </Card.Description>
-      </Card.Header>
-      <Card.Content>
-        <Button
-          onclick={() => installPackage(name)}
-          disabled={!ready ||
-            !isDockerRunning ||
-            installedPackages.some((pkg) => pkg.name === name) ||
-            installLoading === name ||
-            deleteLoading === name}
-        >
-          {installLoading === name ? "Installing..." : "Install"}
-        </Button>
-
-        {#if installedPackages.some((pkg) => pkg.name === name)}
+{#if serverUrlStore.serverUrl === "" && ["ios", "android"].includes(currentPlatform)}
+  <Card.Root>
+    <Card.Header>
+      <Card.Title>Helios</Card.Title>
+      <Card.Description>
+        Runs a Helios light client on Holesky, using wasm.
+      </Card.Description>
+    </Card.Header>
+    <Card.Content>
+      <Button
+        onclick={() => alert("Coming soon!")}
+      >
+       Install
+      </Button>
+    </Card.Content>
+  </Card.Root>
+{:else}
+  {#if Object.keys(packages).length > 0}
+    {#each Object.entries(packages).sort( ([a], [b]) => a.localeCompare(b), ) as [name, p]}
+      <Card.Root>
+        <Card.Header>
+          <Card.Title>{name}</Card.Title>
+          <Card.Description>
+            {#if !isDockerRunning && currentPlatform !== "ios"}
+              <p>
+                <strong
+                  >Turn on Docker to use this package. If you need to install
+                  Docker, please follow the installation guide <a
+                    href="https://docs.docker.com/engine/install/"
+                    target="_blank">here</a
+                  >.</strong
+                >
+              </p>
+            {/if}
+            {p.description}
+          </Card.Description>
+        </Card.Header>
+        <Card.Content>
           <Button
-            class="secondary"
-            onclick={() => deletePackage(name, false)}
-            disabled={!isDockerRunning || deleteLoading === name}
+            onclick={() => installPackage(name)}
+            disabled={!ready ||
+              !isDockerRunning ||
+              installedPackages.some((pkg) => pkg.name === name) ||
+              installLoading === name ||
+              deleteLoading === name}
           >
-            {deleteLoading === name ? "Deleting..." : "Delete"}
+            {installLoading === name ? "Installing..." : "Install"}
           </Button>
-        {/if}
-      </Card.Content>
-    </Card.Root>
-  {/each}
+
+          {#if installedPackages.some((pkg) => pkg.name === name)}
+            <Button
+              class="secondary"
+              onclick={() => deletePackage(name, false)}
+              disabled={!isDockerRunning || deleteLoading === name}
+            >
+              {deleteLoading === name ? "Deleting..." : "Delete"}
+            </Button>
+          {/if}
+        </Card.Content>
+      </Card.Root>
+    {/each}
+  {/if}
 {/if}

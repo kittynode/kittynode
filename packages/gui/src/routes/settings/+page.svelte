@@ -30,7 +30,7 @@ async function disableRemoteAccess() {
 
 async function connectRemote() {
   try {
-    serverUrlStore.setServerUrl("http://lucy:3000");
+    serverUrlStore.setServerUrl("http://merlin:3000");
     await message("Connected to remote.");
   } catch (e) {
     alert(`Failed to connect to remote: ${e}`);
