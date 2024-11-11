@@ -20,7 +20,9 @@ async function loadPackages() {
   try {
     packages = await invoke("get_packages");
     if (isDockerRunning) {
-      installedPackages = await invoke("get_installed_packages", { serverUrl: serverUrlStore.serverUrl });
+      installedPackages = await invoke("get_installed_packages", {
+        serverUrl: serverUrlStore.serverUrl,
+      });
     }
   } catch (error) {
     alert(`Failed to load packages: ${error}`);
@@ -33,7 +35,10 @@ async function loadPackages() {
 async function installPackage(name: string) {
   installLoading = name;
   try {
-    await invoke("install_package", { name, serverUrl: serverUrlStore.serverUrl });
+    await invoke("install_package", {
+      name,
+      serverUrl: serverUrlStore.serverUrl,
+    });
     await loadPackages();
     alert(`Successfully installed ${name}.`);
   } catch (error) {
@@ -47,7 +52,11 @@ async function installPackage(name: string) {
 async function deletePackage(name: string, includeImages: boolean) {
   deleteLoading = name;
   try {
-    await invoke("delete_package", { name, includeImages, serverUrl: serverUrlStore.serverUrl });
+    await invoke("delete_package", {
+      name,
+      includeImages,
+      serverUrl: serverUrlStore.serverUrl,
+    });
     await loadPackages();
     alert(`Successfully deleted ${name}.`);
   } catch (error) {

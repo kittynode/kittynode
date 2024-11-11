@@ -65,35 +65,35 @@ onMount(async () => {
 <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight mb-4">Settings</h3>
 
 <ul class="settings-list">
-  {#if remoteAccessStore.remoteAccess === null}
-    <li>Loading remote access status...</li>
-  {:else if !remoteAccessStore.remoteAccess}
-    <li>
-      <span>Enable remote access</span>
-      <Button onclick={enableRemoteAccess}>Enable</Button>
-    </li>
-    <hr />
-  {:else}
-    <li>
-      <span>Disable remote access</span>
-      <Button onclick={disableRemoteAccess}>Disable</Button>
-    </li>
-    <hr />
-  {/if}
   {#if !["ios", "android"].includes(currentPlatform)}
-    {#if serverUrlStore.serverUrl === ""}
+    {#if remoteAccessStore.remoteAccess === null}
+      <li>Loading remote access status...</li>
+    {:else if !remoteAccessStore.remoteAccess}
       <li>
-        <span>Connect remote kitty</span>
-        <Button onclick={connectRemote}>Connect</Button>
+        <span>Enable remote access</span>
+        <Button onclick={enableRemoteAccess}>Enable</Button>
       </li>
       <hr />
     {:else}
       <li>
-        <span>Disconnect remote kitty</span>
-        <Button onclick={disconnectRemote}>Disconnect</Button>
+        <span>Disable remote access</span>
+        <Button onclick={disableRemoteAccess}>Disable</Button>
       </li>
       <hr />
     {/if}
+  {/if}
+  {#if serverUrlStore.serverUrl === ""}
+    <li>
+      <span>Connect remote kitty</span>
+      <Button onclick={connectRemote}>Connect</Button>
+    </li>
+    <hr />
+  {:else}
+    <li>
+      <span>Disconnect remote kitty</span>
+      <Button onclick={disconnectRemote}>Disconnect</Button>
+    </li>
+    <hr />
   {/if}
   <li>
     <span>Delete all Kittynode data</span>

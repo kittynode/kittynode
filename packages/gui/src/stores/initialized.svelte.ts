@@ -11,6 +11,9 @@ export const initializedStore = {
     await invoke("init_kittynode", { serverUrl: serverUrlStore.serverUrl });
     initialized = true;
   },
+  async fakeInitialize() {
+    initialized = true;
+  },
   async uninitialize() {
     initialized = false;
   },

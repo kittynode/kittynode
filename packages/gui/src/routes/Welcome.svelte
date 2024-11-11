@@ -10,7 +10,11 @@ let currentPlatform = $state("");
 
 async function initKittynode() {
   try {
-    await initializedStore.initialize();
+    if (["ios", "android"].includes(currentPlatform)) {
+      await initializedStore.fakeInitialize();
+    } else {
+      await initializedStore.initialize();
+    }
   } catch (e) {
     alert(`Failed to initialize kittynode: ${e}`);
   }
