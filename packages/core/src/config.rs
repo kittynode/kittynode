@@ -58,12 +58,12 @@ impl Config {
         &self.capabilities
     }
 
-    /// Sets the remote url in the configuration.
+    /// Sets the server url in the configuration.
     pub fn set_server_url(&mut self, endpoint: String) {
         self.server_url = endpoint;
     }
 
-    /// Retrieves the remote url from the configuration.
+    /// Retrieves the server url from the configuration.
     pub fn get_server_url(&self) -> String {
         self.server_url.clone()
     }
@@ -91,7 +91,7 @@ pub fn get_capabilities() -> Result<Vec<String>> {
     Ok(config.capabilities.clone())
 }
 
-/// Module-level function to set the remote url.
+/// Module-level function to set the server url.
 pub fn set_server_url(endpoint: String) -> Result<()> {
     let mut config = Config::load()?;
     config.set_server_url(endpoint);
@@ -99,7 +99,7 @@ pub fn set_server_url(endpoint: String) -> Result<()> {
     Ok(())
 }
 
-/// Module-level function to get the remote url.
+/// Module-level function to get the server url.
 pub fn get_server_url() -> Result<String> {
     let config = Config::load()?;
     Ok(config.server_url.clone())

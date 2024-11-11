@@ -9,17 +9,6 @@
     "core:default",
     "core:window:allow-show",
     "dialog:default",
-    "os:default",
-    {
-      "identifier": "fs:allow-exists",
-      "allow": [
-        {
-          "path": "$HOME/taudri.png"
-        },
-        {
-          "path": "$HOME/tauri.png"
-        }
-      ]
-    }
+    "os:default"
   ]
 }

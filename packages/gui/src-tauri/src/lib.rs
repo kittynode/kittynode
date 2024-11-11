@@ -60,7 +60,6 @@ async fn get_capabilities(server_url: String) -> Result<Vec<String>, String> {
             .await
             .map_err(|e| e.to_string())?;
 
-        // Store status and error text before any potential moves
         let status = res.status();
         let error_text = res.text().await.unwrap_or_default();
 
@@ -70,7 +69,7 @@ async fn get_capabilities(server_url: String) -> Result<Vec<String>, String> {
                 status, error_text
             ));
         }
-        // Re-issue the request to get JSON, as we cannot reuse `res`
+
         let res = HTTP_CLIENT
             .get(&url)
             .send()
@@ -107,7 +106,6 @@ async fn get_installed_packages(server_url: String) -> Result<Vec<Package>, Stri
             .await
             .map_err(|e| e.to_string())?;
 
-        // Store status and error text before any potential moves
         let status = res.status();
         let error_text = res.text().await.unwrap_or_default();
 
@@ -117,7 +115,7 @@ async fn get_installed_packages(server_url: String) -> Result<Vec<Package>, Stri
                 status, error_text
             ));
         }
-        // Re-issue the request to get JSON, as we cannot reuse `res`
+
         let res = HTTP_CLIENT
             .get(&url)
             .send()
@@ -238,7 +236,7 @@ async fn init_kittynode(server_url: String) -> Result<(), String> {
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
-pub fn run() -> eyre::Result<()> {
+pub fn run() -> Result<()> {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())

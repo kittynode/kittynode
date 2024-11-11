@@ -71,7 +71,7 @@ async function checkDocker() {
 
 onMount(async () => {
   currentPlatform = platform();
-
+  await checkDocker();
   if (
     !(
       ["ios", "android"].includes(currentPlatform) &&
@@ -80,7 +80,6 @@ onMount(async () => {
   ) {
     await loadPackages();
   }
-  await checkDocker();
 });
 </script>
 
