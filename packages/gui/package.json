@@ -12,7 +12,7 @@
     "format-lint:fix": "biome format src/ --fix && biome lint src/ --fix"
   },
   "dependencies": {
-    "@tauri-apps/api": "^2.0.3",
+    "@tauri-apps/api": "^2.1.0",
     "@tauri-apps/plugin-dialog": "^2.0.1",
     "@tauri-apps/plugin-os": "^2.0.0",
     "lucide-svelte": "^0.456.0",
