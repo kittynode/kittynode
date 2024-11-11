@@ -12,4 +12,4 @@ Learn about Kittynode at [kittynode.io](https://kittynode.io).
 
 ## Development
 
-See the [development guide](https://kittynode.io/contribute/development-guide).
+See the [development guide](https://kittynode.io/development/development-guide).
