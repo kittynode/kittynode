@@ -65,22 +65,20 @@ onMount(async () => {
 <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight mb-4">Settings</h3>
 
 <ul class="settings-list">
-  {#if !["ios", "android"].includes(currentPlatform)}
-    {#if remoteAccessStore.remoteAccess === null}
-      <li>Loading remote access status...</li>
-    {:else if !remoteAccessStore.remoteAccess}
-      <li>
-        <span>Enable remote access</span>
-        <Button onclick={enableRemoteAccess}>Enable</Button>
-      </li>
-      <hr />
-    {:else}
-      <li>
-        <span>Disable remote access</span>
-        <Button onclick={disableRemoteAccess}>Disable</Button>
-      </li>
-      <hr />
-    {/if}
+  {#if remoteAccessStore.remoteAccess === null}
+    <li>Loading remote access status...</li>
+  {:else if !remoteAccessStore.remoteAccess}
+    <li>
+      <span>Enable remote access</span>
+      <Button onclick={enableRemoteAccess} disabled={ ["ios", "android"].includes(currentPlatform) }>Enable</Button>
+    </li>
+    <hr />
+  {:else}
+    <li>
+      <span>Disable remote access</span>
+      <Button onclick={disableRemoteAccess}>Disable</Button>
+    </li>
+    <hr />
   {/if}
   {#if serverUrlStore.serverUrl === ""}
     <li>
