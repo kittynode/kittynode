@@ -32,7 +32,7 @@ async function connectRemote() {
   try {
     const serverUrl = "http://merlin:3000";
     serverUrlStore.setServerUrl(serverUrl);
-    await message(`Connected to remote: ${serverUrl}`);
+    await message("Connected to remote.");
   } catch (e) {
     alert(`Failed to connect to remote: ${e}`);
   }
