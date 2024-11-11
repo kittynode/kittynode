@@ -1,4 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
+import { serverUrlStore } from "./serverUrl.svelte";
 
 let initialized = $state(false);
 
@@ -7,11 +8,11 @@ export const initializedStore = {
     return initialized;
   },
   async initialize() {
-    await invoke("init_kittynode");
+    await invoke("init_kittynode", { serverUrl: serverUrlStore.serverUrl });
     initialized = true;
   },
-  async cheatInitialize() {
-    initialized = !initialized;
+  async fakeInitialize() {
+    initialized = true;
   },
   async uninitialize() {
     initialized = false;

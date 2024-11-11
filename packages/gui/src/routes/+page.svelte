@@ -6,33 +6,36 @@ import Dashboard from "./Dashboard.svelte";
 import { Button } from "$lib/components/ui/button";
 import * as Card from "$lib/components/ui/card/index.js";
 import { platform } from "@tauri-apps/plugin-os";
+import { serverUrlStore } from "../stores/serverUrl.svelte";
 
 let packages: { [name: string]: Package } = $state({});
 let isDockerRunning: boolean | null = $state(null);
 let installedPackages: Package[] = $state([]);
 let installLoading: string | null = $state(null); // Track which package is being installed
 let deleteLoading: string | null = $state(null); // Track which package is being deleted
-let ready = $state(false); // Track when state checks are complete
 let currentPlatform = $state("");
 
 async function loadPackages() {
   try {
     packages = await invoke("get_packages");
     if (isDockerRunning) {
-      installedPackages = await invoke("get_installed_packages");
+      installedPackages = await invoke("get_installed_packages", {
+        serverUrl: serverUrlStore.serverUrl,
+      });
     }
   } catch (error) {
     alert(`Failed to load packages: ${error}`);
     console.error(error);
-  } finally {
-    ready = true;
   }
 }
 
 async function installPackage(name: string) {
   installLoading = name;
   try {
-    await invoke("install_package", { name });
+    await invoke("install_package", {
+      name,
+      serverUrl: serverUrlStore.serverUrl,
+    });
     await loadPackages();
     alert(`Successfully installed ${name}.`);
   } catch (error) {
@@ -46,7 +49,11 @@ async function installPackage(name: string) {
 async function deletePackage(name: string, includeImages: boolean) {
   deleteLoading = name;
   try {
-    await invoke("delete_package", { name, includeImages });
+    await invoke("delete_package", {
+      name,
+      includeImages,
+      serverUrl: serverUrlStore.serverUrl,
+    });
     await loadPackages();
     alert(`Successfully deleted ${name}.`);
   } catch (error) {
@@ -65,7 +72,14 @@ async function checkDocker() {
 onMount(async () => {
   currentPlatform = platform();
   await checkDocker();
-  await loadPackages();
+  if (
+    !(
+      ["ios", "android"].includes(currentPlatform) &&
+      serverUrlStore.serverUrl === ""
+    )
+  ) {
+    await loadPackages();
+  }
 });
 </script>
 
@@ -81,48 +95,66 @@ onMount(async () => {
   Package store
 </h3>
 
-{#if Object.keys(packages).length > 0}
-  {#each Object.entries(packages).sort( ([a], [b]) => a.localeCompare(b), ) as [name, p]}
-    <Card.Root>
-      <Card.Header>
-        <Card.Title>{name}</Card.Title>
-        <Card.Description>
-          {#if !isDockerRunning && currentPlatform !== "ios"}
-            <p>
-              <strong
-                >Turn on Docker to use this package. If you need to install
-                Docker, please follow the installation guide <a
-                  href="https://docs.docker.com/engine/install/"
-                  target="_blank">here</a
-                >.</strong
-              >
-            </p>
-          {/if}
-          {p.description}
-        </Card.Description>
-      </Card.Header>
-      <Card.Content>
-        <Button
-          onclick={() => installPackage(name)}
-          disabled={!ready ||
-            !isDockerRunning ||
-            installedPackages.some((pkg) => pkg.name === name) ||
-            installLoading === name ||
-            deleteLoading === name}
-        >
-          {installLoading === name ? "Installing..." : "Install"}
-        </Button>
-
-        {#if installedPackages.some((pkg) => pkg.name === name)}
+{#if serverUrlStore.serverUrl === "" && ["ios", "android"].includes(currentPlatform)}
+  <Card.Root>
+    <Card.Header>
+      <Card.Title>Helios</Card.Title>
+      <Card.Description>
+        Runs a Helios light client on Holesky, using wasm.
+      </Card.Description>
+    </Card.Header>
+    <Card.Content>
+      <Button
+        onclick={() => alert("Coming soon!")}
+      >
+       Install
+      </Button>
+    </Card.Content>
+  </Card.Root>
+{:else}
+  {#if Object.keys(packages).length > 0}
+    {#each Object.entries(packages).sort( ([a], [b]) => a.localeCompare(b), ) as [name, p]}
+      <Card.Root>
+        <Card.Header>
+          <Card.Title>{name}</Card.Title>
+          <Card.Description>
+            {#if !isDockerRunning && currentPlatform !== "ios"}
+              <p>
+                <strong
+                  >Turn on Docker to use this package. If you need to install
+                  Docker, please follow the installation guide <a
+                    href="https://docs.docker.com/engine/install/"
+                    target="_blank">here</a
+                  >.</strong
+                >
+              </p>
+            {/if}
+            {p.description}
+          </Card.Description>
+        </Card.Header>
+        <Card.Content>
           <Button
-            class="secondary"
-            onclick={() => deletePackage(name, false)}
-            disabled={!isDockerRunning || deleteLoading === name}
+            onclick={() => installPackage(name)}
+            disabled={
+              !isDockerRunning ||
+              installedPackages.some((pkg) => pkg.name === name) ||
+              installLoading === name ||
+              deleteLoading === name}
           >
-            {deleteLoading === name ? "Deleting..." : "Delete"}
+            {installLoading === name ? "Installing..." : "Install"}
           </Button>
-        {/if}
-      </Card.Content>
-    </Card.Root>
-  {/each}
+
+          {#if installedPackages.some((pkg) => pkg.name === name)}
+            <Button
+              class="secondary"
+              onclick={() => deletePackage(name, false)}
+              disabled={!isDockerRunning || deleteLoading === name}
+            >
+              {deleteLoading === name ? "Deleting..." : "Delete"}
+            </Button>
+          {/if}
+        </Card.Content>
+      </Card.Root>
+    {/each}
+  {/if}
 {/if}

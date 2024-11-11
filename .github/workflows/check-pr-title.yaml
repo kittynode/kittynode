@@ -16,14 +16,11 @@ jobs:
     steps:
       - uses: amannn/action-semantic-pull-request@v5
         with:
-          requireScope: true
+          requireScope: false
           scopes: |
             cli
             core
-            deps
-            docs
             gui
-            repo
             web
           subjectPattern: ^(?![A-Z]).+$
           subjectPatternError: |

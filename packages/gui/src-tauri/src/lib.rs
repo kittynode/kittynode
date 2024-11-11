@@ -1,76 +1,131 @@
 use eyre::Result;
 use kittynode_core::package::Package;
 use std::collections::HashMap;
+use std::sync::LazyLock;
+use tauri_plugin_http::reqwest;
 use tracing::info;
 
-#[cfg(mobile)]
-use once_cell::sync::OnceCell;
-#[cfg(mobile)]
-use tauri_plugin_http::reqwest;
-
-#[cfg(mobile)]
-pub static HTTP_CLIENT: OnceCell<reqwest::Client> = OnceCell::new();
-#[cfg(mobile)]
-pub static SERVER_URL: OnceCell<String> = OnceCell::new();
+/// Global HTTP client instance.
+pub static HTTP_CLIENT: LazyLock<reqwest::Client> = LazyLock::new(reqwest::Client::new);
 
 #[tauri::command]
-fn add_capability(name: String) -> Result<(), String> {
+async fn add_capability(name: String, server_url: String) -> Result<(), String> {
     info!("Adding capability: {}", name);
-    kittynode_core::config::add_capability(&name).map_err(|e| e.to_string())
-}
 
-#[tauri::command]
-fn remove_capability(name: String) -> Result<(), String> {
-    info!("Removing capability: {}", name);
-    kittynode_core::config::remove_capability(&name).map_err(|e| e.to_string())
-}
-
-#[tauri::command]
-fn get_capabilities() -> Result<Vec<String>, String> {
-    info!("Getting capabilities");
-    kittynode_core::config::get_capabilities().map_err(|e| e.to_string())
-}
-
-#[tauri::command]
-fn get_packages() -> Result<HashMap<String, kittynode_core::package::Package>, String> {
-    info!("Getting packages");
-    let packages = kittynode_core::package::get_packages()
-        .map_err(|e| e.to_string())?
-        .into_iter()
-        .map(|(name, package)| (name.to_string(), package))
-        .collect();
-    Ok(packages)
-}
-
-#[tauri::command]
-async fn get_installed_packages() -> Result<Vec<Package>, String> {
-    info!("Getting installed packages");
-    #[cfg(not(mobile))]
-    {
-        let installed = kittynode_core::package::get_installed_packages()
+    if !server_url.is_empty() {
+        let url = format!("{}/add_capability/{}", server_url, name);
+        let res = HTTP_CLIENT
+            .post(&url)
+            .send()
             .await
             .map_err(|e| e.to_string())?;
-        Ok(installed)
+        if !res.status().is_success() {
+            return Err(format!("Failed to add capability: {}", res.status()));
+        }
+        Ok(())
+    } else {
+        kittynode_core::config::add_capability(&name).map_err(|e| e.to_string())
     }
-    #[cfg(mobile)]
-    {
-        let client = HTTP_CLIENT.get_or_init(reqwest::Client::new);
-        let server_url = SERVER_URL.get().ok_or("Server URL not set")?;
-        let url = format!("{}/get_installed_packages", server_url);
-        let res = client.get(&url).send().await.map_err(|e| e.to_string())?;
+}
+
+#[tauri::command]
+async fn remove_capability(name: String, server_url: String) -> Result<(), String> {
+    info!("Removing capability: {}", name);
+
+    if !server_url.is_empty() {
+        let url = format!("{}/remove_capability/{}", server_url, name);
+        let res = HTTP_CLIENT
+            .post(&url)
+            .send()
+            .await
+            .map_err(|e| e.to_string())?;
+        if !res.status().is_success() {
+            return Err(format!("Failed to remove capability: {}", res.status()));
+        }
+        Ok(())
+    } else {
+        kittynode_core::config::remove_capability(&name).map_err(|e| e.to_string())
+    }
+}
+
+#[tauri::command]
+async fn get_capabilities(server_url: String) -> Result<Vec<String>, String> {
+    info!("Getting capabilities");
+
+    if !server_url.is_empty() {
+        let url = format!("{}/get_capabilities", server_url);
+        let res = HTTP_CLIENT
+            .get(&url)
+            .send()
+            .await
+            .map_err(|e| e.to_string())?;
+
         let status = res.status();
+        let error_text = res.text().await.unwrap_or_default();
+
         if !status.is_success() {
-            let error_text = res.text().await.unwrap_or_default();
+            return Err(format!(
+                "Failed to get capabilities: {} - {}",
+                status, error_text
+            ));
+        }
+
+        let res = HTTP_CLIENT
+            .get(&url)
+            .send()
+            .await
+            .map_err(|e| e.to_string())?;
+        res.json::<Vec<String>>().await.map_err(|e| e.to_string())
+    } else {
+        kittynode_core::config::get_capabilities().map_err(|e| e.to_string())
+    }
+}
+
+#[tauri::command]
+fn get_packages() -> Result<HashMap<String, Package>, String> {
+    info!("Getting packages");
+    kittynode_core::package::get_packages()
+        .map(|packages| {
+            packages
+                .into_iter()
+                .map(|(name, package)| (name.to_string(), package))
+                .collect()
+        })
+        .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+async fn get_installed_packages(server_url: String) -> Result<Vec<Package>, String> {
+    info!("Getting installed packages");
+
+    if !server_url.is_empty() {
+        let url = format!("{}/get_installed_packages", server_url);
+        let res = HTTP_CLIENT
+            .get(&url)
+            .send()
+            .await
+            .map_err(|e| e.to_string())?;
+
+        let status = res.status();
+        let error_text = res.text().await.unwrap_or_default();
+
+        if !status.is_success() {
             return Err(format!(
                 "Failed to get installed packages: {} - {}",
                 status, error_text
             ));
         }
-        let packages = res
-            .json::<Vec<Package>>()
+
+        let res = HTTP_CLIENT
+            .get(&url)
+            .send()
             .await
             .map_err(|e| e.to_string())?;
-        Ok(packages)
+        res.json::<Vec<Package>>().await.map_err(|e| e.to_string())
+    } else {
+        kittynode_core::package::get_installed_packages()
+            .await
+            .map_err(|e| e.to_string())
     }
 }
 
@@ -81,21 +136,21 @@ async fn is_docker_running() -> bool {
 }
 
 #[tauri::command]
-async fn install_package(name: String) -> Result<(), String> {
-    #[cfg(not(mobile))]
-    kittynode_core::package::install_package(&name)
-        .await
-        .map_err(|e| e.to_string())?;
-
-    #[cfg(mobile)]
-    {
-        let client = HTTP_CLIENT.get_or_init(reqwest::Client::new);
-        let server_url = SERVER_URL.get().ok_or("Server URL not set")?;
+async fn install_package(name: String, server_url: String) -> Result<(), String> {
+    if !server_url.is_empty() {
         let url = format!("{}/install_package/{}", server_url, name);
-        let res = client.post(&url).send().await.map_err(|e| e.to_string())?;
+        let res = HTTP_CLIENT
+            .post(&url)
+            .send()
+            .await
+            .map_err(|e| e.to_string())?;
         if !res.status().is_success() {
             return Err(format!("Failed to install package: {}", res.status()));
         }
+    } else {
+        kittynode_core::package::install_package(&name)
+            .await
+            .map_err(|e| e.to_string())?;
     }
 
     info!("Successfully installed package: {}", name);
@@ -103,21 +158,25 @@ async fn install_package(name: String) -> Result<(), String> {
 }
 
 #[tauri::command]
-async fn delete_package(name: String, include_images: bool) -> Result<(), String> {
-    #[cfg(not(mobile))]
-    kittynode_core::package::delete_package(&name, include_images)
-        .await
-        .map_err(|e| e.to_string())?;
-
-    #[cfg(mobile)]
-    {
-        let client = HTTP_CLIENT.get_or_init(reqwest::Client::new);
-        let server_url = SERVER_URL.get().ok_or("Server URL not set")?;
+async fn delete_package(
+    name: String,
+    include_images: bool,
+    server_url: String,
+) -> Result<(), String> {
+    if !server_url.is_empty() {
         let url = format!("{}/delete_package/{}", server_url, name);
-        let res = client.post(&url).send().await.map_err(|e| e.to_string())?;
+        let res = HTTP_CLIENT
+            .post(&url)
+            .send()
+            .await
+            .map_err(|e| e.to_string())?;
         if !res.status().is_success() {
             return Err(format!("Failed to delete package: {}", res.status()));
         }
+    } else {
+        kittynode_core::package::delete_package(&name, include_images)
+            .await
+            .map_err(|e| e.to_string())?;
     }
 
     info!("Successfully deleted package: {}", name);
@@ -125,9 +184,23 @@ async fn delete_package(name: String, include_images: bool) -> Result<(), String
 }
 
 #[tauri::command]
-fn delete_kittynode() -> Result<(), String> {
+async fn delete_kittynode(server_url: String) -> Result<(), String> {
     info!("Deleting .kittynode directory");
-    kittynode_core::kittynode::delete_kittynode().map_err(|e| e.to_string())
+
+    if !server_url.is_empty() {
+        let url = format!("{}/delete_kittynode", server_url);
+        let res = HTTP_CLIENT
+            .post(&url)
+            .send()
+            .await
+            .map_err(|e| e.to_string())?;
+        if !res.status().is_success() {
+            return Err(format!("Failed to delete Kittynode: {}", res.status()));
+        }
+        Ok(())
+    } else {
+        kittynode_core::kittynode::delete_kittynode().map_err(|e| e.to_string())
+    }
 }
 
 #[tauri::command]
@@ -143,21 +216,31 @@ fn is_initialized() -> bool {
 }
 
 #[tauri::command]
-fn init_kittynode() -> Result<(), String> {
+async fn init_kittynode(server_url: String) -> Result<(), String> {
     info!("Initializing Kittynode");
-    kittynode_core::kittynode::init_kittynode().map_err(|e| e.to_string())
+
+    if !server_url.is_empty() {
+        let url = format!("{}/init_kittynode", server_url);
+        let res = HTTP_CLIENT
+            .post(&url)
+            .send()
+            .await
+            .map_err(|e| e.to_string())?;
+        if !res.status().is_success() {
+            return Err(format!("Failed to initialize Kittynode: {}", res.status()));
+        }
+        Ok(())
+    } else {
+        kittynode_core::kittynode::init_kittynode().map_err(|e| e.to_string())
+    }
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
-pub fn run() {
+pub fn run() -> Result<()> {
     tauri::Builder::default()
-        .setup(|_| {
-            #[cfg(mobile)]
-            SERVER_URL.set("http://merlin:3000".to_string())?;
-            Ok(()) // do nothing if not mobile
-        })
-        .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_fs::init())
+        .plugin(tauri_plugin_os::init())
         .invoke_handler(tauri::generate_handler![
             get_packages,
             get_installed_packages,
@@ -170,8 +253,10 @@ pub fn run() {
             init_kittynode,
             add_capability,
             remove_capability,
-            get_capabilities
+            get_capabilities,
         ])
         .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .map_err(|e| eyre::eyre!(e.to_string()))?;
+
+    Ok(())
 }
