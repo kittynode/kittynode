@@ -6,6 +6,7 @@ import Dashboard from "./Dashboard.svelte";
 import { Button } from "$lib/components/ui/button";
 import * as Card from "$lib/components/ui/card/index.js";
 import { platform } from "@tauri-apps/plugin-os";
+import { serverUrlStore } from "../stores/serverUrl.svelte";
 
 let packages: { [name: string]: Package } = $state({});
 let isDockerRunning: boolean | null = $state(null);
@@ -19,7 +20,7 @@ async function loadPackages() {
   try {
     packages = await invoke("get_packages");
     if (isDockerRunning) {
-      installedPackages = await invoke("get_installed_packages");
+      installedPackages = await invoke("get_installed_packages", { serverUrl: serverUrlStore.serverUrl });
     }
   } catch (error) {
     alert(`Failed to load packages: ${error}`);
@@ -32,7 +33,7 @@ async function loadPackages() {
 async function installPackage(name: string) {
   installLoading = name;
   try {
-    await invoke("install_package", { name });
+    await invoke("install_package", { name, serverUrl: serverUrlStore.serverUrl });
     await loadPackages();
     alert(`Successfully installed ${name}.`);
   } catch (error) {
@@ -46,7 +47,7 @@ async function installPackage(name: string) {
 async function deletePackage(name: string, includeImages: boolean) {
   deleteLoading = name;
   try {
-    await invoke("delete_package", { name, includeImages });
+    await invoke("delete_package", { name, includeImages, serverUrl: serverUrlStore.serverUrl });
     await loadPackages();
     alert(`Successfully deleted ${name}.`);
   } catch (error) {

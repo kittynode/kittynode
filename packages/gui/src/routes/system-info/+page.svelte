@@ -3,11 +3,11 @@ import { onMount } from "svelte";
 import type { SystemInfo } from "$lib/types/system_info";
 import { invoke } from "@tauri-apps/api/core";
 import { platform } from "@tauri-apps/plugin-os";
+import { remoteAccessStore } from "./../../stores/remoteAccess.svelte";
 
 let processor = $state("Loading...");
 let memory = $state("Loading...");
 let storage = $state("Loading...");
-let capabilities: string[] | null = $state(null);
 
 async function fetchSystemInfo() {
   try {
@@ -24,7 +24,6 @@ onMount(async () => {
   if (!["ios", "android"].includes(platform())) {
     await fetchSystemInfo();
   }
-  capabilities = await invoke("get_capabilities");
 });
 </script>
 
@@ -33,11 +32,7 @@ onMount(async () => {
 </h3>
 
 <ul class="mb-8">
-  {#if capabilities === null}
-    <li>Loading capabilities...</li>
-  {:else}
-    <li>Remote control: <strong>{capabilities.includes("remote_control") ? "Enabled" : "Not enabled"}</strong></li>
-  {/if}
+  <li>Remote access: <strong>{remoteAccessStore.remoteAccess ? "Enabled" : "Not enabled"}</strong></li>
 </ul>
 
 <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight mb-4">

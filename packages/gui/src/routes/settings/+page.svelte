@@ -5,48 +5,50 @@ import { initializedStore } from "../../stores/initialized.svelte";
 import { Button } from "$lib/components/ui/button";
 import { platform } from "@tauri-apps/plugin-os";
 import { onMount } from "svelte";
+import { remoteAccessStore } from "../../stores/remoteAccess.svelte";
+import { serverUrlStore } from "../../stores/serverUrl.svelte";
 
 let currentPlatform = $state("");
-let isRemoteMode: boolean | null = $state(null);
 
-async function doThing() {
+async function enableRemoteAccess() {
   try {
-    const resp = await invoke("set_is_remote_flag", { value: false });
-    const anotherResp = await invoke("get_server_url");
-    alert(`Success: ${anotherResp}`);
-  } catch (error) {
-    alert(`Error: ${error}`);
-    console.error("Failed to do thing:", error);
+    remoteAccessStore.enable();
+    await message("Remote access has been enabled.");
+  } catch (e) {
+    alert(`Failed to enable remote access: ${e}`);
   }
 }
 
-async function connect() {
-  await message("Coming soon.");
-}
-
-async function connectMobile() {
-  await message("Coming soon.");
-}
-
-async function remoteControl() {
+async function disableRemoteAccess() {
   try {
-    if (isRemoteMode) {
-      await invoke("remove_capability", { name: "remote_control" });
-    } else {
-      await invoke("add_capability", { name: "remote_control" });
-    }
-    isRemoteMode = ((await invoke("get_capabilities")) as string[]).includes(
-      "remote_control",
-    );
-  } catch (error) {
-    alert(`Error: ${error}`);
-    console.error("Failed to update remote control capability:", error);
+    remoteAccessStore.disable();
+    await message("Remote access has been disabled.");
+  } catch (e) {
+    alert(`Failed to disable remote access: ${e}`);
+  }
+}
+
+async function connectRemote() {
+  try {
+    serverUrlStore.setServerUrl("http://lucy:3000");
+    await message("Connected to remote.");
+  } catch (e) {
+    alert(`Failed to connect to remote: ${e}`);
+  }
+}
+
+async function disconnectRemote() {
+  try {
+    serverUrlStore.setServerUrl("");
+    await message("Disconnected from remote.");
+  } catch (e) {
+    alert(`Failed to disconnect from remote: ${e}`);
   }
 }
 
 async function deleteKittynode() {
   try {
-    await invoke("delete_kittynode");
+    await invoke("delete_kittynode", { serverUrl: serverUrlStore.serverUrl });
     await initializedStore.uninitialize();
     message("Kittynode data has been deleted successfully.");
   } catch (error) {
@@ -57,45 +59,45 @@ async function deleteKittynode() {
 
 onMount(async () => {
   currentPlatform = platform();
-  isRemoteMode = ((await invoke("get_capabilities")) as string[]).includes(
-    "remote_control",
-  );
 });
 </script>
 
 <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight mb-4">Settings</h3>
 
 <ul class="settings-list">
-  {#if !["ios", "android"].includes(currentPlatform)}
+  {#if remoteAccessStore.remoteAccess === null}
+    <li>Loading remote access status...</li>
+  {:else if !remoteAccessStore.remoteAccess}
     <li>
-      <span>Connect your mobile device</span>
-      <Button onclick={connectMobile}>Connect mobile</Button>
-    </li>
-    <hr />
-  {/if}
-  {#if isRemoteMode === null}
-    <li>Loading remote control status...</li>
-  {:else if isRemoteMode}
-    <li>
-      <span>Disable remote control</span>
-      <Button onclick={remoteControl}>Disable</Button>
+      <span>Enable remote access</span>
+      <Button onclick={enableRemoteAccess}>Enable</Button>
     </li>
     <hr />
   {:else}
     <li>
-      <span>Enable remote control</span>
-      <Button onclick={remoteControl}>Enable</Button>
+      <span>Disable remote access</span>
+      <Button onclick={disableRemoteAccess}>Disable</Button>
     </li>
     <hr />
   {/if}
+  {#if !["ios", "android"].includes(currentPlatform)}
+    {#if serverUrlStore.serverUrl === ""}
+      <li>
+        <span>Connect remote kitty</span>
+        <Button onclick={connectRemote}>Connect</Button>
+      </li>
+      <hr />
+    {:else}
+      <li>
+        <span>Disconnect remote kitty</span>
+        <Button onclick={disconnectRemote}>Disconnect</Button>
+      </li>
+      <hr />
+    {/if}
+  {/if}
   <li>
     <span>Delete all Kittynode data</span>
-    <Button onclick={deleteKittynode}>Delete data</Button>
-  </li>
-  <hr />
-  <li>
-    <span>Do thing</span>
-    <Button onclick={doThing}>Do thing</Button>
+    <Button onclick={deleteKittynode} disabled={serverUrlStore.serverUrl !== ""}>Delete data</Button>
   </li>
 </ul>
 

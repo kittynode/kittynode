@@ -6,7 +6,7 @@ use std::{fs, path::PathBuf};
 #[derive(Serialize, Deserialize, Default)]
 pub struct Config {
     pub capabilities: Vec<String>,
-    pub remote_url: Option<String>,
+    pub server_url: String,
 }
 
 impl Config {
@@ -59,13 +59,13 @@ impl Config {
     }
 
     /// Sets the remote url in the configuration.
-    pub fn set_remote_url(&mut self, endpoint: Option<String>) {
-        self.remote_url = endpoint;
+    pub fn set_server_url(&mut self, endpoint: String) {
+        self.server_url = endpoint;
     }
 
     /// Retrieves the remote url from the configuration.
-    pub fn get_remote_url(&self) -> Option<&String> {
-        self.remote_url.as_ref()
+    pub fn get_server_url(&self) -> String {
+        self.server_url.clone()
     }
 }
 
@@ -92,15 +92,15 @@ pub fn get_capabilities() -> Result<Vec<String>> {
 }
 
 /// Module-level function to set the remote url.
-pub fn set_remote_url(endpoint: Option<String>) -> Result<()> {
+pub fn set_server_url(endpoint: String) -> Result<()> {
     let mut config = Config::load()?;
-    config.set_remote_url(endpoint);
+    config.set_server_url(endpoint);
     config.save()?;
     Ok(())
 }
 
 /// Module-level function to get the remote url.
-pub fn get_remote_url() -> Result<Option<String>> {
+pub fn get_server_url() -> Result<String> {
     let config = Config::load()?;
-    Ok(config.remote_url)
+    Ok(config.server_url.clone())
 }
