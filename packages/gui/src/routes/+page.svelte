@@ -13,7 +13,6 @@ let isDockerRunning: boolean | null = $state(null);
 let installedPackages: Package[] = $state([]);
 let installLoading: string | null = $state(null); // Track which package is being installed
 let deleteLoading: string | null = $state(null); // Track which package is being deleted
-let ready = $state(false); // Track when state checks are complete
 let currentPlatform = $state("");
 
 async function loadPackages() {
@@ -27,8 +26,6 @@ async function loadPackages() {
   } catch (error) {
     alert(`Failed to load packages: ${error}`);
     console.error(error);
-  } finally {
-    ready = true;
   }
 }
 
@@ -81,9 +78,9 @@ onMount(async () => {
       serverUrlStore.serverUrl === ""
     )
   ) {
-    await checkDocker();
     await loadPackages();
   }
+  await checkDocker();
 });
 </script>
 
@@ -139,7 +136,7 @@ onMount(async () => {
         <Card.Content>
           <Button
             onclick={() => installPackage(name)}
-            disabled={!ready ||
+            disabled={
               !isDockerRunning ||
               installedPackages.some((pkg) => pkg.name === name) ||
               installLoading === name ||
