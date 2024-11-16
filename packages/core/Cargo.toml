@@ -13,7 +13,7 @@ eyre = { version = "0.6.12", default-features = false, features = [
   "auto-install",
   "track-caller",
 ] }
-serde = { version = "1.0.214", features = ["derive"] }
+serde = { version = "1.0.215", features = ["derive"] }
 toml = "0.8.19"
 tracing = "0.1.40"
 tokio-stream = "0.1.16"
