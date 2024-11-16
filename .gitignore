@@ -1,3 +1,30 @@
+# Operating system files
 .DS_Store
+Thumbs.db
+
+# Dependency directories
 node_modules
+
+# Build outputs
+dist
+build
 target
+
+# Generated files
+.astro
+.svelte-kit
+gen
+!**/gen-overrides/**
+
+# Environment variables
+.env
+.env.*
+!.env.example
+!.env.test
+
+# Logs
+pnpm-debug.log*
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
