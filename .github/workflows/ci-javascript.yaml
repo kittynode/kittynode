@@ -3,6 +3,7 @@ name: CI - JavaScript
 on:
   push:
     paths:
+      - docs/**
       - packages/gui/*
       - packages/gui/src/**
 
@@ -23,10 +24,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 23
-          cache: "pnpm"
+          cache: pnpm
 
       - name: Install dependencies
         run: pnpm install
 
       - name: Format and lint
-        run: pnpm -F gui format-lint
+        run: pnpm -F docs -F gui format-lint

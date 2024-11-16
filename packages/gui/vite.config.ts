@@ -12,10 +12,10 @@ export default defineConfig({
     strictPort: true,
     hmr: host
       ? {
-        protocol: "ws",
-        host,
-        port: 1421,
-      }
+          protocol: "ws",
+          host,
+          port: 1421,
+        }
       : undefined,
   },
 });

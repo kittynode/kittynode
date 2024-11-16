@@ -1,12 +1,15 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
+import starlightLinksValidator from "starlight-links-validator";
+import starlightImageZoom from "starlight-image-zoom";
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://kittynode.io",
   integrations: [
     starlight({
+      plugins: [starlightLinksValidator(), starlightImageZoom()],
       title: "Kittynode",
       logo: {
         light: "../assets/kittynode-light.png",
@@ -25,6 +28,7 @@ export default defineConfig({
         github: "https://github.com/kittynode",
         discord: "https://discord.kittynode.io",
         "x.com": "https://x.com/kittynode",
+        youtube: "https://youtube.com/@kittynode",
       },
       sidebar: [
         {
@@ -50,7 +54,10 @@ export default defineConfig({
         {
           label: "Development",
           items: [
-            { label: "Development guide", slug: "development/development-guide" },
+            {
+              label: "Development guide",
+              slug: "development/development-guide",
+            },
             { label: "Project tracking", slug: "development/project-tracking" },
             { label: "Releases", slug: "development/releases" },
           ],
