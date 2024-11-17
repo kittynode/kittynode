@@ -23,7 +23,7 @@ async function fetchSystemInfo() {
 }
 
 onMount(async () => {
-   await fetchSystemInfo();
+  await fetchSystemInfo();
 });
 </script>
 
