@@ -2,8 +2,8 @@
 import { onMount } from "svelte";
 import type { SystemInfo } from "$lib/types/system_info";
 import { invoke } from "@tauri-apps/api/core";
-import { platform } from "@tauri-apps/plugin-os";
 import { remoteAccessStore } from "./../../stores/remoteAccess.svelte";
+import { serverUrlStore } from "../../stores/serverUrl.svelte";
 
 let processor = $state("Loading...");
 let memory = $state("Loading...");
@@ -11,7 +11,9 @@ let storage = $state("Loading...");
 
 async function fetchSystemInfo() {
   try {
-    const systemInfo: SystemInfo = await invoke("system_info");
+    const systemInfo: SystemInfo = await invoke("system_info", {
+      serverUrl: serverUrlStore.serverUrl,
+    });
     processor = systemInfo.processor;
     memory = systemInfo.memory;
     storage = systemInfo.storage;
@@ -21,9 +23,7 @@ async function fetchSystemInfo() {
 }
 
 onMount(async () => {
-  if (!["ios", "android"].includes(platform())) {
-    await fetchSystemInfo();
-  }
+  await fetchSystemInfo();
 });
 </script>
 
@@ -39,12 +39,8 @@ onMount(async () => {
   System info
 </h3>
 
-{#if ["ios", "android"].includes(platform())}
-  <p>This feature is not yet supported on mobile.</p>
-{:else}
-  <ul>
-    <li>Processor: {processor}</li>
-    <li>Memory: {memory}</li>
-    <li>Storage: {storage}</li>
-  </ul>
-{/if}
+<ul>
+  <li>Processor: {processor}</li>
+  <li>Memory: {memory}</li>
+  <li>Storage: {storage}</li>
+</ul>

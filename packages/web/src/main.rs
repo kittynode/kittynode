@@ -6,6 +6,7 @@ use axum::{
     Router,
 };
 use kittynode_core::package::Package;
+use kittynode_core::system_info::SystemInfo;
 
 pub(crate) async fn hello_world() -> &'static str {
     "Hello World!"
@@ -80,6 +81,12 @@ pub(crate) async fn delete_kittynode() -> Result<StatusCode, (StatusCode, String
     Ok(StatusCode::OK)
 }
 
+pub(crate) async fn get_system_info() -> Result<Json<SystemInfo>, (StatusCode, String)> {
+    kittynode_core::system_info::get_system_info()
+        .map(Json)
+        .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))
+}
+
 #[tokio::main]
 async fn main() {
     tracing_subscriber::fmt::init();
@@ -94,7 +101,8 @@ async fn main() {
         .route("/get_installed_packages", get(get_installed_packages))
         .route("/is_docker_running", get(is_docker_running))
         .route("/init_kittynode", post(init_kittynode))
-        .route("/delete_kittynode", post(delete_kittynode));
+        .route("/delete_kittynode", post(delete_kittynode))
+        .route("/get_system_info", get(get_system_info));
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
     axum::serve(listener, app).await.unwrap();

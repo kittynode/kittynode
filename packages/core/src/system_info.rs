@@ -13,18 +13,18 @@ pub fn get_system_info() -> Result<SystemInfo> {
     let mut system = System::new_all();
     system.refresh_all();
 
-    // Get processor details and convert to gigahertz
+    // Get processor details
     let cpu_name = system
         .cpus()
         .first()
-        .and_then(|cpu| {
+        .map(|cpu| {
             if cpu.brand().is_empty() {
-                None
+                "Unknown CPU name".to_string()
             } else {
-                Some(cpu.brand().to_string())
+                cpu.brand().to_string()
             }
         })
-        .unwrap_or_else(|| "Unknown".to_string());
+        .ok_or_else(|| eyre::eyre!("Failed to retrieve CPU name"))?;
 
     let cpu_cores = system.physical_core_count().unwrap_or(1);
 
@@ -32,12 +32,12 @@ pub fn get_system_info() -> Result<SystemInfo> {
         .cpus()
         .first()
         .map(|cpu| cpu.frequency() as f64 / 1000.0)
-        .unwrap_or(0.0);
+        .ok_or_else(|| eyre::eyre!("Failed to retrieve CPU frequency"))?;
 
-    let cpu_architecture = match std::env::consts::ARCH {
-        "x86_64" => "x86_64",
-        "aarch64" => "ARM",
-        _ => "Unknown",
+    let cpu_architecture = if std::env::consts::ARCH.is_empty() {
+        "Unknown architecture".to_string()
+    } else {
+        std::env::consts::ARCH.to_string()
     };
 
     let processor = format!(
