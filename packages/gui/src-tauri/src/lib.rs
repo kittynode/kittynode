@@ -1,5 +1,6 @@
 use eyre::Result;
 use kittynode_core::package::Package;
+use kittynode_core::system_info::SystemInfo;
 use std::collections::HashMap;
 use std::sync::LazyLock;
 use tauri_plugin_http::reqwest;
@@ -204,9 +205,36 @@ async fn delete_kittynode(server_url: String) -> Result<(), String> {
 }
 
 #[tauri::command]
-fn system_info() -> Result<kittynode_core::system_info::SystemInfo, String> {
+async fn system_info(server_url: String) -> Result<SystemInfo, String> {
     info!("Getting system info");
-    kittynode_core::system_info::get_system_info().map_err(|e| e.to_string())
+
+    if !server_url.is_empty() {
+        let url = format!("{}/get_system_info", server_url);
+        let res = HTTP_CLIENT
+            .get(&url)
+            .send()
+            .await
+            .map_err(|e| e.to_string())?;
+
+        let status = res.status();
+        let error_text = res.text().await.unwrap_or_default();
+
+        if !status.is_success() {
+            return Err(format!(
+                "Failed to get system info: {} - {}",
+                status, error_text
+            ));
+        }
+
+        let res = HTTP_CLIENT
+            .get(&url)
+            .send()
+            .await
+            .map_err(|e| e.to_string())?;
+        res.json::<SystemInfo>().await.map_err(|e| e.to_string())
+    } else {
+        kittynode_core::system_info::get_system_info().map_err(|e| e.to_string())
+    }
 }
 
 #[tauri::command]

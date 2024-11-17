@@ -4,6 +4,7 @@ import type { SystemInfo } from "$lib/types/system_info";
 import { invoke } from "@tauri-apps/api/core";
 import { platform } from "@tauri-apps/plugin-os";
 import { remoteAccessStore } from "./../../stores/remoteAccess.svelte";
+import { serverUrlStore } from "../../stores/serverUrl.svelte";
 
 let processor = $state("Loading...");
 let memory = $state("Loading...");
@@ -11,7 +12,9 @@ let storage = $state("Loading...");
 
 async function fetchSystemInfo() {
   try {
-    const systemInfo: SystemInfo = await invoke("system_info");
+    const systemInfo: SystemInfo = await invoke("system_info", {
+      serverUrl: serverUrlStore.serverUrl,
+    });
     processor = systemInfo.processor;
     memory = systemInfo.memory;
     storage = systemInfo.storage;
