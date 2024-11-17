@@ -6,7 +6,6 @@ use std::sync::LazyLock;
 use tauri_plugin_http::reqwest;
 use tracing::info;
 
-/// Global HTTP client instance.
 pub static HTTP_CLIENT: LazyLock<reqwest::Client> = LazyLock::new(reqwest::Client::new);
 
 #[tauri::command]
