@@ -3,7 +3,6 @@ import "../app.css";
 import { onMount } from "svelte";
 import { windowShownStore } from "../stores/windowShown.svelte.ts";
 import { initializedStore } from "../stores/initialized.svelte";
-import { platform } from "@tauri-apps/plugin-os";
 import { ModeWatcher } from "mode-watcher";
 import Welcome from "./Welcome.svelte";
 import Navigation from "./Navigation.svelte";
