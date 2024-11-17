@@ -6,13 +6,13 @@ import Dashboard from "./Dashboard.svelte";
 import { Button } from "$lib/components/ui/button";
 import * as Card from "$lib/components/ui/card/index.js";
 import { platform } from "@tauri-apps/plugin-os";
-import { serverUrlStore } from "../stores/serverUrl.svelte";
+import { serverUrlStore } from "$stores/serverUrl.svelte";
 
 let packages: { [name: string]: Package } = $state({});
 let isDockerRunning: boolean | null = $state(null);
 let installedPackages: Package[] = $state([]);
-let installLoading: string | null = $state(null); // Track which package is being installed
-let deleteLoading: string | null = $state(null); // Track which package is being deleted
+let installLoading: string | null = $state(null);
+let deleteLoading: string | null = $state(null);
 let currentPlatform = $state("");
 
 async function loadPackages() {
