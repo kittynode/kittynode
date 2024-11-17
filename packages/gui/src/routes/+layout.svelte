@@ -20,16 +20,17 @@ onMount(async () => {
   <Welcome />
 {:else}
   <div class="flex flex-col h-screen">
-    <main class="flex-1 overflow-y-auto pb-24">
+    <main class="flex-1 overflow-y-auto">
       <div class="container mx-auto pt-8">
         {@render children()}
+        <div class="h-32 md:h-10"></div>
       </div>
     </main>
-    <div class="fixed bottom-0 left-0 right-0 bg-background border-t">
+    <nav class="sticky bottom-0 left-0 right-0 bg-background border-t">
       <div class="container mx-auto py-4">
         <Navigation />
       </div>
-    </div>
+    </nav>
   </div>
 {/if}
 
