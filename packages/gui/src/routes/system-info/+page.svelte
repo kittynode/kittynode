@@ -2,8 +2,8 @@
 import { onMount } from "svelte";
 import type { SystemInfo } from "$lib/types/system_info";
 import { invoke } from "@tauri-apps/api/core";
-import { remoteAccessStore } from "./../../stores/remoteAccess.svelte";
-import { serverUrlStore } from "../../stores/serverUrl.svelte";
+import { remoteAccessStore } from "$stores/remoteAccess.svelte";
+import { serverUrlStore } from "$stores/serverUrl.svelte";
 
 let processor = $state("Loading...");
 let memory = $state("Loading...");

@@ -1,12 +1,12 @@
 <script lang="ts">
 import { invoke } from "@tauri-apps/api/core";
 import { message } from "@tauri-apps/plugin-dialog";
-import { initializedStore } from "../../stores/initialized.svelte";
+import { initializedStore } from "$stores/initialized.svelte";
 import { Button } from "$lib/components/ui/button";
 import { platform } from "@tauri-apps/plugin-os";
 import { onMount } from "svelte";
-import { remoteAccessStore } from "../../stores/remoteAccess.svelte";
-import { serverUrlStore } from "../../stores/serverUrl.svelte";
+import { remoteAccessStore } from "$stores/remoteAccess.svelte";
+import { serverUrlStore } from "$stores/serverUrl.svelte";
 
 let currentPlatform = $state("");
 

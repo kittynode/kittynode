@@ -6,7 +6,7 @@ import Dashboard from "./Dashboard.svelte";
 import { Button } from "$lib/components/ui/button";
 import * as Card from "$lib/components/ui/card/index.js";
 import { platform } from "@tauri-apps/plugin-os";
-import { serverUrlStore } from "../stores/serverUrl.svelte";
+import { serverUrlStore } from "$stores/serverUrl.svelte";
 
 let packages: { [name: string]: Package } = $state({});
 let isDockerRunning: boolean | null = $state(null);
