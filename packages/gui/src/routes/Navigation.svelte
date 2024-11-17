@@ -1,11 +1,9 @@
 <script lang="ts">
 import { page } from "$app/stores";
-import { Separator } from "$lib/components/ui/separator";
 import { House, HeartPulse, Settings } from "lucide-svelte";
 </script>
 
 <nav>
-  <Separator class="my-4" />
   <div class="flex h-5 items-center justify-between text-sm font-semibold">
     <div class="flex-grow flex justify-center">
       <a class="p-4" href="/" aria-current={$page.url.pathname === "/"}>

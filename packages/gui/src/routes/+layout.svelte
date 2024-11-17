@@ -19,11 +19,17 @@ onMount(async () => {
 {#if !initializedStore.initialized}
   <Welcome />
 {:else}
-  <div class="container mx-auto pt-8">
-    {@render children()}
-  </div>
-  <div class="container mx-auto fixed {["ios", "android"].includes(platform()) ? 'bottom-4' : 'bottom-8'} left-0 right-0">
-    <Navigation />
+  <div class="flex flex-col h-screen">
+    <main class="flex-1 overflow-y-auto pb-24">
+      <div class="container mx-auto pt-8">
+        {@render children()}
+      </div>
+    </main>
+    <div class="fixed bottom-0 left-0 right-0 bg-background border-t">
+      <div class="container mx-auto py-4">
+        <Navigation />
+      </div>
+    </div>
   </div>
 {/if}
 
@@ -32,5 +38,6 @@ onMount(async () => {
     height: 100%;
     margin: 0;
     padding: 0;
+    overflow: hidden;
   }
 </style>
