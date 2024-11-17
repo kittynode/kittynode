@@ -17,11 +17,11 @@ pub fn get_system_info() -> Result<SystemInfo> {
     let cpu_name = system
         .cpus()
         .first()
-        .and_then(|cpu| {
+        .map(|cpu| {
             if cpu.brand().is_empty() {
-                Some("Unknown CPU name".to_string())
+                "Unknown CPU name".to_string()
             } else {
-                Some(cpu.brand().to_string())
+                cpu.brand().to_string()
             }
         })
         .ok_or_else(|| eyre::eyre!("Failed to retrieve CPU name"))?;
