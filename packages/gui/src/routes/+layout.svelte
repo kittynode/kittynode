@@ -14,7 +14,7 @@ onMount(async () => {
 });
 </script>
 
-<ModeWatcher />
+<ModeWatcher defaultMode={"light"} track={false} />
 {#if !initializedStore.initialized}
   <Welcome />
 {:else}
