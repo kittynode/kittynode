@@ -35,4 +35,5 @@ onMount(async () => {
     />
   {/if}
   <Button onclick={initKittynode}>Get started</Button>
+  <p>This is the special kittynode with an update!</p>
 </main>
