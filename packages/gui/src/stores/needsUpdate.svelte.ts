@@ -3,31 +3,30 @@ import type { Update } from "@tauri-apps/plugin-updater";
 
 const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
 
-// update logic
-let needsUpdate: Update | null = null;
-let lastChecked = 0;
-
-// dismiss logic
-let lastDismissed: number | null = $state(null);
+let currentUpdate = $state<Update | null>(null);
+let dismissedTime = $state<number | null>(null);
+let lastChecked = $state(0);
 
 export const needsUpdateStore = {
-  async needsUpdate() {
-    if (Date.now() > lastChecked + TWENTY_FOUR_HOURS) {
-      await this.check();
+  async getUpdate() {
+    const now = Date.now();
+    if (now > lastChecked + TWENTY_FOUR_HOURS) {
+      currentUpdate = await check();
+      lastChecked = now;
     }
-    return needsUpdate;
+    return currentUpdate;
   },
 
-  async check() {
-    needsUpdate = await check();
-    lastChecked = Date.now();
+  get hasUpdate() {
+    return currentUpdate !== null;
   },
 
   get isDismissed() {
-    return lastDismissed && Date.now() > lastDismissed + TWENTY_FOUR_HOURS;
+    if (!dismissedTime) return false;
+    return Date.now() < dismissedTime + TWENTY_FOUR_HOURS;
   },
 
   dismiss() {
-    lastDismissed = Date.now();
+    dismissedTime = Date.now();
   },
 };

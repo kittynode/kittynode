@@ -65,7 +65,7 @@ async function deleteKittynode() {
 async function updateKittynode() {
   processingUpdate = true;
   try {
-    let update = await needsUpdateStore.needsUpdate();
+    let update = await needsUpdateStore.getUpdate();
     if (update) {
       console.log(
         `found update ${update.version} from ${update.date} with notes ${update.body}`,

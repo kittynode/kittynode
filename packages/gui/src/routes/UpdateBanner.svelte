@@ -4,8 +4,6 @@ import { Separator } from "$lib/components/ui/separator";
 import { needsUpdateStore } from "$stores/needsUpdate.svelte";
 import { onMount } from "svelte";
 
-let needsUpdate = $state(false);
-
 function handleUpdate() {
   alert("Update action triggered!");
 }
@@ -15,12 +13,12 @@ function handleDismiss() {
 }
 
 onMount(async () => {
-  needsUpdate = await needsUpdateStore.needsUpdate() !== null;
+  // Gets the full Update object if you need it
+  const update = await needsUpdateStore.getUpdate();
 });
-
 </script>
 
-{#if needsUpdate && !needsUpdateStore.isDismissed }
+{#if needsUpdateStore.hasUpdate && !needsUpdateStore.isDismissed}
   <div style="display: flex; justify-content: space-between; align-items: center;">
     <strong>A new update is available! ✨</strong>
     <div>
