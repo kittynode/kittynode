@@ -74,7 +74,9 @@ async function updateKittynode() {
         switch (event.event) {
           case "Started":
             contentLength = event.data.contentLength as number;
-            console.log(`started downloading ${event.data.contentLength} bytes`);
+            console.log(
+              `started downloading ${event.data.contentLength} bytes`,
+            );
             break;
           case "Progress":
             downloaded += event.data.chunkLength;
@@ -90,9 +92,9 @@ async function updateKittynode() {
       console.log("update installed");
       await relaunch();
     } else {
-      alert("No update available.")
+      alert("No update available.");
     }
-  } catch(error) {
+  } catch (error) {
     alert(`Failed to update Kittynode: ${error}`);
     console.error(error);
   }
