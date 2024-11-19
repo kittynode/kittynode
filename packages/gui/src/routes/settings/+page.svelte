@@ -9,6 +9,7 @@ import { remoteAccessStore } from "$stores/remoteAccess.svelte";
 import { serverUrlStore } from "$stores/serverUrl.svelte";
 import { check } from "@tauri-apps/plugin-updater";
 import { relaunch } from "@tauri-apps/plugin-process";
+import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 
 let currentPlatform = $state("");
 
@@ -88,9 +89,10 @@ async function updateKittynode() {
         }
       });
 
-      alert("Update successfully installed!");
       console.log("update installed");
       await relaunch();
+      await getCurrentWebviewWindow().show();
+      alert("Update successfully installed!");
     } else {
       alert("No update available.");
     }
