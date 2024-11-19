@@ -13,8 +13,7 @@ function handleDismiss() {
 }
 
 onMount(async () => {
-  // Gets the full Update object if you need it
-  const update = await needsUpdateStore.getUpdate();
+  await needsUpdateStore.getUpdate();
 });
 </script>
 
