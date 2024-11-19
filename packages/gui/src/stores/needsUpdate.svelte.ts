@@ -11,9 +11,9 @@ let lastChecked = 0;
 let lastDismissed: number | null = $state(null);
 
 export const needsUpdateStore = {
-  get needsUpdate() {
+  async needsUpdate() {
     if (Date.now() > lastChecked + TWENTY_FOUR_HOURS) {
-      this.check();
+      await this.check();
     }
     return needsUpdate;
   },
