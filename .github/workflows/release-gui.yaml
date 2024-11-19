@@ -88,3 +88,4 @@ jobs:
           tagName: ${{ github.ref_name }}
           projectPath: "packages/gui/src-tauri"
           args: ${{ matrix.args }}
+          includeUpdaterJson: true
