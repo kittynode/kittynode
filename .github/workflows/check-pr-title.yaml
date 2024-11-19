@@ -20,6 +20,8 @@ jobs:
           scopes: |
             cli
             core
+            deps
+            deps-dev
             gui
             web
           subjectPattern: ^(?![A-Z]).+$
