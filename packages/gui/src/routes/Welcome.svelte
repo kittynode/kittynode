@@ -35,4 +35,6 @@ onMount(async () => {
     />
   {/if}
   <Button onclick={initKittynode}>Get started</Button>
+  <br />
+  <p>*meow*</p>
 </main>
