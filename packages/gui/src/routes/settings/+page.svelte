@@ -7,11 +7,12 @@ import { platform } from "@tauri-apps/plugin-os";
 import { onMount } from "svelte";
 import { remoteAccessStore } from "$stores/remoteAccess.svelte";
 import { serverUrlStore } from "$stores/serverUrl.svelte";
-import { check } from "@tauri-apps/plugin-updater";
 import { relaunch } from "@tauri-apps/plugin-process";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
+import { needsUpdateStore } from "$stores/needsUpdate.svelte";
 
 let currentPlatform = $state("");
+let processingUpdate = $state(false);
 
 async function enableRemoteAccess() {
   try {
@@ -62,8 +63,9 @@ async function deleteKittynode() {
 }
 
 async function updateKittynode() {
+  processingUpdate = true;
   try {
-    const update = await check();
+    let update = needsUpdateStore.needsUpdate;
     if (update) {
       console.log(
         `found update ${update.version} from ${update.date} with notes ${update.body}`,
@@ -100,6 +102,7 @@ async function updateKittynode() {
     alert(`Failed to update Kittynode: ${error}`);
     console.error(error);
   }
+  processingUpdate = false;
 }
 
 onMount(async () => {
@@ -141,13 +144,17 @@ onMount(async () => {
   {#if !["ios", "android"].includes(currentPlatform)}
     <li>
       <span>Update Kittynode</span>
-      <Button onclick={updateKittynode}>Update</Button>
+      {#if processingUpdate}
+        <span>Updating...</span>
+      {:else}
+        <Button onclick={updateKittynode}>Update</Button>
+      {/if}
     </li>
     <hr />
   {/if}
   <li>
     <span>Delete all Kittynode data</span>
-    <Button onclick={deleteKittynode} disabled={serverUrlStore.serverUrl !== ""}>Delete data</Button>
+    <Button onclick={deleteKittynode} disabled={serverUrlStore.serverUrl !== ""} variant="destructive">Delete data</Button>
   </li>
 </ul>
 

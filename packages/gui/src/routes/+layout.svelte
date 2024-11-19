@@ -6,6 +6,7 @@ import { initializedStore } from "$stores/initialized.svelte";
 import { ModeWatcher } from "mode-watcher";
 import Welcome from "./Welcome.svelte";
 import Navigation from "./Navigation.svelte";
+import UpdateBanner from "./UpdateBanner.svelte";
 
 const { children } = $props();
 
@@ -21,6 +22,7 @@ onMount(async () => {
   <div class="flex flex-col h-screen">
     <main class="flex-1 overflow-y-auto">
       <div class="container mx-auto pt-8">
+        <UpdateBanner />
         {@render children()}
         <div class="h-32 md:h-10"></div>
       </div>
