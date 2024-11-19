@@ -7,6 +7,8 @@ import { platform } from "@tauri-apps/plugin-os";
 import { onMount } from "svelte";
 import { remoteAccessStore } from "$stores/remoteAccess.svelte";
 import { serverUrlStore } from "$stores/serverUrl.svelte";
+import { check } from "@tauri-apps/plugin-updater";
+import { relaunch } from "@tauri-apps/plugin-process";
 
 let currentPlatform = $state("");
 
@@ -58,6 +60,44 @@ async function deleteKittynode() {
   }
 }
 
+async function updateKittynode() {
+  try {
+    const update = await check();
+    if (update) {
+      console.log(
+        `found update ${update.version} from ${update.date} with notes ${update.body}`,
+      );
+      let downloaded = 0;
+      let contentLength = 0;
+
+      await update.downloadAndInstall((event) => {
+        switch (event.event) {
+          case "Started":
+            contentLength = event.data.contentLength as number;
+            console.log(`started downloading ${event.data.contentLength} bytes`);
+            break;
+          case "Progress":
+            downloaded += event.data.chunkLength;
+            console.log(`downloaded ${downloaded} from ${contentLength}`);
+            break;
+          case "Finished":
+            console.log("download finished");
+            break;
+        }
+      });
+
+      alert("Update successfully installed!");
+      console.log("update installed");
+      await relaunch();
+    } else {
+      alert("No update available.")
+    }
+  } catch(error) {
+    alert(`Failed to update Kittynode: ${error}`);
+    console.error(error);
+  }
+}
+
 onMount(async () => {
   currentPlatform = platform();
 });
@@ -91,6 +131,13 @@ onMount(async () => {
     <li>
       <span>Disconnect remote kitty</span>
       <Button onclick={disconnectRemote}>Disconnect</Button>
+    </li>
+    <hr />
+  {/if}
+  {#if !["ios", "android"].includes(currentPlatform)}
+    <li>
+      <span>Update Kittynode</span>
+      <Button onclick={updateKittynode}>Update</Button>
     </li>
     <hr />
   {/if}
