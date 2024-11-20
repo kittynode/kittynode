@@ -7,6 +7,8 @@ import { platform } from "@tauri-apps/plugin-os";
 import { onMount } from "svelte";
 import { remoteAccessStore } from "$stores/remoteAccess.svelte";
 import { serverUrlStore } from "$stores/serverUrl.svelte";
+import { updates } from "$stores/updates.svelte";
+import { LoaderCircle } from "lucide-svelte";
 
 let currentPlatform = $state("");
 
@@ -58,6 +60,10 @@ async function deleteKittynode() {
   }
 }
 
+async function handleUpdate() {
+  await updates.installUpdate();
+}
+
 onMount(async () => {
   currentPlatform = platform();
 });
@@ -94,9 +100,23 @@ onMount(async () => {
     </li>
     <hr />
   {/if}
+  {#if !["ios", "android"].includes(currentPlatform)}
+    <li>
+      <span>Update Kittynode</span>
+      <Button disabled={updates.isProcessing} onclick={handleUpdate}>
+        {#if updates.isProcessing}
+          <LoaderCircle class="animate-spin" />
+          Updating
+        {:else}
+          Update
+        {/if}
+      </Button>
+    </li>
+    <hr />
+  {/if}
   <li>
     <span>Delete all Kittynode data</span>
-    <Button onclick={deleteKittynode} disabled={serverUrlStore.serverUrl !== ""}>Delete data</Button>
+    <Button onclick={deleteKittynode} disabled={serverUrlStore.serverUrl !== ""} variant="destructive">Delete data</Button>
   </li>
 </ul>
 
