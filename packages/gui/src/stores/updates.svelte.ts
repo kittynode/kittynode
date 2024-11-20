@@ -38,7 +38,9 @@ export const updates = {
   },
 
   async installUpdate() {
-    if (!currentUpdate || processingUpdate) return;
+    if (!currentUpdate || processingUpdate) {
+      return;
+    }
 
     processingUpdate = true;
     try {

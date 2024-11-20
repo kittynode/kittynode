@@ -103,10 +103,12 @@ onMount(async () => {
   {#if !["ios", "android"].includes(currentPlatform)}
     <li>
       <span>Update Kittynode</span>
-      <Button disabled={updates.isProcessing} onclick={handleUpdate}>
+      <Button disabled={updates.isProcessing || !updates.hasUpdate} onclick={handleUpdate}>
         {#if updates.isProcessing}
           <LoaderCircle class="animate-spin" />
           Updating
+        {:else if !updates.hasUpdate}
+          No update available
         {:else}
           Update
         {/if}
