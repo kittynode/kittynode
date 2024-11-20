@@ -2,6 +2,7 @@
 import { Button } from "$lib/components/ui/button";
 import { Separator } from "$lib/components/ui/separator";
 import { updates } from "$stores/updates.svelte";
+import { LoaderCircle } from "lucide-svelte";
 import { onMount } from "svelte";
 
 function handleUpdate() {
@@ -21,11 +22,13 @@ onMount(async () => {
   <div style="display: flex; justify-content: space-between; align-items: center;">
     <strong>A new update is available! ✨</strong>
     <div>
-      <Button
-        onclick={handleUpdate}
-        disabled={updates.isProcessing}
-      >
-        {updates.isProcessing ? 'Updating...' : 'Update'}
+      <Button onclick={handleUpdate} disabled={updates.isProcessing}>
+        {#if updates.isProcessing}
+          <LoaderCircle class="animate-spin" />
+          Updating
+        {:else}
+          Update
+        {/if}
       </Button>
       <Button
         onclick={handleDismiss}

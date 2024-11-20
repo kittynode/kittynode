@@ -8,6 +8,7 @@ import { onMount } from "svelte";
 import { remoteAccessStore } from "$stores/remoteAccess.svelte";
 import { serverUrlStore } from "$stores/serverUrl.svelte";
 import { updates } from "$stores/updates.svelte";
+import { LoaderCircle } from "lucide-svelte";
 
 let currentPlatform = $state("");
 
@@ -102,11 +103,13 @@ onMount(async () => {
   {#if !["ios", "android"].includes(currentPlatform)}
     <li>
       <span>Update Kittynode</span>
-      <Button
-        onclick={handleUpdate}
-        disabled={updates.isProcessing}
-      >
-        {updates.isProcessing ? 'Updating...' : 'Update'}
+      <Button disabled={updates.isProcessing} onclick={handleUpdate}>
+        {#if updates.isProcessing}
+          <LoaderCircle class="animate-spin" />
+          Updating
+        {:else}
+          Update
+        {/if}
       </Button>
     </li>
     <hr />
