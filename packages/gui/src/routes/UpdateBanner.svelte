@@ -1,28 +1,39 @@
 <script>
 import { Button } from "$lib/components/ui/button";
 import { Separator } from "$lib/components/ui/separator";
-import { needsUpdateStore } from "$stores/needsUpdate.svelte";
+import { updates } from "$stores/updates.svelte";
 import { onMount } from "svelte";
 
 function handleUpdate() {
-  alert("Update action triggered!");
+  updates.installUpdate();
 }
 
 function handleDismiss() {
-  needsUpdateStore.dismiss();
+  updates.dismiss();
 }
 
 onMount(async () => {
-  await needsUpdateStore.getUpdate();
+  await updates.getUpdate();
 });
 </script>
 
-{#if needsUpdateStore.hasUpdate && !needsUpdateStore.isDismissed}
+{#if updates.hasUpdate && !updates.isDismissed}
   <div style="display: flex; justify-content: space-between; align-items: center;">
     <strong>A new update is available! ✨</strong>
     <div>
-      <Button onclick={handleUpdate}>Update Now</Button>
-      <Button onclick={handleDismiss} variant="secondary">Dismiss</Button>
+      <Button
+        onclick={handleUpdate}
+        disabled={updates.isProcessing}
+      >
+        {updates.isProcessing ? 'Updating...' : 'Update Now'}
+      </Button>
+      <Button
+        onclick={handleDismiss}
+        variant="secondary"
+        disabled={updates.isProcessing}
+      >
+        Dismiss
+      </Button>
     </div>
   </div>
   <Separator style="margin-top: 20px; margin-bottom: 20px;" />

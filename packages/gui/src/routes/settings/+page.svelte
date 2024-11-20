@@ -9,10 +9,9 @@ import { remoteAccessStore } from "$stores/remoteAccess.svelte";
 import { serverUrlStore } from "$stores/serverUrl.svelte";
 import { relaunch } from "@tauri-apps/plugin-process";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
-import { needsUpdateStore } from "$stores/needsUpdate.svelte";
+import { updates } from "$stores/updates.svelte";
 
 let currentPlatform = $state("");
-let processingUpdate = $state(false);
 
 async function enableRemoteAccess() {
   try {
@@ -63,46 +62,7 @@ async function deleteKittynode() {
 }
 
 async function updateKittynode() {
-  processingUpdate = true;
-  try {
-    let update = await needsUpdateStore.getUpdate();
-    if (update) {
-      console.log(
-        `found update ${update.version} from ${update.date} with notes ${update.body}`,
-      );
-      let downloaded = 0;
-      let contentLength = 0;
-
-      await update.downloadAndInstall((event) => {
-        switch (event.event) {
-          case "Started":
-            contentLength = event.data.contentLength as number;
-            console.log(
-              `started downloading ${event.data.contentLength} bytes`,
-            );
-            break;
-          case "Progress":
-            downloaded += event.data.chunkLength;
-            console.log(`downloaded ${downloaded} from ${contentLength}`);
-            break;
-          case "Finished":
-            console.log("download finished");
-            break;
-        }
-      });
-
-      console.log("update installed");
-      await relaunch();
-      await getCurrentWebviewWindow().show();
-      alert("Update successfully installed!");
-    } else {
-      alert("No update available.");
-    }
-  } catch (error) {
-    alert(`Failed to update Kittynode: ${error}`);
-    console.error(error);
-  }
-  processingUpdate = false;
+  await updates.installUpdate();
 }
 
 onMount(async () => {
@@ -144,7 +104,7 @@ onMount(async () => {
   {#if !["ios", "android"].includes(currentPlatform)}
     <li>
       <span>Update Kittynode</span>
-      {#if processingUpdate}
+      {#if updates.isProcessing}
         <span>Updating...</span>
       {:else}
         <Button onclick={updateKittynode}>Update</Button>
