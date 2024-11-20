@@ -7,8 +7,6 @@ import { platform } from "@tauri-apps/plugin-os";
 import { onMount } from "svelte";
 import { remoteAccessStore } from "$stores/remoteAccess.svelte";
 import { serverUrlStore } from "$stores/serverUrl.svelte";
-import { relaunch } from "@tauri-apps/plugin-process";
-import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { updates } from "$stores/updates.svelte";
 
 let currentPlatform = $state("");
@@ -61,7 +59,7 @@ async function deleteKittynode() {
   }
 }
 
-async function updateKittynode() {
+async function handleUpdate() {
   await updates.installUpdate();
 }
 
@@ -104,11 +102,12 @@ onMount(async () => {
   {#if !["ios", "android"].includes(currentPlatform)}
     <li>
       <span>Update Kittynode</span>
-      {#if updates.isProcessing}
-        <span>Updating...</span>
-      {:else}
-        <Button onclick={updateKittynode}>Update</Button>
-      {/if}
+      <Button
+        onclick={handleUpdate}
+        disabled={updates.isProcessing}
+      >
+        {updates.isProcessing ? 'Updating...' : 'Update'}
+      </Button>
     </li>
     <hr />
   {/if}

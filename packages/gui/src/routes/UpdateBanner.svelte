@@ -25,7 +25,7 @@ onMount(async () => {
         onclick={handleUpdate}
         disabled={updates.isProcessing}
       >
-        {updates.isProcessing ? 'Updating...' : 'Update Now'}
+        {updates.isProcessing ? 'Updating...' : 'Update'}
       </Button>
       <Button
         onclick={handleDismiss}
