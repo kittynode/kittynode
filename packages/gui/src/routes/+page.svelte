@@ -1,5 +1,5 @@
 <script lang="ts">
-import Dashboard from "./Dashboard.svelte";
+import Home from "./Home.svelte";
 </script>
 
-<Dashboard />
+<Home />

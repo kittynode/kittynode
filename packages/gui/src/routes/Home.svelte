@@ -6,6 +6,7 @@ import { Button } from "$lib/components/ui/button";
 import * as Card from "$lib/components/ui/card/index.js";
 import { platform } from "@tauri-apps/plugin-os";
 import { serverUrlStore } from "$stores/serverUrl.svelte";
+import { goto } from "$app/navigation";
 
 let packages: { [name: string]: Package } = $state({});
 let isDockerRunning: boolean | null = $state(null);
@@ -83,25 +84,7 @@ onMount(async () => {
 </script>
 
 <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight mb-4">
-  Dashboard
-</h3>
-
-<div class="mb-8">
-  {#if installedPackages.length === 0}
-    <p>You have no packages installed.</p>
-  {:else}
-    <ul>
-      {#each installedPackages as pkg}
-        <ul class="container mx-auto list-disc">
-          <li>{pkg.name}</li>
-        </ul>
-      {/each}
-    </ul>
-  {/if}
-</div>
-
-<h3 class="scroll-m-20 text-2xl font-semibold tracking-tight mb-4">
-  Package store
+  Home
 </h3>
 
 {#if Object.keys(packages).length > 0}
@@ -138,7 +121,11 @@ onMount(async () => {
 
         {#if installedPackages.some((pkg) => pkg.name === name)}
           <Button
-            class="secondary"
+            variant="secondary"
+            onclick={() => goto("package", { state: { name: "dave" } })}
+            >Configure</Button>
+          <Button
+            variant="destructive"
             onclick={() => deletePackage(name, false)}
             disabled={!isDockerRunning || deleteLoading === name}
           >
