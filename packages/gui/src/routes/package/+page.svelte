@@ -1,19 +1,31 @@
 <script lang="ts">
 import type { Package } from "$lib/types";
+import { serverUrlStore } from "$stores/serverUrl.svelte";
+import { invoke } from "@tauri-apps/api/core";
 import { onMount } from "svelte";
 
-let blah = $props();
+let installedPackages = $state<Package[]>([]);
+let pkg = $state<Package | null>(null);
 
-
-onMount(() => {
-  console.log("name", blah);
+onMount(async () => {
+  installedPackages = await invoke("get_installed_packages", {
+    serverUrl: serverUrlStore.serverUrl,
+  });
+  if (installedPackages.length === 1) {
+    pkg = installedPackages[0];
+  }
 });
-
 </script>
 
 <a href="/" class="text-primary font-medium underline underline-offset-4">← Back home</a>
-<br />
-<br />
-<p>Package stuff here</p>
 
-<p>here is my name: { blah }</p>
+
+{#if pkg}
+<div class="mt-4">
+  <p>Name: {pkg.name}</p>
+</div>
+{:else}
+<div class="mt-4">
+  <p>No packages installed.</p>
+</div>
+{/if}

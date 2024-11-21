@@ -119,11 +119,12 @@ onMount(async () => {
           {installLoading === name ? "Installing..." : "Install"}
         </Button>
 
+        <Button
+          variant="secondary"
+          onclick={() => goto("package")}
+          >Configure</Button>
+
         {#if installedPackages.some((pkg) => pkg.name === name)}
-          <Button
-            variant="secondary"
-            onclick={() => goto("package", { state: { name: "dave" } })}
-            >Configure</Button>
           <Button
             variant="destructive"
             onclick={() => deletePackage(name, false)}
