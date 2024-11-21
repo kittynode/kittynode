@@ -35,6 +35,6 @@ import { House, HeartPulse, Settings } from "lucide-svelte";
 
 <style>
   a[aria-current="true"] {
-    color: #7d3fc1; /* Adjust this shade of purple as needed */
+    color: #7d3fc1;
   }
 </style>
