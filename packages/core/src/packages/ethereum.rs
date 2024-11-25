@@ -3,7 +3,7 @@ use eyre::Result;
 use std::collections::HashMap;
 
 use crate::{
-    file::kittynode_path,
+    infra::file::kittynode_path,
     package::{Binding, Container, Package, PackageDefinition},
 };
 

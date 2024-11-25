@@ -1,8 +1,8 @@
-use crate::docker::{
+use crate::infra::docker::{
     create_or_recreate_network, find_container, get_docker_instance, pull_and_start_container,
     remove_container,
 };
-use crate::file::generate_jwt_secret;
+use crate::infra::file::generate_jwt_secret;
 use crate::packages::ethereum::Ethereum;
 use bollard::models::PortBinding;
 use eyre::{Context, Result};

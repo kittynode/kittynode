@@ -60,7 +60,7 @@ pub(crate) async fn get_installed_packages() -> Result<Json<Vec<Package>>, (Stat
 }
 
 pub(crate) async fn is_docker_running() -> Result<StatusCode, (StatusCode, String)> {
-    match kittynode_core::docker::is_docker_running().await {
+    match kittynode_core::infra::docker::is_docker_running().await {
         true => Ok(StatusCode::OK),
         false => Err((
             StatusCode::SERVICE_UNAVAILABLE,
