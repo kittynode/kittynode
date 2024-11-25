@@ -1,6 +1,6 @@
 use eyre::Result;
+use kittynode_core::application::get_system_info::SystemInfo;
 use kittynode_core::package::Package;
-use kittynode_core::system_info::SystemInfo;
 use std::collections::HashMap;
 use std::sync::LazyLock;
 use tauri_plugin_http::reqwest;
@@ -232,7 +232,7 @@ async fn system_info(server_url: String) -> Result<SystemInfo, String> {
             .map_err(|e| e.to_string())?;
         res.json::<SystemInfo>().await.map_err(|e| e.to_string())
     } else {
-        kittynode_core::system_info::get_system_info().map_err(|e| e.to_string())
+        kittynode_core::application::get_system_info::get_system_info().map_err(|e| e.to_string())
     }
 }
 
