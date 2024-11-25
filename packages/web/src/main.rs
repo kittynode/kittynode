@@ -5,8 +5,8 @@ use axum::{
     routing::{get, post},
     Router,
 };
+use kittynode_core::application::get_system_info::SystemInfo;
 use kittynode_core::package::Package;
-use kittynode_core::system_info::SystemInfo;
 
 pub(crate) async fn hello_world() -> &'static str {
     "Hello World!"
@@ -82,7 +82,7 @@ pub(crate) async fn delete_kittynode() -> Result<StatusCode, (StatusCode, String
 }
 
 pub(crate) async fn get_system_info() -> Result<Json<SystemInfo>, (StatusCode, String)> {
-    kittynode_core::system_info::get_system_info()
+    kittynode_core::application::get_system_info::get_system_info()
         .map(Json)
         .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))
 }
