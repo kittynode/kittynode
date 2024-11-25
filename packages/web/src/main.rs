@@ -70,13 +70,13 @@ pub(crate) async fn is_docker_running() -> Result<StatusCode, (StatusCode, Strin
 }
 
 pub(crate) async fn init_kittynode() -> Result<StatusCode, (StatusCode, String)> {
-    kittynode_core::kittynode::init_kittynode()
+    kittynode_core::application::init_kittynode::init_kittynode()
         .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
     Ok(StatusCode::OK)
 }
 
 pub(crate) async fn delete_kittynode() -> Result<StatusCode, (StatusCode, String)> {
-    kittynode_core::kittynode::delete_kittynode()
+    kittynode_core::application::delete_kittynode::delete_kittynode()
         .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
     Ok(StatusCode::OK)
 }
