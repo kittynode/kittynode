@@ -1,4 +1,4 @@
-use crate::{config::Config, file::kittynode_path};
+use crate::{config::Config, infra::file::kittynode_path};
 use eyre::Result;
 use std::{fs, io::ErrorKind};
 use tracing::info;
