@@ -28,7 +28,7 @@
     "autoprefixer": "^10.4.20",
     "bits-ui": "1.0.0-next.63",
     "clsx": "^2.1.1",
-    "svelte": "^5.2.4",
+    "svelte": "^5.2.7",
     "svelte-check": "^4.0.9",
     "tailwind-merge": "^2.5.4",
     "tailwind-variants": "^0.3.0",
