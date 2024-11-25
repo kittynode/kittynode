@@ -20,11 +20,3 @@ pub fn delete_kittynode() -> Result<()> {
     info!("Successfully deleted Kittynode.");
     Ok(())
 }
-
-/// Checks if Kittynode is initialized.
-pub fn is_initialized() -> bool {
-    match kittynode_path() {
-        Ok(path) => path.exists(),
-        Err(_) => false,
-    }
-}

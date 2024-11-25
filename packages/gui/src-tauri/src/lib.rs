@@ -237,12 +237,6 @@ async fn system_info(server_url: String) -> Result<SystemInfo, String> {
 }
 
 #[tauri::command]
-fn is_initialized() -> bool {
-    info!("Checking if Kittynode is initialized");
-    kittynode_core::kittynode::is_initialized()
-}
-
-#[tauri::command]
 async fn init_kittynode(server_url: String) -> Result<(), String> {
     info!("Initializing Kittynode");
 
@@ -282,7 +276,6 @@ pub fn run() -> Result<()> {
             delete_package,
             delete_kittynode,
             system_info,
-            is_initialized,
             init_kittynode,
             add_capability,
             remove_capability,
