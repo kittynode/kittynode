@@ -199,7 +199,7 @@ async fn delete_kittynode(server_url: String) -> Result<(), String> {
         }
         Ok(())
     } else {
-        kittynode_core::kittynode::delete_kittynode().map_err(|e| e.to_string())
+        kittynode_core::application::delete_kittynode::delete_kittynode().map_err(|e| e.to_string())
     }
 }
 
@@ -252,7 +252,7 @@ async fn init_kittynode(server_url: String) -> Result<(), String> {
         }
         Ok(())
     } else {
-        kittynode_core::kittynode::init_kittynode().map_err(|e| e.to_string())
+        kittynode_core::application::init_kittynode::init_kittynode().map_err(|e| e.to_string())
     }
 }
 
