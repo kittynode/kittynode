@@ -3,8 +3,8 @@ use eyre::Result;
 use std::collections::HashMap;
 
 use crate::{
+    domain::package::{Binding, Container, Package, PackageDefinition},
     infra::file::kittynode_path,
-    package::{Binding, Container, Package, PackageDefinition},
 };
 
 pub(crate) struct Ethereum;

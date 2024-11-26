@@ -1,54 +1,14 @@
+use crate::domain::package::{Binding, Package, PackageDefinition};
 use crate::infra::docker::{
     create_or_recreate_network, find_container, get_docker_instance, pull_and_start_container,
     remove_container,
 };
 use crate::infra::file::generate_jwt_secret;
 use crate::manifests::ethereum::Ethereum;
-use bollard::models::PortBinding;
 use eyre::{Context, Result};
-use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
-use std::{fmt, fs};
+use std::fs;
 use tracing::info;
-
-pub(crate) trait PackageDefinition {
-    const NAME: &'static str;
-    fn get_package() -> Result<Package>;
-}
-
-#[derive(Clone, Serialize, Deserialize)]
-pub struct Package {
-    pub(crate) name: String,
-    pub(crate) description: String,
-    pub(crate) network_name: String,
-    pub(crate) containers: Vec<Container>,
-}
-
-#[derive(Clone, Serialize, Deserialize)]
-pub struct Container {
-    pub(crate) name: String,
-    pub(crate) image: String,
-    pub(crate) cmd: Vec<String>,
-    pub(crate) port_bindings: HashMap<String, Vec<PortBinding>>,
-    pub(crate) volume_bindings: Vec<Binding>,
-    pub(crate) file_bindings: Vec<Binding>,
-}
-
-#[derive(Clone, Serialize, Deserialize)]
-pub struct Binding {
-    pub(crate) source: String,
-    pub(crate) destination: String,
-    pub(crate) options: Option<String>,
-}
-
-impl fmt::Display for Package {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        for container in &self.containers {
-            writeln!(f, "Container Image: {}", container.image)?;
-        }
-        Ok(())
-    }
-}
 
 pub fn get_packages() -> Result<HashMap<String, Package>> {
     let mut packages = HashMap::new();
