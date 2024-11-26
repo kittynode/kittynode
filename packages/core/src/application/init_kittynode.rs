@@ -5,6 +5,6 @@ use eyre::Result;
 /// Initializes Kittynode with the default config
 pub fn init_kittynode() -> Result<()> {
     let config = Config::default();
-    ConfigStore::save(&config)?; // Explicitly use ConfigStore for persistence.
+    ConfigStore::save(&config)?;
     Ok(())
 }
