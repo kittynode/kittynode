@@ -1,6 +1,6 @@
 use eyre::Result;
-use kittynode_core::package::Package;
-use kittynode_core::system_info::SystemInfo;
+use kittynode_core::domain::package::Package;
+use kittynode_core::domain::system_info::SystemInfo;
 use std::collections::HashMap;
 use std::sync::LazyLock;
 use tauri_plugin_http::reqwest;
@@ -24,7 +24,7 @@ async fn add_capability(name: String, server_url: String) -> Result<(), String> 
         }
         Ok(())
     } else {
-        kittynode_core::config::add_capability(&name).map_err(|e| e.to_string())
+        kittynode_core::application::add_capability(&name).map_err(|e| e.to_string())
     }
 }
 
@@ -44,7 +44,7 @@ async fn remove_capability(name: String, server_url: String) -> Result<(), Strin
         }
         Ok(())
     } else {
-        kittynode_core::config::remove_capability(&name).map_err(|e| e.to_string())
+        kittynode_core::application::remove_capability(&name).map_err(|e| e.to_string())
     }
 }
 
@@ -77,14 +77,14 @@ async fn get_capabilities(server_url: String) -> Result<Vec<String>, String> {
             .map_err(|e| e.to_string())?;
         res.json::<Vec<String>>().await.map_err(|e| e.to_string())
     } else {
-        kittynode_core::config::get_capabilities().map_err(|e| e.to_string())
+        kittynode_core::application::get_capabilities().map_err(|e| e.to_string())
     }
 }
 
 #[tauri::command]
 fn get_packages() -> Result<HashMap<String, Package>, String> {
     info!("Getting packages");
-    kittynode_core::package::get_packages()
+    kittynode_core::application::get_packages()
         .map(|packages| {
             packages
                 .into_iter()
@@ -123,7 +123,7 @@ async fn get_installed_packages(server_url: String) -> Result<Vec<Package>, Stri
             .map_err(|e| e.to_string())?;
         res.json::<Vec<Package>>().await.map_err(|e| e.to_string())
     } else {
-        kittynode_core::package::get_installed_packages()
+        kittynode_core::application::get_installed_packages()
             .await
             .map_err(|e| e.to_string())
     }
@@ -132,7 +132,7 @@ async fn get_installed_packages(server_url: String) -> Result<Vec<Package>, Stri
 #[tauri::command]
 async fn is_docker_running() -> bool {
     info!("Checking if Docker is running");
-    kittynode_core::docker::is_docker_running().await
+    kittynode_core::application::is_docker_running().await
 }
 
 #[tauri::command]
@@ -148,7 +148,7 @@ async fn install_package(name: String, server_url: String) -> Result<(), String>
             return Err(format!("Failed to install package: {}", res.status()));
         }
     } else {
-        kittynode_core::package::install_package(&name)
+        kittynode_core::application::install_package(&name)
             .await
             .map_err(|e| e.to_string())?;
     }
@@ -174,7 +174,7 @@ async fn delete_package(
             return Err(format!("Failed to delete package: {}", res.status()));
         }
     } else {
-        kittynode_core::package::delete_package(&name, include_images)
+        kittynode_core::application::delete_package(&name, include_images)
             .await
             .map_err(|e| e.to_string())?;
     }
@@ -199,7 +199,7 @@ async fn delete_kittynode(server_url: String) -> Result<(), String> {
         }
         Ok(())
     } else {
-        kittynode_core::kittynode::delete_kittynode().map_err(|e| e.to_string())
+        kittynode_core::application::delete_kittynode().map_err(|e| e.to_string())
     }
 }
 
@@ -232,14 +232,8 @@ async fn system_info(server_url: String) -> Result<SystemInfo, String> {
             .map_err(|e| e.to_string())?;
         res.json::<SystemInfo>().await.map_err(|e| e.to_string())
     } else {
-        kittynode_core::system_info::get_system_info().map_err(|e| e.to_string())
+        kittynode_core::application::get_system_info().map_err(|e| e.to_string())
     }
-}
-
-#[tauri::command]
-fn is_initialized() -> bool {
-    info!("Checking if Kittynode is initialized");
-    kittynode_core::kittynode::is_initialized()
 }
 
 #[tauri::command]
@@ -258,7 +252,7 @@ async fn init_kittynode(server_url: String) -> Result<(), String> {
         }
         Ok(())
     } else {
-        kittynode_core::kittynode::init_kittynode().map_err(|e| e.to_string())
+        kittynode_core::application::init_kittynode().map_err(|e| e.to_string())
     }
 }
 
@@ -282,7 +276,6 @@ pub fn run() -> Result<()> {
             delete_package,
             delete_kittynode,
             system_info,
-            is_initialized,
             init_kittynode,
             add_capability,
             remove_capability,

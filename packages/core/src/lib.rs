@@ -1,10 +1,7 @@
-// Public exports
-pub mod config;
-pub mod docker;
-pub mod kittynode;
-pub mod package;
-pub mod system_info;
+// Public modules
+pub mod application;
+pub mod domain;
 
-// Private exports
-mod file;
-mod packages;
+// Internal modules
+mod infra;
+mod manifests;

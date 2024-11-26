@@ -1,4 +1,4 @@
-use crate::package::{create_binding_string, Container};
+use crate::domain::package::{Binding, Container};
 use bollard::{
     container::{Config, CreateContainerOptions, ListContainersOptions, StartContainerOptions},
     image::CreateImageOptions,
@@ -10,14 +10,6 @@ use eyre::{Report, Result};
 use std::collections::HashMap;
 use tokio_stream::StreamExt;
 use tracing::{error, info};
-
-pub async fn is_docker_running() -> bool {
-    if let Ok(connection) = get_docker_instance() {
-        connection.version().await.is_ok()
-    } else {
-        false // Docker connection failed
-    }
-}
 
 pub(crate) fn get_docker_instance() -> Result<Docker> {
     Docker::connect_with_local_defaults().map_err(Report::from)
@@ -152,4 +144,11 @@ pub(crate) async fn pull_and_start_container(
     );
 
     Ok(())
+}
+
+fn create_binding_string(binding: &Binding) -> String {
+    match &binding.options {
+        Some(options) => format!("{}:{}:{}", binding.source, binding.destination, options),
+        None => format!("{}:{}", binding.source, binding.destination),
+    }
 }
