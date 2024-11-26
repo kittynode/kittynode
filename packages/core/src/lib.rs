@@ -1,7 +1,7 @@
-// Public exports
+// Public modules
 pub mod application;
 pub mod domain;
-pub mod infra; // TODO: should not leak this
 
-// Private exports
+// Internal modules
+mod infra;
 mod manifests;

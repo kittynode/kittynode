@@ -11,14 +11,6 @@ use std::collections::HashMap;
 use tokio_stream::StreamExt;
 use tracing::{error, info};
 
-pub async fn is_docker_running() -> bool {
-    if let Ok(connection) = get_docker_instance() {
-        connection.version().await.is_ok()
-    } else {
-        false // Docker connection failed
-    }
-}
-
 pub(crate) fn get_docker_instance() -> Result<Docker> {
     Docker::connect_with_local_defaults().map_err(Report::from)
 }

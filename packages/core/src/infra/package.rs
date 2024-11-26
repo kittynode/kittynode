@@ -8,11 +8,3 @@ pub fn get_packages() -> Result<HashMap<String, Package>> {
     packages.insert(Ethereum::NAME.to_string(), Ethereum::get_package()?);
     Ok(packages)
 }
-
-pub fn get_package(name: &str) -> Result<Package> {
-    let packages = get_packages()?;
-    packages
-        .get(name)
-        .cloned()
-        .ok_or_else(|| eyre::eyre!("Package not found"))
-}

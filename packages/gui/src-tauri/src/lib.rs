@@ -134,7 +134,7 @@ async fn get_installed_packages(server_url: String) -> Result<Vec<Package>, Stri
 #[tauri::command]
 async fn is_docker_running() -> bool {
     info!("Checking if Docker is running");
-    kittynode_core::infra::docker::is_docker_running().await
+    kittynode_core::application::is_docker_running::is_docker_running().await
 }
 
 #[tauri::command]
