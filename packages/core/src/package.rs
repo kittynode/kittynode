@@ -1,4 +1,4 @@
-use crate::domain::package::{Binding, Package, PackageDefinition};
+use crate::domain::package::{Package, PackageDefinition};
 use crate::infra::docker::{
     create_or_recreate_network, find_container, get_docker_instance, pull_and_start_container,
     remove_container,
@@ -161,11 +161,4 @@ pub async fn delete_package(package_name: &str, include_images: bool) -> Result<
 
     info!("Package '{}' deleted successfully.", package_name);
     Ok(())
-}
-
-pub(crate) fn create_binding_string(binding: &Binding) -> String {
-    match &binding.options {
-        Some(options) => format!("{}:{}:{}", binding.source, binding.destination, options),
-        None => format!("{}:{}", binding.source, binding.destination),
-    }
 }

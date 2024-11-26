@@ -1,4 +1,4 @@
-use crate::{domain::package::Container, package::create_binding_string};
+use crate::domain::package::{Binding, Container};
 use bollard::{
     container::{Config, CreateContainerOptions, ListContainersOptions, StartContainerOptions},
     image::CreateImageOptions,
@@ -152,4 +152,11 @@ pub(crate) async fn pull_and_start_container(
     );
 
     Ok(())
+}
+
+fn create_binding_string(binding: &Binding) -> String {
+    match &binding.options {
+        Some(options) => format!("{}:{}:{}", binding.source, binding.destination, options),
+        None => format!("{}:{}", binding.source, binding.destination),
+    }
 }
