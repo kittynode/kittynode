@@ -174,7 +174,7 @@ async fn delete_package(
             return Err(format!("Failed to delete package: {}", res.status()));
         }
     } else {
-        kittynode_core::package::delete_package(&name, include_images)
+        kittynode_core::application::delete_package::delete_package(&name, include_images)
             .await
             .map_err(|e| e.to_string())?;
     }
