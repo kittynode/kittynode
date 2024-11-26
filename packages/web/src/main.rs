@@ -46,7 +46,7 @@ pub(crate) async fn install_package(
 pub(crate) async fn delete_package(
     Path(name): Path<String>,
 ) -> Result<StatusCode, (StatusCode, String)> {
-    kittynode_core::package::delete_package(&name, false)
+    kittynode_core::application::delete_package::delete_package(&name, false)
         .await
         .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
     Ok(StatusCode::OK)
