@@ -53,7 +53,7 @@ pub(crate) async fn delete_package(
 }
 
 pub(crate) async fn get_installed_packages() -> Result<Json<Vec<Package>>, (StatusCode, String)> {
-    kittynode_core::package::get_installed_packages()
+    kittynode_core::application::get_installed_packages::get_installed_packages()
         .await
         .map(Json)
         .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))

@@ -123,7 +123,7 @@ async fn get_installed_packages(server_url: String) -> Result<Vec<Package>, Stri
             .map_err(|e| e.to_string())?;
         res.json::<Vec<Package>>().await.map_err(|e| e.to_string())
     } else {
-        kittynode_core::package::get_installed_packages()
+        kittynode_core::application::get_installed_packages::get_installed_packages()
             .await
             .map_err(|e| e.to_string())
     }
