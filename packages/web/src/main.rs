@@ -15,7 +15,7 @@ pub(crate) async fn hello_world() -> &'static str {
 pub(crate) async fn add_capability(
     Path(name): Path<String>,
 ) -> Result<StatusCode, (StatusCode, String)> {
-    kittynode_core::application::add_capability::add_capability(&name)
+    kittynode_core::application::add_capability(&name)
         .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
     Ok(StatusCode::OK)
 }
@@ -23,13 +23,13 @@ pub(crate) async fn add_capability(
 pub(crate) async fn remove_capability(
     Path(name): Path<String>,
 ) -> Result<StatusCode, (StatusCode, String)> {
-    kittynode_core::application::remove_capability::remove_capability(&name)
+    kittynode_core::application::remove_capability(&name)
         .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
     Ok(StatusCode::OK)
 }
 
 pub(crate) async fn get_capabilities() -> Result<Json<Vec<String>>, (StatusCode, String)> {
-    kittynode_core::application::get_capabilities::get_capabilities()
+    kittynode_core::application::get_capabilities()
         .map(Json)
         .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))
 }
@@ -37,7 +37,7 @@ pub(crate) async fn get_capabilities() -> Result<Json<Vec<String>>, (StatusCode,
 pub(crate) async fn install_package(
     Path(name): Path<String>,
 ) -> Result<StatusCode, (StatusCode, String)> {
-    kittynode_core::application::install_package::install_package(&name)
+    kittynode_core::application::install_package(&name)
         .await
         .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
     Ok(StatusCode::OK)
@@ -46,21 +46,21 @@ pub(crate) async fn install_package(
 pub(crate) async fn delete_package(
     Path(name): Path<String>,
 ) -> Result<StatusCode, (StatusCode, String)> {
-    kittynode_core::application::delete_package::delete_package(&name, false)
+    kittynode_core::application::delete_package(&name, false)
         .await
         .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
     Ok(StatusCode::OK)
 }
 
 pub(crate) async fn get_installed_packages() -> Result<Json<Vec<Package>>, (StatusCode, String)> {
-    kittynode_core::application::get_installed_packages::get_installed_packages()
+    kittynode_core::application::get_installed_packages()
         .await
         .map(Json)
         .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))
 }
 
 pub(crate) async fn is_docker_running() -> Result<StatusCode, (StatusCode, String)> {
-    match kittynode_core::application::is_docker_running::is_docker_running().await {
+    match kittynode_core::application::is_docker_running().await {
         true => Ok(StatusCode::OK),
         false => Err((
             StatusCode::SERVICE_UNAVAILABLE,
@@ -70,19 +70,19 @@ pub(crate) async fn is_docker_running() -> Result<StatusCode, (StatusCode, Strin
 }
 
 pub(crate) async fn init_kittynode() -> Result<StatusCode, (StatusCode, String)> {
-    kittynode_core::application::init_kittynode::init_kittynode()
+    kittynode_core::application::init_kittynode()
         .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
     Ok(StatusCode::OK)
 }
 
 pub(crate) async fn delete_kittynode() -> Result<StatusCode, (StatusCode, String)> {
-    kittynode_core::application::delete_kittynode::delete_kittynode()
+    kittynode_core::application::delete_kittynode()
         .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
     Ok(StatusCode::OK)
 }
 
 pub(crate) async fn get_system_info() -> Result<Json<SystemInfo>, (StatusCode, String)> {
-    kittynode_core::application::get_system_info::get_system_info()
+    kittynode_core::application::get_system_info()
         .map(Json)
         .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))
 }

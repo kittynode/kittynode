@@ -11,3 +11,17 @@ pub mod install_package;
 pub mod is_docker_running;
 pub mod remove_capability;
 pub mod set_server_url;
+
+pub use add_capability::add_capability;
+pub use delete_kittynode::delete_kittynode;
+pub use delete_package::delete_package;
+pub use get_capabilities::get_capabilities;
+pub use get_installed_packages::get_installed_packages;
+pub use get_packages::get_packages;
+pub use get_server_url::get_server_url;
+pub use get_system_info::get_system_info;
+pub use init_kittynode::init_kittynode;
+pub use install_package::install_package;
+pub use is_docker_running::is_docker_running;
+pub use remove_capability::remove_capability;
+pub use set_server_url::set_server_url;
