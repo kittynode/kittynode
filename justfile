@@ -77,13 +77,9 @@ tauri-build-apple:
 tauri-build-linux:
   cargo tauri build --target x86_64-unknown-linux-gnu
 
-# run the unit tests
+# run the tests
 test:
   cargo nextest run
-
-# run the unit and integration tests
-test-all:
-  cargo nextest run -- --include-ignored
 
 # run the tests with coverage
 test-coverage:
