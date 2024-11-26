@@ -5,8 +5,8 @@ use axum::{
     routing::{get, post},
     Router,
 };
+use kittynode_core::domain::package::Package;
 use kittynode_core::domain::system_info::SystemInfo;
-use kittynode_core::package::Package;
 
 pub(crate) async fn hello_world() -> &'static str {
     "Hello World!"
