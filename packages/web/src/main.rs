@@ -37,7 +37,7 @@ pub(crate) async fn get_capabilities() -> Result<Json<Vec<String>>, (StatusCode,
 pub(crate) async fn install_package(
     Path(name): Path<String>,
 ) -> Result<StatusCode, (StatusCode, String)> {
-    kittynode_core::package::install_package(&name)
+    kittynode_core::application::install_package::install_package(&name)
         .await
         .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
     Ok(StatusCode::OK)

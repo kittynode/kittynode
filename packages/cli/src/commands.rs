@@ -10,7 +10,7 @@ pub async fn get_packages_command() -> Result<()> {
 }
 
 pub async fn install_package(name: String) -> Result<()> {
-    kittynode_core::package::install_package(&name).await?;
+    kittynode_core::application::install_package::install_package(&name).await?;
     Ok(())
 }
 

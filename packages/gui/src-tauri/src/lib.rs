@@ -148,7 +148,7 @@ async fn install_package(name: String, server_url: String) -> Result<(), String>
             return Err(format!("Failed to install package: {}", res.status()));
         }
     } else {
-        kittynode_core::package::install_package(&name)
+        kittynode_core::application::install_package::install_package(&name)
             .await
             .map_err(|e| e.to_string())?;
     }
