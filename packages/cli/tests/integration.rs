@@ -2,7 +2,6 @@ use assert_cmd::Command;
 use predicates::prelude::*;
 
 #[test]
-#[ignore]
 fn get_packages() {
     let mut cmd = Command::cargo_bin("kittynode").unwrap();
     cmd.arg("get-packages")
