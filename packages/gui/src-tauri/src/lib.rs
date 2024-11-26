@@ -84,7 +84,7 @@ async fn get_capabilities(server_url: String) -> Result<Vec<String>, String> {
 #[tauri::command]
 fn get_packages() -> Result<HashMap<String, Package>, String> {
     info!("Getting packages");
-    kittynode_core::package::get_packages()
+    kittynode_core::application::get_packages::get_packages()
         .map(|packages| {
             packages
                 .into_iter()

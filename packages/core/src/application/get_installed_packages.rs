@@ -1,7 +1,9 @@
 use crate::{
     domain::package::Package,
-    infra::docker::{find_container, get_docker_instance},
-    package::get_packages,
+    infra::{
+        docker::{find_container, get_docker_instance},
+        package::get_packages,
+    },
 };
 use eyre::{Context, Result};
 

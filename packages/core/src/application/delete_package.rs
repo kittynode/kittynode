@@ -1,7 +1,7 @@
 use std::{collections::HashSet, fs};
 
-use crate::{
-    infra::docker::{get_docker_instance, remove_container},
+use crate::infra::{
+    docker::{get_docker_instance, remove_container},
     package::get_packages,
 };
 use eyre::{Context, Result};

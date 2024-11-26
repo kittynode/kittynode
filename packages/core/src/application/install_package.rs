@@ -1,8 +1,6 @@
-use crate::{
-    infra::{
-        docker::{create_or_recreate_network, get_docker_instance, pull_and_start_container},
-        file::generate_jwt_secret,
-    },
+use crate::infra::{
+    docker::{create_or_recreate_network, get_docker_instance, pull_and_start_container},
+    file::generate_jwt_secret,
     package::get_packages,
 };
 use eyre::{Context, Result};
