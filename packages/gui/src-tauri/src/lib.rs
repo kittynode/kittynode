@@ -24,7 +24,8 @@ async fn add_capability(name: String, server_url: String) -> Result<(), String> 
         }
         Ok(())
     } else {
-        kittynode_core::config::add_capability(&name).map_err(|e| e.to_string())
+        kittynode_core::application::add_capability::add_capability(&name)
+            .map_err(|e| e.to_string())
     }
 }
 
@@ -44,7 +45,8 @@ async fn remove_capability(name: String, server_url: String) -> Result<(), Strin
         }
         Ok(())
     } else {
-        kittynode_core::config::remove_capability(&name).map_err(|e| e.to_string())
+        kittynode_core::application::remove_capability::remove_capability(&name)
+            .map_err(|e| e.to_string())
     }
 }
 
@@ -77,7 +79,7 @@ async fn get_capabilities(server_url: String) -> Result<Vec<String>, String> {
             .map_err(|e| e.to_string())?;
         res.json::<Vec<String>>().await.map_err(|e| e.to_string())
     } else {
-        kittynode_core::config::get_capabilities().map_err(|e| e.to_string())
+        kittynode_core::application::get_capabilities::get_capabilities().map_err(|e| e.to_string())
     }
 }
 
