@@ -15,7 +15,7 @@ pub(crate) async fn hello_world() -> &'static str {
 pub(crate) async fn add_capability(
     Path(name): Path<String>,
 ) -> Result<StatusCode, (StatusCode, String)> {
-    kittynode_core::config::add_capability(&name)
+    kittynode_core::application::add_capability::add_capability(&name)
         .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
     Ok(StatusCode::OK)
 }
@@ -23,13 +23,13 @@ pub(crate) async fn add_capability(
 pub(crate) async fn remove_capability(
     Path(name): Path<String>,
 ) -> Result<StatusCode, (StatusCode, String)> {
-    kittynode_core::config::remove_capability(&name)
+    kittynode_core::application::remove_capability::remove_capability(&name)
         .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
     Ok(StatusCode::OK)
 }
 
 pub(crate) async fn get_capabilities() -> Result<Json<Vec<String>>, (StatusCode, String)> {
-    kittynode_core::config::get_capabilities()
+    kittynode_core::application::get_capabilities::get_capabilities()
         .map(Json)
         .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))
 }
