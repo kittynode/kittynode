@@ -3,7 +3,7 @@ use crate::infra::docker::{
     remove_container,
 };
 use crate::infra::file::generate_jwt_secret;
-use crate::packages::ethereum::Ethereum;
+use crate::manifests::ethereum::Ethereum;
 use bollard::models::PortBinding;
 use eyre::{Context, Result};
 use serde::{Deserialize, Serialize};

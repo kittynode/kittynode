@@ -5,4 +5,4 @@ pub mod infra; // TODO: should not leak this
 pub mod package;
 
 // Private exports
-mod packages;
+mod manifests;
