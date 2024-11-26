@@ -26,7 +26,7 @@
     "@sveltejs/kit": "^2.8.4",
     "@sveltejs/vite-plugin-svelte": "^4.0.2",
     "autoprefixer": "^10.4.20",
-    "bits-ui": "1.0.0-next.63",
+    "bits-ui": "1.0.0-next.64",
     "clsx": "^2.1.1",
     "svelte": "^5.2.8",
     "svelte-check": "^4.1.0",
