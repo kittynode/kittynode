@@ -1,5 +1,5 @@
 use eyre::Result;
-use kittynode_core::application::get_system_info::SystemInfo;
+use kittynode_core::domain::system_info::SystemInfo;
 use kittynode_core::package::Package;
 use std::collections::HashMap;
 use std::sync::LazyLock;

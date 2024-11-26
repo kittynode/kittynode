@@ -1,13 +1,6 @@
+use crate::domain::system_info::SystemInfo;
 use eyre::Result;
-use serde::{Deserialize, Serialize};
 use sysinfo::{Disks, System};
-
-#[derive(Serialize, Deserialize)]
-pub struct SystemInfo {
-    pub processor: String,
-    pub memory: String,
-    pub storage: String,
-}
 
 pub fn get_system_info() -> Result<SystemInfo> {
     let mut system = System::new_all();
