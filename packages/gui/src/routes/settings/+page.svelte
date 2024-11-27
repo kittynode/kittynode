@@ -25,6 +25,7 @@ async function enableRemoteAccess() {
 async function disableRemoteAccess() {
   try {
     remoteAccessStore.disable();
+    // todo: find out diff between message and alert; add to development-guide
     await message("Remote access has been disabled.");
   } catch (e) {
     alert(`Failed to disable remote access: ${e}`);
