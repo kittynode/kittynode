@@ -11,7 +11,7 @@ let animationFrameId: number;
 let ctx: CanvasRenderingContext2D;
 
 // Reactive statement to get the current mode (dark or light)
-$: currentMode = $mode;
+$: currentMode = $mode; // todo
 
 async function initKittynode() {
   try {
@@ -46,8 +46,8 @@ onMount(() => {
   ctx = context;
 
   const nodes: Node[] = [];
-  const numNodes = 50;
-  const maxVelocity = 0.5;
+  const numNodes = 50; // should be relative to screen size as well
+  const maxVelocity = 0.75;
   const mouse = { x: null as number | null, y: null as number | null };
 
   function resizeCanvas() {
