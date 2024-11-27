@@ -1,6 +1,6 @@
 <script lang="ts">
 import { page } from "$app/stores";
-import { House, HeartPulse, Settings } from "lucide-svelte";
+import { House, HeartPulse, Settings, KeyRound } from "lucide-svelte";
 </script>
 
 <nav>
@@ -18,6 +18,17 @@ import { House, HeartPulse, Settings } from "lucide-svelte";
       >
         <HeartPulse
           strokeWidth={$page.url.pathname === "/system-info" ? 2.25 : 2}
+        />
+      </a>
+    </div>
+    <div class="flex-grow flex justify-center">
+      <a
+        class="p-4"
+        href="/key-manager"
+        aria-current={$page.url.pathname === "/key-manager"}
+      >
+        <KeyRound
+          strokeWidth={$page.url.pathname === "/key-manager" ? 2.25 : 2}
         />
       </a>
     </div>
