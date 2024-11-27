@@ -4,9 +4,9 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fmt;
 
-pub trait PackageDefinition {
-    fn name(&self) -> &'static str;
-    fn get_package(&self) -> Result<Package>;
+pub(crate) trait PackageDefinition {
+    const NAME: &'static str;
+    fn get_package() -> Result<Package>;
 }
 
 #[derive(Clone, Serialize, Deserialize)]
