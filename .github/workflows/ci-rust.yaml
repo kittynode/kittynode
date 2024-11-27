@@ -26,7 +26,7 @@ jobs:
       - name: Cache Cargo dependencies
         uses: Swatinem/rust-cache@v2
         with:
-          # default: "v0-rust"; increment to reset cache
+          # default is "v0-rust"; increment to reset cache.
           prefix-key: v1-rust
 
       - name: Install cargo-llvm-cov
@@ -60,7 +60,7 @@ jobs:
       - name: Cache Cargo dependencies
         uses: Swatinem/rust-cache@v2
         with:
-          # default: "v0-rust"; increment to reset cache
+          # default is "v0-rust"; increment to reset cache.
           prefix-key: v1-rust
 
       - name: Check code formatting

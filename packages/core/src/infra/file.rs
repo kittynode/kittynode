@@ -44,7 +44,7 @@ mod tests {
     use tempfile::tempdir;
 
     #[test]
-    fn it_generates_a_jwt_secret() {
+    fn test_generate_jwt_secret() {
         let temp_dir = tempdir().unwrap();
         env::set_var("HOME", temp_dir.path().to_str().unwrap());
 

@@ -3,6 +3,7 @@ use crate::manifests::ethereum::Ethereum;
 use eyre::Result;
 use std::collections::HashMap;
 
+/// Retrieves a HashMap of all available packages.
 pub fn get_packages() -> Result<HashMap<String, Package>> {
     let mut packages = HashMap::new();
     packages.insert(Ethereum::NAME.to_string(), Ethereum::get_package()?);
