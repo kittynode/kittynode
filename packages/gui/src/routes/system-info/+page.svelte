@@ -1,29 +1,17 @@
 <script lang="ts">
 import { onMount } from "svelte";
-import type { SystemInfo } from "$lib/types/system_info";
-import { invoke } from "@tauri-apps/api/core";
 import { remoteAccessStore } from "$stores/remoteAccess.svelte";
-import { serverUrlStore } from "$stores/serverUrl.svelte";
+import { systemInfoStore } from "$stores/systemInfo.svelte";
+import { Skeleton } from "$lib/components/ui/skeleton/index.js";
 
-let processor = $state("Loading...");
-let memory = $state("Loading...");
-let storage = $state("Loading...");
-
-async function fetchSystemInfo() {
-  try {
-    const systemInfo: SystemInfo = await invoke("system_info", {
-      serverUrl: serverUrlStore.serverUrl,
-    });
-    processor = systemInfo.processor;
-    memory = systemInfo.memory;
-    storage = systemInfo.storage;
-  } catch (error) {
-    console.error("Failed to fetch system info:", error);
-  }
+function fetchSystemInfo() {
+  systemInfoStore.fetchSystemInfo();
 }
 
-onMount(async () => {
-  await fetchSystemInfo();
+onMount(() => {
+  if (!systemInfoStore.systemInfo) {
+    fetchSystemInfo();
+  }
 });
 </script>
 
@@ -39,8 +27,16 @@ onMount(async () => {
   System info
 </h3>
 
+{#if systemInfoStore.systemInfo}
 <ul>
-  <li>Processor: {processor}</li>
-  <li>Memory: {memory}</li>
-  <li>Storage: {storage}</li>
+  <li>Processor: {systemInfoStore.systemInfo.processor}</li>
+  <li>Memory: {systemInfoStore.systemInfo.memory}</li>
+  <li>Storage: {systemInfoStore.systemInfo.storage}</li>
 </ul>
+{:else}
+<div class="space-y-2">
+  <Skeleton class="h-4 w-[250px]" />
+  <Skeleton class="h-4 w-[250px]" />
+  <Skeleton class="h-4 w-[250px]" />
+</div>
+{/if}
