@@ -115,3 +115,19 @@ Some notes until we get it resolved upstream in Tauri:
 2. Make sure any last build is uninstalled from the device.
 3. See the justfile for more clean up commands.
 4. If you don't see the iOS IP, then it's a connection issue.
+
+### Other
+
+You can also try some of these commands which used to be in the `justfile`:
+
+```just
+# clean the ios app
+ios-clean:
+  rm -rf ~/Library/Developer/Xcode/DerivedData
+  rm -rf ~/Library/Developer/Xcode/Archives
+  rm -rf ~/Library/Developer/Xcode/Projects
+
+# reset ios simulators
+ios-erase:
+  xcrun simctl erase all
+```

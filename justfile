@@ -25,16 +25,6 @@ ios:
 ios-build:
   cargo tauri ios build
 
-# clean the ios app
-ios-clean:
-  rm -rf ~/Library/Developer/Xcode/DerivedData
-  rm -rf ~/Library/Developer/Xcode/Archives
-  rm -rf ~/Library/Developer/Xcode/Projects
-
-# reset ios simulators
-ios-erase:
-  xcrun simctl erase all
-
 # init the ios app
 ios-init:
   cargo tauri ios init
@@ -64,6 +54,10 @@ lint-rs:
 # add a shadcn component
 shadcn-add *args='':
   cd packages/gui && pnpm dlx shadcn-svelte@next add {{args}} && pnpm format-lint:fix
+
+# update shadcn components
+shadcn-update:
+  echo "todo"
 
 # start the desktop app
 tauri:
