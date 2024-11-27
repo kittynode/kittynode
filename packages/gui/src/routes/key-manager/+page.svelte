@@ -2,4 +2,4 @@
   Key manager
 </h3>
 
-<p>Securely generate local cryptographic keys for your nodes.</p>
+<p>Securely generate local cryptographic keys for your nodes. This may also deal with wallet connection.</p>
