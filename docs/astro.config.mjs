@@ -36,18 +36,9 @@ export default defineConfig({
           items: [
             { label: "What is Kittynode?", slug: "learn/what-is-kittynode" },
             { label: "Why Kittynode?", slug: "learn/why-kittynode" },
-          ],
-        },
-        {
-          label: "Contribute",
-          items: [
             {
               label: "Architecture",
-              slug: "contribute/architecture",
-            },
-            {
-              label: "Open questions",
-              slug: "contribute/questions",
+              slug: "learn/architecture",
             },
           ],
         },
@@ -66,6 +57,10 @@ export default defineConfig({
           label: "Resources",
           items: [
             { label: "Hardware guide", slug: "resources/hardware-guide" },
+            {
+              label: "Questions",
+              slug: "resources/questions",
+            },
           ],
         },
       ],
