@@ -4,7 +4,7 @@ build:
 
 # start the docs dev server
 docs:
-  pnpm -F docs dev
+  pnpm -F docs dev --open
 
 # install icons
 icons:
