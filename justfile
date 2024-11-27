@@ -8,6 +8,7 @@ docs:
 
 # start the kittynode-core docs dev server
 # todo: create github action workflow and host it on docs.rs..? + add to user facing docs
+# todo: setup hot reloading local server (right now its just a static html)
 docs-rs:
    cargo doc -p kittynode-core --open
 
