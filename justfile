@@ -6,6 +6,11 @@ build:
 docs:
   pnpm -F docs dev --open
 
+# start the kittynode-core docs dev server
+# todo: create github action workflow and host it on docs.rs..? + add to user facing docs
+docs-rs:
+   cargo doc -p kittynode-core --open
+
 # install icons
 icons:
   cargo tauri icon assets/kittynode-logo.png
