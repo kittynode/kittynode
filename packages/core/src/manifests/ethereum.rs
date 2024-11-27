@@ -9,17 +9,17 @@ use crate::{
 
 pub(crate) struct Ethereum;
 
-const ETHEREUM_NAME: &str = "Ethereum";
-
 impl PackageDefinition for Ethereum {
-    const NAME: &'static str = ETHEREUM_NAME;
+    fn name(&self) -> &'static str {
+        "Ethereum"
+    }
 
-    fn get_package() -> Result<Package> {
+    fn get_package(&self) -> Result<Package> {
         let kittynode_path = kittynode_path()?;
         let jwt_path = kittynode_path.join("jwt.hex");
 
         Ok(Package {
-            name: ETHEREUM_NAME.to_string(),
+            name: self.name().to_string(), // Use `self.name()` instead of `ETHEREUM_NAME`
             description: "This package installs a Reth execution client and a Lighthouse consensus client on the Holesky network with Docker."
                 .to_string(),
             network_name: "ethereum-network".to_string(),

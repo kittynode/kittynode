@@ -1,7 +1,7 @@
 use eyre::Result;
-use kittynode_core::application::get_packages;
+use kittynode_core::application::{delete_package, get_packages, install_package};
 
-pub async fn get_packages_command() -> Result<()> {
+pub async fn get_packages_cmd() -> Result<()> {
     let packages = get_packages()?;
     for (name, package) in packages {
         println!("Package: {}\n{}", name, package);
@@ -9,12 +9,10 @@ pub async fn get_packages_command() -> Result<()> {
     Ok(())
 }
 
-pub async fn install_package(name: String) -> Result<()> {
-    kittynode_core::application::install_package(&name).await?;
-    Ok(())
+pub async fn install_package_cmd(name: String) -> Result<()> {
+    install_package(&name).await
 }
 
-pub async fn delete_package(name: String, include_images: bool) -> Result<()> {
-    kittynode_core::application::delete_package(&name, include_images).await?;
-    Ok(())
+pub async fn delete_package_cmd(name: String, include_images: bool) -> Result<()> {
+    delete_package(&name, include_images).await
 }

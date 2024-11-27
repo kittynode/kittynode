@@ -29,16 +29,16 @@ async fn main() -> Result<()> {
     tracing_subscriber::fmt::init();
     match Cli::parse().command {
         Commands::GetPackages => {
-            commands::get_packages_command().await?;
+            commands::get_packages_cmd().await?;
         }
         Commands::InstallPackage { name } => {
-            commands::install_package(name).await?;
+            commands::install_package_cmd(name).await?;
         }
         Commands::DeletePackage {
             name,
             include_images,
         } => {
-            commands::delete_package(name, include_images).await?;
+            commands::delete_package_cmd(name, include_images).await?;
         }
     }
     Ok(())
