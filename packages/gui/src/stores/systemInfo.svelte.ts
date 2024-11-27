@@ -10,6 +10,7 @@ export const systemInfoStore = {
   },
   async fetchSystemInfo() {
     try {
+      systemInfo = undefined; // invalidate previous data
       systemInfo = await invoke("system_info", {
         serverUrl: serverUrlStore.serverUrl,
       });

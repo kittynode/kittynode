@@ -9,6 +9,7 @@ import { remoteAccessStore } from "$stores/remoteAccess.svelte";
 import { serverUrlStore } from "$stores/serverUrl.svelte";
 import { updates } from "$stores/updates.svelte";
 import { LoaderCircle } from "lucide-svelte";
+import { refetchStores } from "$utils/refetchStores";
 
 let currentPlatform = $state("");
 
@@ -32,8 +33,7 @@ async function disableRemoteAccess() {
 
 async function connectRemote() {
   try {
-    const serverUrl = "http://merlin:3000";
-    serverUrlStore.setServerUrl(serverUrl);
+    setRemote("http://merlin:3000");
     await message("Connected to remote.");
   } catch (e) {
     alert(`Failed to connect to remote: ${e}`);
@@ -42,7 +42,7 @@ async function connectRemote() {
 
 async function disconnectRemote() {
   try {
-    serverUrlStore.setServerUrl("");
+    setRemote("");
     await message("Disconnected from remote.");
   } catch (e) {
     alert(`Failed to disconnect from remote: ${e}`);
@@ -62,6 +62,12 @@ async function deleteKittynode() {
 
 async function handleUpdate() {
   await updates.installUpdate();
+}
+
+function setRemote(serverUrl: string) {
+  serverUrlStore.setServerUrl(serverUrl);
+  // Refetch store caches
+  refetchStores();
 }
 
 onMount(async () => {
