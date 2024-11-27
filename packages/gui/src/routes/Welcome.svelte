@@ -188,7 +188,7 @@ onMount(() => {
     onclick={initKittynode}
   >
     <img
-      class="logo w-24 mb-4"
+      class="logo w-24"
       src={`/images/kittynode-logo-circle.png`}
       alt="Kittynode Logo"
     />
