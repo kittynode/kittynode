@@ -43,7 +43,8 @@ onMount(() => {
   ctx = context;
 
   const nodes: Node[] = [];
-  const numNodes = 50; // todo: should be relative and reactive to scren size as well
+  const numNodes = 50; // todo: should be relative and reactive to screen size as well
+  // todo: note, can also fix some of this by always starting kittynode on desktop "maximized"
   const maxVelocity = 0.75;
   const mouse = { x: null as number | null, y: null as number | null };
 
@@ -69,6 +70,7 @@ onMount(() => {
     });
   }
 
+  // todo: remove mouse / pointer stuff if not used (or if bad performance hit)
   // Mouse and touch event listeners
   function updateMousePosition(event: MouseEvent | TouchEvent) {
     if (event instanceof MouseEvent) {
