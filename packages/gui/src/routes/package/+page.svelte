@@ -50,7 +50,7 @@ onMount(async () => {
 <p>Here we will walk through an entire validator setup workflow:</p>
 <ul>
   <li>&nbsp;&nbsp;&nbsp;&nbsp;- Generating the crytographic key pair (using the key manager).</li>
-  <li>&nbsp;&nbsp;&nbsp;&nbsp;- Generating and uploading deposit data (including wallet connection and tx signing).</li>
+  <li>&nbsp;&nbsp;&nbsp;&nbsp;- Generating and uploading deposit data (including wallet connection and local tx submission).</li>
   <li>&nbsp;&nbsp;&nbsp;&nbsp;- Displaying monitoring logs and configurability after setup.</li>
 </ul>
 <Button class="mt-4">Set up validator</Button>
