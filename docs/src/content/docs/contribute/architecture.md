@@ -3,6 +3,8 @@ title: Architecture
 description: Kittynode architecture.
 ---
 
+> TODO: it's clear this should be higher up in the monorepo under `packages/*`. While you're at it, add a README.md for `docs/` or move it into `packages/*`.
+
 Kittynode is a command center for node operators. We'll start with a brief one sentence description of each package:
 
 - [kittynode-core](https://github.com/kittynode/kittynode/tree/main/packages/core): Core library for Kittynode written in Rust.
