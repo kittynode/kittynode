@@ -14,7 +14,11 @@ function handleDismiss() {
 }
 
 onMount(async () => {
-  await updates.getUpdate();
+  try {
+    await updates.getUpdate();
+  } catch (e) {
+    console.error(`Failed to check for update: ${e}.`);
+  }
 });
 </script>
 

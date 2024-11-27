@@ -1,7 +1,6 @@
 import { check } from "@tauri-apps/plugin-updater";
 import type { Update } from "@tauri-apps/plugin-updater";
 import { relaunch } from "@tauri-apps/plugin-process";
-import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 
 const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
 

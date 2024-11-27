@@ -4,7 +4,7 @@ export const serverUrlStore = {
   get serverUrl() {
     return serverUrl;
   },
-  async setServerUrl(url: string) {
+  setServerUrl(url: string) {
     serverUrl = url;
   },
 };
