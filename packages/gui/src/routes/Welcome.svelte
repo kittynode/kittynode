@@ -5,13 +5,10 @@ import { platform } from "@tauri-apps/plugin-os";
 import { onMount } from "svelte";
 import { mode } from "mode-watcher";
 
-let currentPlatform = "";
+let currentPlatform = $state("");
 let canvasElement: HTMLCanvasElement;
 let animationFrameId: number;
 let ctx: CanvasRenderingContext2D;
-
-// Reactive statement to get the current mode (dark or light)
-$: currentMode = $mode; // todo
 
 async function initKittynode() {
   try {
@@ -46,7 +43,7 @@ onMount(() => {
   ctx = context;
 
   const nodes: Node[] = [];
-  const numNodes = 50; // should be relative to screen size as well
+  const numNodes = 50; // todo: should be relative and reactive to scren size as well
   const maxVelocity = 0.75;
   const mouse = { x: null as number | null, y: null as number | null };
 
@@ -99,7 +96,7 @@ onMount(() => {
 
   function animate() {
     // Set background color based on mode
-    ctx.fillStyle = currentMode === "dark" ? "#0a0a0a" : "#FFFFFF";
+    ctx.fillStyle = $mode === "dark" ? "#0a0a0a" : "#FFFFFF";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Update and draw nodes
@@ -114,7 +111,7 @@ onMount(() => {
       // Draw node
       ctx.beginPath();
       ctx.arc(node.x, node.y, 2, 0, Math.PI * 2);
-      ctx.fillStyle = currentMode === "dark" ? "#FFFFFF" : "#000000";
+      ctx.fillStyle = $mode === "dark" ? "#FFFFFF" : "#000000";
       ctx.fill();
     }
 
@@ -129,7 +126,7 @@ onMount(() => {
           ctx.beginPath();
           ctx.moveTo(nodes[i].x, nodes[i].y);
           ctx.lineTo(nodes[j].x, nodes[j].y);
-          const color = currentMode === "dark" ? "255, 255, 255" : "0, 0, 0";
+          const color = $mode === "dark" ? "255, 255, 255" : "0, 0, 0";
           ctx.strokeStyle = `rgba(${color}, ${1 - distance / 100})`;
           ctx.lineWidth = 1;
           ctx.stroke();
