@@ -85,9 +85,13 @@ test:
 test-all:
   cargo nextest run -- --include-ignored
 
-# run the tests with coverage
+# run the unit tests with coverage
 test-coverage:
   cargo llvm-cov nextest
+
+# run the unit and integration tests with coverage
+test-coverage-all:
+  cargo llvm-cov nextest -- --include-ignored
 
 # run the tests without capturing output
 test-no-capture:
