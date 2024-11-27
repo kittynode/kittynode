@@ -93,10 +93,6 @@ test-coverage:
 test-coverage-all:
   cargo llvm-cov nextest -- --include-ignored
 
-# run the tests without capturing output
-test-no-capture:
-  cargo nextest run --no-capture
-
 # update all toolchains and dependencies
 update-all:
   rustup update
