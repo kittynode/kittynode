@@ -4,7 +4,7 @@ import { onMount } from "svelte";
 import { windowShownStore } from "$stores/windowShown.svelte.ts";
 import { initializedStore } from "$stores/initialized.svelte";
 import { ModeWatcher } from "mode-watcher";
-import Welcome from "./Welcome.svelte";
+import Splash from "./Splash.svelte";
 import Navigation from "./Navigation.svelte";
 import UpdateBanner from "./UpdateBanner.svelte";
 
@@ -17,7 +17,7 @@ onMount(async () => {
 
 <ModeWatcher />
 {#if !initializedStore.initialized}
-  <Welcome />
+  <Splash />
 {:else}
   <div class="flex flex-col h-screen">
     <main class="flex-1 overflow-y-auto">
