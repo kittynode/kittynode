@@ -63,7 +63,7 @@ Get started with the codebase and running development commands.
 
 </Steps>
 
-## Releases
+## Managing releases
 
 We push a tag `<package-name>-canary.n` to GitHub, and CI will build and publish a draft release for the package. We auto-generate a changelog with GitHub, and publish a latest release (this gives us links to refer to the latest release).
 
@@ -71,18 +71,9 @@ You can find all the latest releases [here](https://github.com/kittynode/kittyno
 
 We will support package-level changelogs and semantic versioning in the future, but during the rapid development phase we don't want to waste time on that.
 
-## Deploying to iOS
+## Coding principles
 
-Some notes until we get it resolved upstream in Tauri:
-
-1. Make sure the physical device is properly connected and xcode is open.
-2. Make sure any last build is uninstalled from the device.
-3. See the justfile for more clean up commands.
-4. If you don't see the iOS IP, then it's a connection issue.
-
-## Testing
-
-### Philosophy
+### Testing philosophy
 
 Here are the tests we (currently) employ in the project:
 
@@ -100,3 +91,27 @@ Additionally, we don't strive for some kind of 100% code coverage. That's not th
 We include coverage from the integration tests in our total code coverage. This means code coverage is a holistic quality check for the codebase that represents an aggregate of our testing strategies and the code paths we are hitting in our test suite.
 
 It would be useful to have a sense of what percentage of code paths are hit by unit tests versus integration tests, but we don't do that (for now).
+
+### Logging
+
+We like logs. In library functions it's essential, in "binding" layers it is highly encouraged (as the API is homogenous and we should trace out the entry here), and in other layers it is optional / as needed. In the other layers it's best to use your judgement but not litter with too many logs.
+
+In consumers of library functions we (optionally) log at the entrypoint. Inside the library functions we log after the success / failure of the operation. We also always write our logs in sentence case without an ending period.
+
+In JavaScript we should at minimum log errors when calling library functions or external APIs at all (in a try-catch), and other logging is (currently) just best judgement.
+
+The log functions we use are:
+
+- Rust: `info!()` and `error!()`
+- JavaScript: `info()` and `error()`
+
+## Troubleshooting
+
+### Deploying to iOS
+
+Some notes until we get it resolved upstream in Tauri:
+
+1. Make sure the physical device is properly connected and xcode is open.
+2. Make sure any last build is uninstalled from the device.
+3. See the justfile for more clean up commands.
+4. If you don't see the iOS IP, then it's a connection issue.
