@@ -9,7 +9,7 @@ pub fn add_capability(capability: &str) -> Result<()> {
     Ok(())
 }
 
-/// Modifies the capabilities vector in place to add a capability if it doesn't already exist.
+/// Helper function to add a capability to the list, ensuring no duplicates.
 fn add_to_capabilities(capabilities: &mut Vec<String>, capability: &str) {
     if !capabilities.contains(&capability.to_string()) {
         capabilities.push(capability.to_string());
