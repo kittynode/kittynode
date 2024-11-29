@@ -6,11 +6,9 @@ build:
 docs:
   pnpm -F docs dev --open
 
-# start the kittynode-core docs dev server
-# todo: create github action workflow and host it on docs.rs..? + add to user facing docs
-# todo: setup hot reloading local server (right now its just a static html)
+# generate the kittynode-core docs
 docs-rs:
-   cargo doc -p kittynode-core --open
+  cargo doc -p kittynode-core
 
 # install icons
 icons:
