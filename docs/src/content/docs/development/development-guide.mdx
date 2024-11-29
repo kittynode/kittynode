@@ -94,7 +94,7 @@ It would be useful to have a sense of what percentage of code paths are hit by u
 
 ### Logging
 
-We like logs. In library functions it's essential, in "binding" layers it is highly encouraged (as the API is homogenous and we should trace out the entry here), and in other layers it is optional / as needed. In the other layers it's best to use your judgement but not litter with too many logs.
+We like logs. In library functions it's essential, in "binding" layers it is highly encouraged (as the API is homogeneous and we should trace out the entry here), and in other layers it is optional / as needed. In the other layers it's best to use your judgement but not litter with too many logs.
 
 In consumers of library functions we (optionally) log at the entrypoint. Inside the library functions we log after the success / failure of the operation. We also always write our logs in sentence case without an ending period.
 

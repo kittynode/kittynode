@@ -15,7 +15,7 @@ We expect operators to aggregate their validators, but potentially diversify and
 
 ### Should voting in consensus require self-operation of a node, or can that part be delegated?
 
-Current answer: We think that self-operation of a node is a must for maintaining self-sovereignity. There is no way to enforce these things in protocol, as it relates to the fork of the chain which is being run by the client.
+Current answer: We think that self-operation of a node is a must for maintaining self-sovereignty. There is no way to enforce these things in protocol, as it relates to the fork of the chain which is being run by the client.
 
 ### Do machines have the same voting rights as humans; and if so, does it open additional attack vectors?
 
