@@ -15,7 +15,6 @@ let isDockerRunning: boolean | null = $state(null);
 let installedPackages: Package[] = $state([]);
 let installLoading: string | null = $state(null);
 let deleteLoading: string | null = $state(null);
-let currentPlatform = $state("");
 
 async function loadPackages() {
   try {
@@ -64,23 +63,26 @@ async function deletePackage(name: string, includeImages: boolean) {
 }
 
 async function checkDocker() {
-  isDockerRunning =
-    currentPlatform === "ios" ? true : await invoke("is_docker_running");
+  isDockerRunning = ["ios", "android"].includes(platform())
+    ? true
+    : await invoke("is_docker_running");
+}
+
+function isMobileAndLocal() {
+  return (
+    ["ios", "android"].includes(platform()) && serverUrlStore.serverUrl === ""
+  );
 }
 
 onMount(async () => {
   // prefetch stores async
   if (!systemInfoStore.systemInfo) systemInfoStore.fetchSystemInfo();
+
+  // check docker
   checkDocker();
 
-  // dummy helios logic
-  currentPlatform = platform();
-  if (
-    !(
-      ["ios", "android"].includes(currentPlatform) &&
-      serverUrlStore.serverUrl === ""
-    )
-  ) {
+  // do not fetch if mobile and local
+  if (!isMobileAndLocal()) {
     await loadPackages();
   }
 });
@@ -96,7 +98,7 @@ onMount(async () => {
       <Card.Header>
         <Card.Title>{name}</Card.Title>
         <Card.Description>
-          {#if !isDockerRunning && currentPlatform !== "ios"}
+          {#if !isDockerRunning}
             <p>
               <strong
                 >Turn on Docker to use this package. If you need to install
@@ -139,4 +141,6 @@ onMount(async () => {
       </Card.Content>
     </Card.Root>
   {/each}
+{:else}
+  <p>No packages available.</p>
 {/if}
