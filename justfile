@@ -12,8 +12,8 @@ docs-rs:
 
 # install icons
 icons:
-  cargo tauri icon assets/kittynode-logo.png
-  cargo tauri icon assets/kittynode-square.png --ios-color '#A181A7' -o tmp
+  cargo tauri icon assets/kittynode-logo-app.png
+  cargo tauri icon assets/kittynode-logo-square.png --ios-color '#A181A7' -o tmp
   mv tmp/ios/* packages/gui/src-tauri/gen/apple/Assets.xcassets/AppIcon.appiconset
   rm -rf tmp
 

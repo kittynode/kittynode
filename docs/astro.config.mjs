@@ -12,8 +12,8 @@ export default defineConfig({
       plugins: [starlightLinksValidator(), starlightImageZoom()],
       title: "Kittynode",
       logo: {
-        light: "../assets/kittynode-light.png",
-        dark: "../assets/kittynode-dark.png",
+        light: "../assets/kittynode-wordmark-light.png",
+        dark: "../assets/kittynode-wordmark-dark.png",
         replacesTitle: true,
       },
       editLink: {
