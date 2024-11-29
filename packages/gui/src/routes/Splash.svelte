@@ -74,8 +74,10 @@ onMount(() => {
     }
 
     for (const node of nodes) {
-      if (node.x > window.innerWidth) node.x = Math.random() * window.innerWidth;
-      if (node.y > window.innerHeight) node.y = Math.random() * window.innerHeight;
+      if (node.x > window.innerWidth)
+        node.x = Math.random() * window.innerWidth;
+      if (node.y > window.innerHeight)
+        node.y = Math.random() * window.innerHeight;
     }
   }
 
