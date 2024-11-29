@@ -34,7 +34,6 @@ interface Node {
 onMount(() => {
   currentPlatform = platform();
 
-  // Initialize the canvas animation
   const canvas = canvasElement;
   const context = canvas.getContext("2d");
   if (!context) {
@@ -45,7 +44,7 @@ onMount(() => {
 
   const nodes: Node[] = [];
   const maxVelocity = 0.75;
-  const nodeDensity = 0.00005; // Nodes per pixel squared
+  const nodeDensity = 0.00005;
 
   function calculateNumNodes() {
     return Math.round(window.innerWidth * window.innerHeight * nodeDensity);
@@ -57,12 +56,10 @@ onMount(() => {
     canvas.height = window.innerHeight * dpr;
     canvas.style.width = `${window.innerWidth}px`;
     canvas.style.height = `${window.innerHeight}px`;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // Reset transform and scale
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    // Recalculate the number of nodes
     const newNumNodes = calculateNumNodes();
     if (newNumNodes > nodes.length) {
-      // Add new nodes
       const nodesToAdd = newNumNodes - nodes.length;
       for (let i = 0; i < nodesToAdd; i++) {
         nodes.push({
@@ -73,56 +70,34 @@ onMount(() => {
         });
       }
     } else if (newNumNodes < nodes.length) {
-      // Remove nodes
-      const nodesToRemove = nodes.length - newNumNodes;
-      nodes.splice(0, nodesToRemove);
+      nodes.splice(0, nodes.length - newNumNodes);
     }
 
-    // Adjust positions of existing nodes to be within new window dimensions
     for (const node of nodes) {
-      if (node.x > window.innerWidth)
-        node.x = Math.random() * window.innerWidth;
-      if (node.y > window.innerHeight)
-        node.y = Math.random() * window.innerHeight;
+      if (node.x > window.innerWidth) node.x = Math.random() * window.innerWidth;
+      if (node.y > window.innerHeight) node.y = Math.random() * window.innerHeight;
     }
   }
 
-  resizeCanvas();
+  resizeCanvas(); // Initialize canvas dimensions and nodes
   window.addEventListener("resize", resizeCanvas);
 
-  // Create initial nodes
-  const numNodes = calculateNumNodes();
-  for (let i = 0; i < numNodes; i++) {
-    nodes.push({
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
-      vx: (Math.random() - 0.5) * maxVelocity,
-      vy: (Math.random() - 0.5) * maxVelocity,
-    });
-  }
-
   function animate() {
-    // Set background color based on mode
     ctx.fillStyle = $mode === "dark" ? "#0a0a0a" : "#FFFFFF";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Update and draw nodes
     for (const node of nodes) {
       node.x += node.vx;
       node.y += node.vy;
-
-      // Bounce off edges
       if (node.x <= 0 || node.x >= window.innerWidth) node.vx *= -1;
       if (node.y <= 0 || node.y >= window.innerHeight) node.vy *= -1;
 
-      // Draw node
       ctx.beginPath();
       ctx.arc(node.x, node.y, 2, 0, Math.PI * 2);
       ctx.fillStyle = $mode === "dark" ? "#FFFFFF" : "#000000";
       ctx.fill();
     }
 
-    // Draw connections
     for (let i = 0; i < nodes.length; i++) {
       for (let j = i + 1; j < nodes.length; j++) {
         const dx = nodes[i].x - nodes[j].x;
@@ -147,7 +122,6 @@ onMount(() => {
   animate();
 
   return () => {
-    // Cleanup on component unmount
     cancelAnimationFrame(animationFrameId);
     window.removeEventListener("resize", resizeCanvas);
   };
