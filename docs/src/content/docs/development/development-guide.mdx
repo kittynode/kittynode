@@ -103,8 +103,7 @@ In JavaScript we should at minimum log errors when calling library functions or 
 The log functions we use are:
 
 - Rust: `info!()` and `error!()`
-- JavaScript: `info()` and `error()`
-- todo: How do we bubble errors to the client (or track them otherwise)? Do we use alert() or console.error, or both? I think it is best to not track **any** user data, if we can avoid it. That means we do rely on alert(). The only downside I can think of, is if it's possible to leak things to the client, but the design of Kittynode should be that it is always local. I think the alert pattern is okay, but let's double check.
+- JavaScript: `console.info()` and custom `error()`
 
 ## Troubleshooting
 

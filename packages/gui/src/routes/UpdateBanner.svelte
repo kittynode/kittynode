@@ -4,6 +4,7 @@ import { Separator } from "$lib/components/ui/separator";
 import { updates } from "$stores/updates.svelte";
 import { LoaderCircle } from "lucide-svelte";
 import { onMount } from "svelte";
+import { error } from "$utils/error";
 
 function handleUpdate() {
   updates.installUpdate();
@@ -17,7 +18,7 @@ onMount(async () => {
   try {
     await updates.getUpdate();
   } catch (e) {
-    console.error(`Failed to check for update: ${e}.`);
+    error(`Failed to check for update: ${e}.`);
   }
 });
 </script>

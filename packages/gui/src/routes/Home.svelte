@@ -8,6 +8,7 @@ import { platform } from "@tauri-apps/plugin-os";
 import { serverUrlStore } from "$stores/serverUrl.svelte";
 import { systemInfoStore } from "$stores/systemInfo.svelte";
 import { goto } from "$app/navigation";
+import { error } from "$utils/error";
 
 let packages: { [name: string]: Package } = $state({});
 let isDockerRunning: boolean | null = $state(null);
@@ -24,9 +25,8 @@ async function loadPackages() {
         serverUrl: serverUrlStore.serverUrl,
       });
     }
-  } catch (error) {
-    alert(`Failed to load packages: ${error}`);
-    console.error(error);
+  } catch (e) {
+    error(`Failed to load packages: ${e}`);
   }
 }
 
@@ -39,9 +39,8 @@ async function installPackage(name: string) {
     });
     await loadPackages();
     alert(`Successfully installed ${name}.`);
-  } catch (error) {
-    alert(`Failed to install ${name}.`);
-    console.error(error);
+  } catch (e) {
+    error(`Failed to install ${name}.`);
   } finally {
     installLoading = null;
   }
@@ -57,9 +56,8 @@ async function deletePackage(name: string, includeImages: boolean) {
     });
     await loadPackages();
     alert(`Successfully deleted ${name}.`);
-  } catch (error) {
-    alert(`Failed to delete ${name}.`);
-    console.error(error);
+  } catch (e) {
+    error(`Failed to delete ${name}.`);
   } finally {
     deleteLoading = null;
   }
