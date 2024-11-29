@@ -44,8 +44,12 @@ onMount(() => {
   ctx = context;
 
   const nodes: Node[] = [];
-  const numNodes = 50;
   const maxVelocity = 0.75;
+  const nodeDensity = 0.00005; // Nodes per pixel squared
+
+  function calculateNumNodes() {
+    return Math.round(window.innerWidth * window.innerHeight * nodeDensity);
+  }
 
   function resizeCanvas() {
     const dpr = window.devicePixelRatio || 1;
@@ -54,12 +58,38 @@ onMount(() => {
     canvas.style.width = `${window.innerWidth}px`;
     canvas.style.height = `${window.innerHeight}px`;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // Reset transform and scale
+
+    // Recalculate the number of nodes
+    const newNumNodes = calculateNumNodes();
+    if (newNumNodes > nodes.length) {
+      // Add new nodes
+      const nodesToAdd = newNumNodes - nodes.length;
+      for (let i = 0; i < nodesToAdd; i++) {
+        nodes.push({
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight,
+          vx: (Math.random() - 0.5) * maxVelocity,
+          vy: (Math.random() - 0.5) * maxVelocity,
+        });
+      }
+    } else if (newNumNodes < nodes.length) {
+      // Remove nodes
+      const nodesToRemove = nodes.length - newNumNodes;
+      nodes.splice(0, nodesToRemove);
+    }
+
+    // Adjust positions of existing nodes to be within new window dimensions
+    for (const node of nodes) {
+      if (node.x > window.innerWidth) node.x = Math.random() * window.innerWidth;
+      if (node.y > window.innerHeight) node.y = Math.random() * window.innerHeight;
+    }
   }
 
   resizeCanvas();
   window.addEventListener("resize", resizeCanvas);
 
-  // Create nodes with random positions and velocities
+  // Create initial nodes
+  const numNodes = calculateNumNodes();
   for (let i = 0; i < numNodes; i++) {
     nodes.push({
       x: Math.random() * window.innerWidth,
