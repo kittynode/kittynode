@@ -1,6 +1,5 @@
 <script lang="ts">
 import { invoke } from "@tauri-apps/api/core";
-import { message } from "@tauri-apps/plugin-dialog";
 import { initializedStore } from "$stores/initialized.svelte";
 import { Button } from "$lib/components/ui/button";
 import { platform } from "@tauri-apps/plugin-os";
@@ -10,42 +9,43 @@ import { serverUrlStore } from "$stores/serverUrl.svelte";
 import { updates } from "$stores/updates.svelte";
 import { LoaderCircle } from "lucide-svelte";
 import { refetchStores } from "$utils/refetchStores";
+import { error } from "$utils/error";
 
 let currentPlatform = $state("");
 
 async function enableRemoteAccess() {
   try {
     remoteAccessStore.enable();
-    await message("Remote access has been enabled.");
+    alert("Remote access has been enabled.");
   } catch (e) {
-    alert(`Failed to enable remote access: ${e}`);
+    error(`Failed to enable remote access: ${e}`);
   }
 }
 
 async function disableRemoteAccess() {
   try {
     remoteAccessStore.disable();
-    await message("Remote access has been disabled.");
+    alert("Remote access has been disabled.");
   } catch (e) {
-    alert(`Failed to disable remote access: ${e}`);
+    error(`Failed to disable remote access: ${e}`);
   }
 }
 
 async function connectRemote() {
   try {
     setRemote("http://merlin:3000");
-    await message("Connected to remote.");
+    alert("Connected to remote.");
   } catch (e) {
-    alert(`Failed to connect to remote: ${e}`);
+    error(`Failed to connect to remote: ${e}`);
   }
 }
 
 async function disconnectRemote() {
   try {
     setRemote("");
-    await message("Disconnected from remote.");
+    alert("Disconnected from remote.");
   } catch (e) {
-    alert(`Failed to disconnect from remote: ${e}`);
+    error(`Failed to disconnect from remote: ${e}`);
   }
 }
 
@@ -53,10 +53,9 @@ async function deleteKittynode() {
   try {
     await invoke("delete_kittynode", { serverUrl: serverUrlStore.serverUrl });
     await initializedStore.uninitialize();
-    message("Kittynode data has been deleted successfully.");
-  } catch (error) {
-    alert(`Failed to delete Kittynode: ${error}`);
-    console.error(error);
+    alert("Kittynode data has been deleted successfully.");
+  } catch (e) {
+    error(`Failed to delete Kittynode: ${e}`);
   }
 }
 

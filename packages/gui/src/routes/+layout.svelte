@@ -4,9 +4,10 @@ import { onMount } from "svelte";
 import { windowShownStore } from "$stores/windowShown.svelte.ts";
 import { initializedStore } from "$stores/initialized.svelte";
 import { ModeWatcher } from "mode-watcher";
-import Welcome from "./Welcome.svelte";
+import Splash from "./Splash.svelte";
 import Navigation from "./Navigation.svelte";
 import UpdateBanner from "./UpdateBanner.svelte";
+import { platform } from "@tauri-apps/plugin-os";
 
 const { children } = $props();
 
@@ -17,12 +18,14 @@ onMount(async () => {
 
 <ModeWatcher />
 {#if !initializedStore.initialized}
-  <Welcome />
+  <Splash />
 {:else}
   <div class="flex flex-col h-screen">
     <main class="flex-1 overflow-y-auto">
       <div class="container mx-auto pt-8">
-        <UpdateBanner />
+        {#if !["ios", "android"].includes(platform())}
+          <UpdateBanner />
+        {/if}
         {@render children()}
         <div class="h-32 md:h-10"></div>
       </div>

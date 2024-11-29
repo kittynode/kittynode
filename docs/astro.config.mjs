@@ -12,8 +12,8 @@ export default defineConfig({
       plugins: [starlightLinksValidator(), starlightImageZoom()],
       title: "Kittynode",
       logo: {
-        light: "../assets/kittynode-light.png",
-        dark: "../assets/kittynode-dark.png",
+        light: "../assets/kittynode-wordmark-light.png",
+        dark: "../assets/kittynode-wordmark-dark.png",
         replacesTitle: true,
       },
       editLink: {
@@ -36,18 +36,9 @@ export default defineConfig({
           items: [
             { label: "What is Kittynode?", slug: "learn/what-is-kittynode" },
             { label: "Why Kittynode?", slug: "learn/why-kittynode" },
-          ],
-        },
-        {
-          label: "Contribute",
-          items: [
             {
               label: "Architecture",
-              slug: "contribute/architecture",
-            },
-            {
-              label: "Open questions",
-              slug: "contribute/questions",
+              slug: "learn/architecture",
             },
           ],
         },
@@ -66,6 +57,10 @@ export default defineConfig({
           label: "Resources",
           items: [
             { label: "Hardware guide", slug: "resources/hardware-guide" },
+            {
+              label: "Questions",
+              slug: "resources/questions",
+            },
           ],
         },
       ],

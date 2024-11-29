@@ -4,12 +4,16 @@ build:
 
 # start the docs dev server
 docs:
-  pnpm -F docs dev
+  pnpm -F docs dev --open
+
+# generate the kittynode-core docs
+docs-rs:
+  cargo doc -p kittynode-core
 
 # install icons
 icons:
-  cargo tauri icon assets/kittynode-logo.png
-  cargo tauri icon assets/kittynode-square.png --ios-color '#A181A7' -o tmp
+  cargo tauri icon assets/kittynode-logo-app.png
+  cargo tauri icon assets/kittynode-logo-square.png --ios-color '#A181A7' -o tmp
   mv tmp/ios/* packages/gui/src-tauri/gen/apple/Assets.xcassets/AppIcon.appiconset
   rm -rf tmp
 
@@ -24,16 +28,6 @@ ios:
 # make an ios build
 ios-build:
   cargo tauri ios build
-
-# clean the ios app
-ios-clean:
-  rm -rf ~/Library/Developer/Xcode/DerivedData
-  rm -rf ~/Library/Developer/Xcode/Archives
-  rm -rf ~/Library/Developer/Xcode/Projects
-
-# reset ios simulators
-ios-erase:
-  xcrun simctl erase all
 
 # init the ios app
 ios-init:
@@ -65,6 +59,10 @@ lint-rs:
 shadcn-add *args='':
   cd packages/gui && pnpm dlx shadcn-svelte@next add {{args}} && pnpm format-lint:fix
 
+# update shadcn components
+shadcn-update:
+  cd packages/gui && pnpm dlx shadcn-svelte@next update -a -y && pnpm format-lint:fix
+
 # start the desktop app
 tauri:
   cargo tauri dev
@@ -85,13 +83,13 @@ test:
 test-all:
   cargo nextest run -- --include-ignored
 
-# run the tests with coverage
+# run the unit tests with coverage
 test-coverage:
   cargo llvm-cov nextest
 
-# run the tests without capturing output
-test-no-capture:
-  cargo nextest run --no-capture
+# run the unit and integration tests with coverage
+test-coverage-all:
+  cargo llvm-cov nextest -- --include-ignored
 
 # update all toolchains and dependencies
 update-all:
@@ -100,6 +98,7 @@ update-all:
   cargo upgrade
   pnpm self-update
   pnpm up -r -L
+  just shadcn-update
 
 # start the web server
 web:
