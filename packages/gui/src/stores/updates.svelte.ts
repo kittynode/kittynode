@@ -1,6 +1,7 @@
 import { check } from "@tauri-apps/plugin-updater";
 import type { Update } from "@tauri-apps/plugin-updater";
 import { relaunch } from "@tauri-apps/plugin-process";
+import { error } from "$utils/error";
 
 const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
 
@@ -13,8 +14,13 @@ export const updates = {
   async getUpdate() {
     const now = Date.now();
     if (now > lastChecked + TWENTY_FOUR_HOURS) {
-      currentUpdate = await check();
-      lastChecked = now;
+      try {
+        currentUpdate = await check();
+        lastChecked = now;
+        console.info("Successfully checked for update.");
+      } catch (e) {
+        error(`Failed to check for update: ${e}.`);
+      }
     }
     return currentUpdate;
   },
@@ -50,25 +56,24 @@ export const updates = {
         switch (event.event) {
           case "Started":
             contentLength = event.data.contentLength as number;
-            console.log(
+            console.info(
               `Started downloading ${event.data.contentLength} bytes.`,
             );
             break;
           case "Progress":
             downloaded += event.data.chunkLength;
-            console.log(`Downloaded ${downloaded} from ${contentLength}.`);
+            console.info(`Downloaded ${downloaded} from ${contentLength}.`);
             break;
           case "Finished":
-            console.log("Download finished.");
+            console.info("Download finished.");
             break;
         }
       });
 
-      console.log("Update installed.");
+      console.info("Update installed.");
       await relaunch();
-    } catch (error) {
-      alert(`Failed to update Kittynode: ${error}.`);
-      console.error(error);
+    } catch (e) {
+      error(`Failed to update Kittynode: ${e}.`);
     }
     processingUpdate = false;
   },
