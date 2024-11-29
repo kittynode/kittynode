@@ -33,5 +33,5 @@ There are several capabilities you can add to your Kittynode which augment the t
 We believe the local HTTPS server over Wireguard is a convenient and secure approach. But the choice is up to you.
 
 ## A diagram
-> todo: we should use mermaid
-![Kittynode architecture diagram](../assets/diagrams/diagram.png)
+
+![Kittynode architecture diagram](../assets/diagrams/diagram.svg)
