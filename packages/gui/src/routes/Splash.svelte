@@ -44,10 +44,8 @@ onMount(() => {
   ctx = context;
 
   const nodes: Node[] = [];
-  const numNodes = 50; // todo: should be relative and reactive to screen size as well
-  // todo: note, can also fix some of this by always starting kittynode on desktop "maximized"
+  const numNodes = 50;
   const maxVelocity = 0.75;
-  const mouse = { x: null as number | null, y: null as number | null };
 
   function resizeCanvas() {
     const dpr = window.devicePixelRatio || 1;
@@ -70,32 +68,6 @@ onMount(() => {
       vy: (Math.random() - 0.5) * maxVelocity,
     });
   }
-
-  // todo: remove mouse / pointer stuff if not used (or if bad performance hit)
-  // Mouse and touch event listeners
-  function updateMousePosition(event: MouseEvent | TouchEvent) {
-    if (event instanceof MouseEvent) {
-      mouse.x = event.clientX;
-      mouse.y = event.clientY;
-    } else if (event instanceof TouchEvent) {
-      const touch = event.touches[0];
-      mouse.x = touch.clientX;
-      mouse.y = touch.clientY;
-    }
-  }
-
-  canvas.addEventListener("mousemove", updateMousePosition);
-  canvas.addEventListener("touchmove", updateMousePosition);
-
-  canvas.addEventListener("mouseleave", () => {
-    mouse.x = null;
-    mouse.y = null;
-  });
-
-  canvas.addEventListener("touchend", () => {
-    mouse.x = null;
-    mouse.y = null;
-  });
 
   function animate() {
     // Set background color based on mode
@@ -137,21 +109,6 @@ onMount(() => {
       }
     }
 
-    // Interact with mouse/touch
-    if (mouse.x !== null && mouse.y !== null) {
-      for (const node of nodes) {
-        const dx = node.x - mouse.x;
-        const dy = node.y - mouse.y;
-        const distance = Math.hypot(dx, dy);
-
-        if (distance < 100) {
-          const angle = Math.atan2(dy, dx);
-          node.vx += Math.cos(angle) * 0.05;
-          node.vy += Math.sin(angle) * 0.05;
-        }
-      }
-    }
-
     animationFrameId = requestAnimationFrame(animate);
   }
 
@@ -161,8 +118,6 @@ onMount(() => {
     // Cleanup on component unmount
     cancelAnimationFrame(animationFrameId);
     window.removeEventListener("resize", resizeCanvas);
-    canvas.removeEventListener("mousemove", updateMousePosition);
-    canvas.removeEventListener("touchmove", updateMousePosition);
   };
 });
 </script>
