@@ -61,7 +61,7 @@ shadcn-add *args='':
 
 # update shadcn components
 shadcn-update:
-  echo "todo"
+  cd packages/gui && pnpm dlx shadcn-svelte@next update -a -y && pnpm format-lint:fix
 
 # start the desktop app
 tauri:
@@ -98,6 +98,7 @@ update-all:
   cargo upgrade
   pnpm self-update
   pnpm up -r -L
+  just shadcn-update
 
 # start the web server
 web:
