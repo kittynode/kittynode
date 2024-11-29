@@ -8,7 +8,6 @@ export const windowShownStore = {
   },
   async show() {
     if (!shown) {
-      // todo fix
       // Workaround for https://github.com/tauri-apps/tauri/issues/6027
       await new Promise((resolve) => setTimeout(resolve, 50)); // 50 ms
       await getCurrentWebviewWindow().show();
