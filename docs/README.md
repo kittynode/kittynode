@@ -1,3 +1,3 @@
 # docs
 
-This is Kittynode's user facing documentation website.
+This is Kittynode's end user documentation website.
