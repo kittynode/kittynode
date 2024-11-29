@@ -46,6 +46,6 @@ import { House, HeartPulse, Settings, KeyRound } from "lucide-svelte";
 
 <style>
   a[aria-current="true"] {
-    color: #7d3fc1;
+    color: hsl(var(--primary));
   }
 </style>
