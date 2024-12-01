@@ -12,6 +12,10 @@ Kittynode is a command center for node operators. There is a README.md describin
 - CLI is a cross-platform Rust binary
 - GUI is a cross-platform Tauri app that compiles the core library into the binary along with the frontend into a native webview, communicating with the core library over IPC, while being able to tap into native platform APIs
 
+## Development guide
+
+See the [development guide](https://kittynode.io/development/development-guide) for more information on coding principles and how to contribute to the project.
+
 ## User facing apps
 
 Kittynode has two user facing apps:
