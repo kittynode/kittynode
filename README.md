@@ -13,3 +13,7 @@ Learn about Kittynode at [kittynode.io](https://kittynode.io).
 ## Development
 
 See the [development guide](https://kittynode.io/development/development-guide).
+
+## Donations
+
+If you like Kittynode, please consider donating to support its development: [kittynode.eth](https://etherscan.io/address/0xc0A274674ac86491Af0b3260b6b0aA5812B92F08).
