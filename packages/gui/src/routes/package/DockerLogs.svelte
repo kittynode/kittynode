@@ -3,7 +3,10 @@ import { onMount, onDestroy } from "svelte";
 import { invoke } from "@tauri-apps/api/core";
 import { serverUrlStore } from "$stores/serverUrl.svelte";
 
-let { containerName }: { containerName: string } = $props();
+let {
+  containerName,
+  tailLines,
+}: { containerName: string; tailLines: number | null } = $props();
 
 let logs: string[] = $state([]);
 let logsElement: HTMLDivElement;
@@ -14,6 +17,7 @@ async function fetchLogs() {
   try {
     const newLogs = await invoke<string[]>("get_container_logs", {
       containerName,
+      tailLines,
       serverUrl: serverUrlStore.serverUrl,
     });
 

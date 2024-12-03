@@ -259,12 +259,23 @@ async fn init_kittynode(server_url: String) -> Result<(), String> {
 #[tauri::command]
 async fn get_container_logs(
     container_name: String,
+    tail_lines: Option<usize>,
     server_url: String,
 ) -> Result<Vec<String>, String> {
-    info!("Getting logs for container: {}", container_name);
+    info!(
+        "Getting logs for container: {} (tail: {:?})",
+        container_name, tail_lines
+    );
 
     if !server_url.is_empty() {
         let url = format!("{}/logs/{}", server_url, container_name);
+        // Add tail_lines to query params if present
+        let url = if let Some(n) = tail_lines {
+            format!("{}?tail={}", url, n)
+        } else {
+            url
+        };
+
         let res = HTTP_CLIENT
             .get(&url)
             .send()
@@ -275,7 +286,7 @@ async fn get_container_logs(
         }
         res.json::<Vec<String>>().await.map_err(|e| e.to_string())
     } else {
-        kittynode_core::application::get_container_logs(&container_name)
+        kittynode_core::application::get_container_logs(&container_name, tail_lines)
             .await
             .map_err(|e| e.to_string())
     }

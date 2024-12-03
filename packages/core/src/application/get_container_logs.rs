@@ -2,15 +2,22 @@ use crate::infra::docker::get_docker_instance;
 use eyre::Result;
 use tokio_stream::StreamExt;
 
-pub async fn get_container_logs(container_name: &str) -> Result<Vec<String>> {
+pub async fn get_container_logs(
+    container_name: &str,
+    tail_lines: Option<usize>,
+) -> Result<Vec<String>> {
     let docker = get_docker_instance()?;
+
+    let tail = tail_lines
+        .map(|n| n.to_string())
+        .unwrap_or_else(|| "all".to_string());
 
     let options = bollard::container::LogsOptions::<String> {
         stdout: true,
         stderr: true,
-        follow: false, // We're using polling instead of streaming
+        follow: false,
         timestamps: true,
-        tail: "100".to_string(),
+        tail,
         ..Default::default()
     };
 

@@ -41,7 +41,7 @@ onMount(async () => {
 
 {#if showLogs && pkg}
     <div class="mt-4">
-        <DockerLogs containerName="reth-node" />
+        <DockerLogs containerName="reth-node" tailLines={1000} />
     </div>
 {/if}
 
