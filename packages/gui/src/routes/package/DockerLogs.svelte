@@ -2,7 +2,7 @@
 import { onMount, onDestroy } from "svelte";
 import { invoke } from "@tauri-apps/api/core";
 import { serverUrlStore } from "$stores/serverUrl.svelte";
-import Convert from 'ansi-to-html';
+import Convert from "ansi-to-html";
 
 const convert = new Convert();
 
@@ -25,7 +25,7 @@ async function fetchLogs() {
     });
 
     // Convert ANSI escape sequences to HTML
-    logs = newLogs.map(log => convert.toHtml(log));
+    logs = newLogs.map((log) => convert.toHtml(log));
 
     // Schedule scroll after render if we should auto scroll
     if (shouldAutoScroll) {
