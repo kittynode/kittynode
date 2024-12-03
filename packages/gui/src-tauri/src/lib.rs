@@ -256,6 +256,31 @@ async fn init_kittynode(server_url: String) -> Result<(), String> {
     }
 }
 
+#[tauri::command]
+async fn get_container_logs(
+    container_name: String,
+    server_url: String,
+) -> Result<Vec<String>, String> {
+    info!("Getting logs for container: {}", container_name);
+
+    if !server_url.is_empty() {
+        let url = format!("{}/logs/{}", server_url, container_name);
+        let res = HTTP_CLIENT
+            .get(&url)
+            .send()
+            .await
+            .map_err(|e| e.to_string())?;
+        if !res.status().is_success() {
+            return Err(format!("Failed to get logs: {}", res.status()));
+        }
+        res.json::<Vec<String>>().await.map_err(|e| e.to_string())
+    } else {
+        kittynode_core::application::get_container_logs(&container_name)
+            .await
+            .map_err(|e| e.to_string())
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() -> Result<()> {
     let builder = tauri::Builder::default()
@@ -280,6 +305,7 @@ pub fn run() -> Result<()> {
             add_capability,
             remove_capability,
             get_capabilities,
+            get_container_logs
         ])
         .run(tauri::generate_context!())
         .map_err(|e| eyre::eyre!(e.to_string()))?;

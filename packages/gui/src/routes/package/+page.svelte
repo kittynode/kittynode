@@ -5,8 +5,12 @@ import type { Package } from "$lib/types";
 import { serverUrlStore } from "$stores/serverUrl.svelte";
 import { invoke } from "@tauri-apps/api/core";
 import { onMount } from "svelte";
+import DockerLogs from "./DockerLogs.svelte";
+
 let installedPackages = $state<Package[]>([]);
 let pkg = $state<Package | null>(null);
+let showLogs = $state(false);
+
 onMount(async () => {
   installedPackages = await invoke("get_installed_packages", {
     serverUrl: serverUrlStore.serverUrl,
@@ -20,22 +24,26 @@ onMount(async () => {
 <Link href="/" text="← Back home" />
 
 {#if pkg}
-<div class="mt-4">
-  <p>Name: {pkg.name}</p>
-</div>
-{:else}
-<!-- <div class="mt-4">
-  <p>Package is not installed.</p>
-</div> -->
-
 <!-- Overview -->
 <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight my-4">
   Overview
 </h3>
-<p><strong>Name:</strong> Ethereum</p>
+<p><strong>Name:</strong> {pkg.name}</p>
 <p><strong>Network:</strong> Holesky</p>
 <p><strong>Latest block hash:</strong> <a href="/" class="text-primary font-medium underline underline-offset-4">0x1234...6789</a></p>
-<Button class="mt-4">View logs</Button>
+
+<Button
+    class="mt-4"
+    onclick={() => showLogs = !showLogs}
+>
+    {showLogs ? 'Hide logs' : 'View logs'}
+</Button>
+
+{#if showLogs && pkg}
+    <div class="mt-4">
+        <DockerLogs containerName="reth-node" />
+    </div>
+{/if}
 
 <!-- Configuration -->
 <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight my-4">
@@ -62,5 +70,4 @@ onMount(async () => {
 </h3>
 <Button class="mt-4">Restart node</Button>
 <Button class="mt-4" variant="destructive">Delete</Button>
-
 {/if}

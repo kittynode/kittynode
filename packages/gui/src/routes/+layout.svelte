@@ -44,6 +44,6 @@ onMount(async () => {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    user-select: none;
+    /* user-select: none; */
   }
 </style>
