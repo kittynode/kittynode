@@ -45,15 +45,14 @@ pub(crate) async fn create_or_recreate_network(docker: &Docker, network_name: &s
 
 pub(crate) async fn find_container(docker: &Docker, name: &str) -> Result<Vec<ContainerSummary>> {
     let filters = HashMap::from([("name".to_string(), vec![name.to_string()])]);
-    let containers = docker
+
+    Ok(docker
         .list_containers(Some(ListContainersOptions {
             all: true,
             filters,
             ..Default::default()
         }))
-        .await?;
-
-    Ok(containers)
+        .await?)
 }
 
 pub(crate) async fn remove_container(docker: &Docker, name: &str) -> Result<()> {

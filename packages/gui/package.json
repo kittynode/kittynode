@@ -14,11 +14,11 @@
   "dependencies": {
     "@tauri-apps/api": "^2.1.1",
     "@tauri-apps/plugin-dialog": "^2.0.1",
-    "@tauri-apps/plugin-fs": "^2.0.2",
+    "@tauri-apps/plugin-fs": "^2.0.3",
     "@tauri-apps/plugin-os": "^2.0.0",
     "@tauri-apps/plugin-process": "^2.0.0",
     "@tauri-apps/plugin-updater": "^2.0.0",
-    "lucide-svelte": "^0.462.0",
+    "lucide-svelte": "^0.464.0",
     "mode-watcher": "^0.5.0"
   },
   "devDependencies": {
@@ -28,13 +28,13 @@
     "autoprefixer": "^10.4.20",
     "bits-ui": "1.0.0-next.65",
     "clsx": "^2.1.1",
-    "svelte": "^5.2.12",
+    "svelte": "^5.5.0",
     "svelte-check": "^4.1.0",
     "tailwind-merge": "^2.5.5",
     "tailwind-variants": "^0.3.0",
     "tailwindcss": "^3.4.15",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.7.2",
-    "vite": "^6.0.1"
+    "vite": "^6.0.2"
   }
 }
