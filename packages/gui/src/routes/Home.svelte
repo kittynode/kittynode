@@ -1,5 +1,5 @@
 <script lang="ts">
-import { onMount } from "svelte";
+import { onMount, onDestroy } from "svelte";
 import { invoke } from "@tauri-apps/api/core";
 import type { Package } from "$lib/types";
 import { Button } from "$lib/components/ui/button";
@@ -7,11 +7,12 @@ import * as Card from "$lib/components/ui/card/index.js";
 import { platform } from "@tauri-apps/plugin-os";
 import { serverUrlStore } from "$stores/serverUrl.svelte";
 import { systemInfoStore } from "$stores/systemInfo.svelte";
+import { dockerStatus } from "$stores/dockerStatus.svelte";
 import { goto } from "$app/navigation";
 import { error } from "$utils/error";
+import Link from "$lib/components/ui/link/link.svelte";
 
 let packages: { [name: string]: Package } = $state({});
-let isDockerRunning: boolean | null = $state(null);
 let installedPackages: Package[] = $state([]);
 let installLoading: string | null = $state(null);
 let deleteLoading: string | null = $state(null);
@@ -19,7 +20,7 @@ let deleteLoading: string | null = $state(null);
 async function loadPackages() {
   try {
     packages = await invoke("get_packages");
-    if (isDockerRunning) {
+    if (dockerStatus.isRunning) {
       installedPackages = await invoke("get_installed_packages", {
         serverUrl: serverUrlStore.serverUrl,
       });
@@ -32,6 +33,13 @@ async function loadPackages() {
 async function installPackage(name: string) {
   installLoading = name;
   try {
+    // Check Docker status right before installation
+    const isRunning = await invoke("is_docker_running");
+    if (!isRunning) {
+      alert("Docker must be running to install packages.");
+      return;
+    }
+
     await invoke("install_package", {
       name,
       serverUrl: serverUrlStore.serverUrl,
@@ -48,6 +56,13 @@ async function installPackage(name: string) {
 async function deletePackage(name: string, includeImages: boolean) {
   deleteLoading = name;
   try {
+    // Check Docker status right before deletion
+    const isRunning = await invoke("is_docker_running");
+    if (!isRunning) {
+      alert("Docker must be running to delete packages.");
+      return;
+    }
+
     await invoke("delete_package", {
       name,
       includeImages,
@@ -62,12 +77,6 @@ async function deletePackage(name: string, includeImages: boolean) {
   }
 }
 
-async function checkDocker() {
-  isDockerRunning = ["ios", "android"].includes(platform())
-    ? true
-    : await invoke("is_docker_running");
-}
-
 function isMobileAndLocal() {
   return (
     ["ios", "android"].includes(platform()) && serverUrlStore.serverUrl === ""
@@ -78,12 +87,23 @@ onMount(async () => {
   // prefetch stores async
   if (!systemInfoStore.systemInfo) systemInfoStore.fetchSystemInfo();
 
-  // check docker
-  checkDocker();
+  // start docker status polling
+  dockerStatus.startPolling();
 
   // do not fetch if mobile and local
   if (!isMobileAndLocal()) {
     await loadPackages();
+  }
+});
+
+onDestroy(() => {
+  dockerStatus.stopPolling();
+});
+
+// reload packages when Docker becomes available
+$effect(() => {
+  if (dockerStatus.isRunning && !isMobileAndLocal()) {
+    loadPackages();
   }
 });
 </script>
@@ -98,15 +118,10 @@ onMount(async () => {
       <Card.Header>
         <Card.Title>{name}</Card.Title>
         <Card.Description>
-          {#if !isDockerRunning}
-            <p>
-              <strong
-                >Turn on Docker to use this package. If you need to install
-                Docker, please follow the installation guide <a
-                  href="https://docs.docker.com/engine/install/"
-                  target="_blank">here</a
-                >.</strong
-              >
+          {#if !dockerStatus.isRunning}
+            <p class="font-bold">
+                Turn on Docker to use this package. If you need to install
+                Docker, please follow the installation guide <Link href="https://docs.docker.com/engine/install/" targetBlank text="here" />.
             </p>
           {/if}
           {p.description}
@@ -116,7 +131,7 @@ onMount(async () => {
         <Button
           onclick={() => installPackage(name)}
           disabled={
-            !isDockerRunning ||
+            !dockerStatus.isRunning ||
             installedPackages.some((pkg) => pkg.name === name) ||
             installLoading === name ||
             deleteLoading === name}
@@ -133,7 +148,7 @@ onMount(async () => {
           <Button
             variant="destructive"
             onclick={() => deletePackage(name, false)}
-            disabled={!isDockerRunning || deleteLoading === name}
+            disabled={!dockerStatus.isRunning || deleteLoading === name}
           >
             {deleteLoading === name ? "Deleting..." : "Delete"}
           </Button>

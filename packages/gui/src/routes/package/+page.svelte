@@ -1,5 +1,6 @@
 <script lang="ts">
 import Button from "$lib/components/ui/button/button.svelte";
+import Link from "$lib/components/ui/link/link.svelte";
 import type { Package } from "$lib/types";
 import { serverUrlStore } from "$stores/serverUrl.svelte";
 import { invoke } from "@tauri-apps/api/core";
@@ -16,7 +17,7 @@ onMount(async () => {
 });
 </script>
 
-<a href="/" class="text-primary font-medium underline underline-offset-4">← Back home</a>
+<Link href="/" text="← Back home" />
 
 {#if pkg}
 <div class="mt-4">
