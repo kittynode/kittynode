@@ -1,5 +1,5 @@
 <script lang="ts">
-import { onMount } from "svelte";
+import { onMount, onDestroy } from "svelte";
 import { invoke } from "@tauri-apps/api/core";
 import type { Package } from "$lib/types";
 import { Button } from "$lib/components/ui/button";
@@ -55,12 +55,6 @@ onMount(async () => {
       <Card.Header>
         <Card.Title>{name}</Card.Title>
         <Card.Description>
-          {#if !dockerStatus.isRunning}
-            <p class="font-bold">
-                Turn on Docker to use this package. If you need to install
-                Docker, please follow the installation guide <Link href="https://docs.docker.com/engine/install/" targetBlank text="here" />.
-            </p>
-          {/if}
           {p.description}
         </Card.Description>
       </Card.Header>

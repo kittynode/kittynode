@@ -114,6 +114,13 @@ onDestroy(() => {
   <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight my-4">
     Lifecycle
   </h3>
+  {#if !dockerStatus.isRunning}
+    <p class="font-bold">
+        Turn on Docker to use this package. If you need to install
+        Docker, please follow the installation guide <Link href="https://docs.docker.com/engine/install/" targetBlank text="here" />.
+    </p>
+    <br />
+  {/if}
   <Button
     onclick={() => installPackage(pkg.name)}
     disabled={
