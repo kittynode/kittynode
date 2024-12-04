@@ -46,6 +46,12 @@ let canShowLogs = $derived(
     ),
 );
 
+$effect(() => {
+  if (isInstalled && activeLogType === null) {
+    activeLogType = "execution";
+  }
+});
+
 async function loadInstalledPackages() {
   try {
     if (dockerStatus.isRunning) {
