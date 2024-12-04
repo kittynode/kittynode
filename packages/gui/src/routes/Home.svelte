@@ -7,11 +7,9 @@ import * as Card from "$lib/components/ui/card/index.js";
 import { platform } from "@tauri-apps/plugin-os";
 import { serverUrlStore } from "$stores/serverUrl.svelte";
 import { systemInfoStore } from "$stores/systemInfo.svelte";
-import { dockerStatus } from "$stores/dockerStatus.svelte";
 import { selectedPackageStore } from "$stores/selectedPackage.svelte";
 import { goto } from "$app/navigation";
 import { error } from "$utils/error";
-import Link from "$lib/components/ui/link/link.svelte";
 
 let packages: { [name: string]: Package } = $state({});
 

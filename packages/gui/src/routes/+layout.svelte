@@ -21,7 +21,7 @@ onMount(async () => {
   <Splash />
 {:else}
   <div class="flex flex-col h-screen">
-    <main class="flex-1 overflow-y-auto">
+    <main class="flex-1 overflow-y-auto scrollbar-gutter-stable">
       <div class="container mx-auto pt-8">
         {#if !["ios", "android"].includes(platform())}
           <UpdateBanner />
@@ -44,6 +44,9 @@ onMount(async () => {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    /* user-select: none; */
+  }
+
+  :global(.scrollbar-gutter-stable) {
+    scrollbar-gutter: stable;
   }
 </style>
