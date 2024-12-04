@@ -13,38 +13,22 @@ import { error } from "$utils/error";
 
 // Core package state
 let installedPackages: Package[] = $state([]);
-
-// Installation action states
 let installLoading: string | null = $state(null);
 let deleteLoading: string | null = $state(null);
-
-// Logs state - single source of truth for which logs are being viewed
 let activeLogType = $state<null | "execution" | "consensus">(null);
 
-// Derived states
-let canInstall = $derived(
-  selectedPackageStore.package &&
-    dockerStatus.isRunning &&
-    !installedPackages.some(
-      (p) => p.name === selectedPackageStore.package?.name,
-    ) &&
-    !installLoading &&
-    !deleteLoading,
-);
+// Simplified isInstalled check
+function isPackageInstalled(packageName: string | undefined): boolean {
+  if (!packageName) return false;
+  return installedPackages.some((p) => p.name === packageName);
+}
 
-let isInstalled = $derived(
-  selectedPackageStore.package &&
-    installedPackages.some(
-      (p) => p.name === selectedPackageStore.package?.name,
-    ),
-);
-
-let canShowLogs = $derived(
-  selectedPackageStore.package &&
-    installedPackages.some(
-      (p) => p.name === selectedPackageStore.package?.name,
-    ),
-);
+// Simplified canInstall check
+function canInstallPackage(packageName: string | undefined): boolean {
+  if (!packageName || !dockerStatus.isRunning) return false;
+  if (installLoading || deleteLoading) return false;
+  return !isPackageInstalled(packageName);
+}
 
 async function loadInstalledPackages() {
   try {
@@ -148,29 +132,29 @@ onDestroy(() => {
             Docker, please follow the installation guide <Link href="https://docs.docker.com/engine/install/" targetBlank text="here" />.
         </p>
         <br />
-    {/if}
-
-    {#if !isInstalled}
-        <Button
-            onclick={() => installPackage(pkg.name)}
-            disabled={!canInstall}
-        >
-            {installLoading === pkg.name ? "Installing..." : "Install"}
-        </Button>
     {:else}
-        <Button
-            variant="destructive"
-            onclick={() => deletePackage(pkg.name)}
-            disabled={!dockerStatus.isRunning || deleteLoading === pkg.name}
-        >
-            {deleteLoading === pkg.name ? "Deleting..." : "Delete"}
-        </Button>
+        {#if !isPackageInstalled(pkg.name)}
+            <Button
+                onclick={() => installPackage(pkg.name)}
+                disabled={!canInstallPackage(pkg.name)}
+            >
+                {installLoading === pkg.name ? "Installing..." : "Install"}
+            </Button>
+        {:else}
+            <Button
+                variant="destructive"
+                onclick={() => deletePackage(pkg.name)}
+                disabled={deleteLoading === pkg.name}
+            >
+                {deleteLoading === pkg.name ? "Deleting..." : "Delete"}
+            </Button>
+        {/if}
     {/if}
 
     <br />
 
     <!-- Logging -->
-    {#if isInstalled}
+    {#if isPackageInstalled(pkg.name)}
         <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight my-4">
             Logging
         </h3>
@@ -178,7 +162,6 @@ onDestroy(() => {
             <Button
                 variant="default"
                 onclick={() => toggleLogs('execution')}
-                disabled={!canShowLogs}
             >
                 {activeLogType === 'execution' ? 'Hide execution logs' : 'View execution logs'}
             </Button>
@@ -186,24 +169,25 @@ onDestroy(() => {
             <Button
                 variant="default"
                 onclick={() => toggleLogs('consensus')}
-                disabled={!canShowLogs}
             >
                 {activeLogType === 'consensus' ? 'Hide consensus logs' : 'View consensus logs'}
             </Button>
         </div>
 
-        {#if activeLogType === 'execution'}
-            <p class="mt-4">Execution logs:</p>
-            <div class="mt-4">
-                <DockerLogs containerName="reth-node" tailLines={1000} />
-            </div>
-        {/if}
+        <div class="logs-container">
+            {#if activeLogType === 'execution'}
+                <p class="mt-4">Execution logs:</p>
+                <div class="mt-4">
+                    <DockerLogs containerName="reth-node" tailLines={1000} />
+                </div>
+            {/if}
 
-        {#if activeLogType === 'consensus'}
-            <p class="mt-4">Consensus logs:</p>
-            <div class="mt-4">
-                <DockerLogs containerName="lighthouse-node" tailLines={1000} />
-            </div>
-        {/if}
+            {#if activeLogType === 'consensus'}
+                <p class="mt-4">Consensus logs:</p>
+                <div class="mt-4">
+                    <DockerLogs containerName="lighthouse-node" tailLines={1000} />
+                </div>
+            {/if}
+        </div>
     {/if}
 {/if}
