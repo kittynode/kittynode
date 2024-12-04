@@ -77,7 +77,7 @@ async function installPackage(name: string) {
       serverUrl: serverUrlStore.serverUrl,
     });
     await loadInstalledPackages();
-    alert(`Successfully installed ${name}.`);
+    console.info(`Successfully installed ${name}.`);
   } catch (e) {
     error(`Failed to install ${name}.`);
   } finally {
@@ -99,7 +99,7 @@ async function deletePackage(name: string) {
       serverUrl: serverUrlStore.serverUrl,
     });
     await loadInstalledPackages();
-    alert(`Successfully deleted ${name}.`);
+    console.info(`Successfully deleted ${name}.`);
     // Clear logs view if package is deleted
     activeLogType = null;
   } catch (e) {
