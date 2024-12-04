@@ -46,12 +46,6 @@ let canShowLogs = $derived(
     ),
 );
 
-$effect(() => {
-  if (isInstalled && activeLogType === null) {
-    activeLogType = "execution";
-  }
-});
-
 async function loadInstalledPackages() {
   try {
     if (dockerStatus.isRunning) {
@@ -77,6 +71,7 @@ async function installPackage(name: string) {
       serverUrl: serverUrlStore.serverUrl,
     });
     await loadInstalledPackages();
+    activeLogType = "execution";
     console.info(`Successfully installed ${name}.`);
   } catch (e) {
     error(`Failed to install ${name}.`);
