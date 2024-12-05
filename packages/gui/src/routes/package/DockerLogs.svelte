@@ -65,7 +65,7 @@ function handleScroll(e: Event) {
     <div
         bind:this={logsElement}
         onscroll={handleScroll}
-        class="h-[400px] overflow-y-auto overflow-x-hidden bg-black/90 text-white p-4 font-mono text-sm rounded scrollbar-gutter"
+        class="h-[400px] overflow-y-auto overflow-x-hidden border p-4 font-mono text-sm rounded-md scrollbar-gutter"
     >
         {#each logs as log}
             <div class="whitespace-pre-line break-words">
@@ -74,7 +74,7 @@ function handleScroll(e: Event) {
         {/each}
 
         {#if logs.length === 0}
-            <div class="text-gray-400">No logs available</div>
+            <div class="text-muted-foreground">No logs available</div>
         {/if}
     </div>
 </div>
