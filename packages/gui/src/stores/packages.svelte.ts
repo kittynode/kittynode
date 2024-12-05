@@ -3,7 +3,7 @@ import type { Package } from "$lib/types";
 import { error } from "$utils/error";
 import { serverUrlStore } from "./serverUrl.svelte";
 
-let packages = $state<{ [name: string]: Package }>({}); // Changed to object
+let packages = $state<{ [name: string]: Package }>({});
 let installedPackages = $state<Package[]>([]);
 let isLoading = $state(false);
 
