@@ -19,13 +19,13 @@ import { House, HeartPulse, Settings, KeyRound } from "lucide-svelte";
     >
       <HeartPulse strokeWidth={$page.url.pathname === "/system-info" ? 2.25 : 2} />
     </a>
-    <a
+    <!-- <a
       class="p-4"
       href="/key-manager"
       aria-current={$page.url.pathname === "/key-manager"}
     >
       <KeyRound strokeWidth={$page.url.pathname === "/key-manager" ? 2.25 : 2} />
-    </a>
+    </a> -->
     <a
       class="p-4 pe-0"
       href="/settings"
