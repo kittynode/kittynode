@@ -1,6 +1,5 @@
 <script lang="ts">
-import { onMount, onDestroy } from "svelte";
-import { invoke } from "@tauri-apps/api/core";
+import { onMount } from "svelte";
 import type { Package } from "$lib/types";
 import { Button } from "$lib/components/ui/button";
 import * as Card from "$lib/components/ui/card/index.js";
@@ -8,18 +7,8 @@ import { platform } from "@tauri-apps/plugin-os";
 import { serverUrlStore } from "$stores/serverUrl.svelte";
 import { systemInfoStore } from "$stores/systemInfo.svelte";
 import { selectedPackageStore } from "$stores/selectedPackage.svelte";
+import { packagesStore } from "$stores/packages.svelte";
 import { goto } from "$app/navigation";
-import { error } from "$utils/error";
-
-let packages: { [name: string]: Package } = $state({});
-
-async function loadPackages() {
-  try {
-    packages = await invoke("get_packages");
-  } catch (e) {
-    error(`Failed to load packages: ${e}`);
-  }
-}
 
 function selectPackage(pkg: Package) {
   selectedPackageStore.setPackage(pkg);
@@ -33,12 +22,11 @@ function isMobileAndLocal() {
 }
 
 onMount(async () => {
-  // prefetch stores async
   if (!systemInfoStore.systemInfo) systemInfoStore.fetchSystemInfo();
 
-  // do not fetch if mobile and local
   if (!isMobileAndLocal()) {
-    await loadPackages();
+    await packagesStore.loadPackages();
+    await packagesStore.loadInstalledPackages();
   }
 });
 </script>
@@ -47,8 +35,8 @@ onMount(async () => {
   Home
 </h3>
 
-{#if Object.keys(packages).length > 0}
-  {#each Object.entries(packages).sort( ([a], [b]) => a.localeCompare(b), ) as [name, p]}
+{#if Object.keys(packagesStore.packages).length > 0}
+  {#each Object.entries(packagesStore.packages).sort(([a], [b]) => a.localeCompare(b)) as [name, p]}
     <Card.Root>
       <Card.Header>
         <Card.Title>{name}</Card.Title>

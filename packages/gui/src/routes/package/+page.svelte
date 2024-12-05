@@ -1,45 +1,21 @@
 <script lang="ts">
 import Button from "$lib/components/ui/button/button.svelte";
 import Link from "$lib/components/ui/link/link.svelte";
-import type { Package } from "$lib/types";
-import { serverUrlStore } from "$stores/serverUrl.svelte";
 import { selectedPackageStore } from "$stores/selectedPackage.svelte";
-import { invoke } from "@tauri-apps/api/core";
+import { packagesStore } from "$stores/packages.svelte";
 import { onDestroy, onMount } from "svelte";
 import DockerLogs from "./DockerLogs.svelte";
 import { goto } from "$app/navigation";
 import { dockerStatus } from "$stores/dockerStatus.svelte";
-import { error } from "$utils/error";
 
-// Core package state
-let installedPackages: Package[] = $state([]);
 let installLoading: string | null = $state(null);
 let deleteLoading: string | null = $state(null);
 let activeLogType = $state<null | "execution" | "consensus">(null);
 
-// Simplified isInstalled check
-function isPackageInstalled(packageName: string | undefined): boolean {
-  if (!packageName) return false;
-  return installedPackages.some((p) => p.name === packageName);
-}
-
-// Simplified canInstall check
 function canInstallPackage(packageName: string | undefined): boolean {
   if (!packageName || !dockerStatus.isRunning) return false;
   if (installLoading || deleteLoading) return false;
-  return !isPackageInstalled(packageName);
-}
-
-async function loadInstalledPackages() {
-  try {
-    if (dockerStatus.isRunning) {
-      installedPackages = await invoke("get_installed_packages", {
-        serverUrl: serverUrlStore.serverUrl,
-      });
-    }
-  } catch (e) {
-    error(`Failed to load packages: ${e}`);
-  }
+  return !packagesStore.isInstalled(packageName);
 }
 
 async function installPackage(name: string) {
@@ -50,15 +26,9 @@ async function installPackage(name: string) {
 
   installLoading = name;
   try {
-    await invoke("install_package", {
-      name,
-      serverUrl: serverUrlStore.serverUrl,
-    });
-    await loadInstalledPackages();
+    await packagesStore.installPackage(name);
     activeLogType = "execution";
     console.info(`Successfully installed ${name}.`);
-  } catch (e) {
-    error(`Failed to install ${name}.`);
   } finally {
     installLoading = null;
   }
@@ -72,17 +42,9 @@ async function deletePackage(name: string) {
 
   deleteLoading = name;
   try {
-    await invoke("delete_package", {
-      name,
-      includeImages: false,
-      serverUrl: serverUrlStore.serverUrl,
-    });
-    await loadInstalledPackages();
+    await packagesStore.deletePackage(name);
     console.info(`Successfully deleted ${name}.`);
-    // Clear logs view if package is deleted
     activeLogType = null;
-  } catch (e) {
-    error(`Failed to delete ${name}.`);
   } finally {
     deleteLoading = null;
   }
@@ -101,7 +63,7 @@ $effect(() => {
 
 onMount(async () => {
   dockerStatus.startPolling();
-  await loadInstalledPackages();
+  await packagesStore.loadInstalledPackages();
 });
 
 onDestroy(() => {
@@ -133,7 +95,7 @@ onDestroy(() => {
         </p>
         <br />
     {:else}
-        {#if !isPackageInstalled(pkg.name)}
+        {#if !packagesStore.isInstalled(pkg.name)}
             <Button
                 onclick={() => installPackage(pkg.name)}
                 disabled={!canInstallPackage(pkg.name)}
@@ -154,7 +116,7 @@ onDestroy(() => {
     <br />
 
     <!-- Logging -->
-    {#if isPackageInstalled(pkg.name)}
+    {#if packagesStore.isInstalled(pkg.name)}
         <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight my-4">
             Logging
         </h3>
