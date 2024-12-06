@@ -1,10 +1,11 @@
 use axum::{
-    extract::Path,
+    extract::{Path, Query},
     http::StatusCode,
     response::Json,
     routing::{get, post},
     Router,
 };
+use kittynode_core::domain::logs::LogsQuery;
 use kittynode_core::domain::package::Package;
 use kittynode_core::domain::system_info::SystemInfo;
 
@@ -87,6 +88,16 @@ pub(crate) async fn get_system_info() -> Result<Json<SystemInfo>, (StatusCode, S
         .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))
 }
 
+pub(crate) async fn get_container_logs(
+    Path(container_name): Path<String>,
+    Query(params): Query<LogsQuery>,
+) -> Result<Json<Vec<String>>, (StatusCode, String)> {
+    kittynode_core::application::get_container_logs(&container_name, params.tail)
+        .await
+        .map(Json)
+        .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))
+}
+
 #[tokio::main]
 async fn main() {
     tracing_subscriber::fmt::init();
@@ -102,7 +113,8 @@ async fn main() {
         .route("/is_docker_running", get(is_docker_running))
         .route("/init_kittynode", post(init_kittynode))
         .route("/delete_kittynode", post(delete_kittynode))
-        .route("/get_system_info", get(get_system_info));
+        .route("/get_system_info", get(get_system_info))
+        .route("/logs/:container_name", get(get_container_logs));
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
     axum::serve(listener, app).await.unwrap();
