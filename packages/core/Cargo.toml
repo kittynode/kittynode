@@ -21,6 +21,7 @@ home = "0.5.9"
 hex = "0.4.3"
 rand = "0.8.5"
 sysinfo = "0.32.1"
+serde_json = "1.0.133"
 
 [dev-dependencies]
 tempfile = "3.14.0"

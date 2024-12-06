@@ -3,7 +3,7 @@ use eyre::Result;
 use std::collections::HashMap;
 
 use crate::{
-    domain::package::{Binding, Container, Package, PackageDefinition},
+    domain::package::{Binding, Container, Package, PackageConfig, PackageDefinition},
     infra::file::kittynode_path,
 };
 
@@ -23,6 +23,7 @@ impl PackageDefinition for Ethereum {
             description: "This package installs a Reth execution client and a Lighthouse consensus client on the Holesky network with Docker."
                 .to_string(),
             network_name: "ethereum-network".to_string(),
+            default_config: PackageConfig::new(),
             containers: vec![
                 Container {
                     name: "reth-node".to_string(),

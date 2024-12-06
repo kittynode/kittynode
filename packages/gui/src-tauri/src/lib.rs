@@ -1,5 +1,5 @@
 use eyre::Result;
-use kittynode_core::domain::package::Package;
+use kittynode_core::domain::package::{Package, PackageConfig};
 use kittynode_core::domain::system_info::SystemInfo;
 use std::collections::HashMap;
 use std::sync::LazyLock;
@@ -292,6 +292,48 @@ async fn get_container_logs(
     }
 }
 
+#[tauri::command]
+async fn get_package_config(name: String, server_url: String) -> Result<PackageConfig, String> {
+    if !server_url.is_empty() {
+        let url = format!("{}/get_package_config/{}", server_url, name);
+        let res = HTTP_CLIENT
+            .get(&url)
+            .send()
+            .await
+            .map_err(|e| e.to_string())?;
+        res.json::<PackageConfig>().await.map_err(|e| e.to_string())
+    } else {
+        kittynode_core::application::get_package_config(&name)
+            .await
+            .map_err(|e| e.to_string())
+    }
+}
+
+#[tauri::command]
+async fn update_package_config(
+    name: String,
+    config: PackageConfig,
+    server_url: String,
+) -> Result<(), String> {
+    if !server_url.is_empty() {
+        let url = format!("{}/update_package_config/{}", server_url, name);
+        let res = HTTP_CLIENT
+            .post(&url)
+            .json(&config)
+            .send()
+            .await
+            .map_err(|e| e.to_string())?;
+        if !res.status().is_success() {
+            return Err(format!("Failed to update package config: {}", res.status()));
+        }
+        Ok(())
+    } else {
+        kittynode_core::application::update_package_config(&name, config)
+            .await
+            .map_err(|e| e.to_string())
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() -> Result<()> {
     let builder = tauri::Builder::default()
@@ -316,7 +358,9 @@ pub fn run() -> Result<()> {
             add_capability,
             remove_capability,
             get_capabilities,
-            get_container_logs
+            get_container_logs,
+            get_package_config,
+            update_package_config
         ])
         .run(tauri::generate_context!())
         .map_err(|e| eyre::eyre!(e.to_string()))?;

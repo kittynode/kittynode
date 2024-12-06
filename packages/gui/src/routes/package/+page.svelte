@@ -7,10 +7,13 @@ import { onDestroy, onMount } from "svelte";
 import DockerLogs from "./DockerLogs.svelte";
 import { goto } from "$app/navigation";
 import { dockerStatus } from "$stores/dockerStatus.svelte";
+import { packageConfigStore } from "$stores/packageConfig.svelte";
 
 let installLoading: string | null = $state(null);
 let deleteLoading: string | null = $state(null);
 let activeLogType = $state<null | "execution" | "consensus">(null);
+let configLoading = $state(false);
+let networkValue = $state("holesky");
 
 function canInstallPackage(packageName: string | undefined): boolean {
   if (!packageName || !dockerStatus.isRunning) return false;
@@ -54,14 +57,45 @@ function toggleLogs(logType: "execution" | "consensus") {
   activeLogType = activeLogType === logType ? null : logType;
 }
 
+async function loadConfig() {
+  if (!selectedPackageStore.package) return;
+  try {
+    const config = await packageConfigStore.getConfig(
+      selectedPackageStore.package.name,
+    );
+    networkValue = config.values.network || "holesky";
+  } catch (e) {
+    console.error("Failed to load config:", e);
+  }
+}
+
+async function updateConfig() {
+  if (!selectedPackageStore.package) return;
+
+  configLoading = true;
+  try {
+    await packageConfigStore.updateConfig(selectedPackageStore.package.name, {
+      values: {
+        network: networkValue,
+      },
+    });
+    console.info("Successfully updated configuration");
+  } catch (e) {
+    console.error("Failed to update config:", e);
+  } finally {
+    configLoading = false;
+  }
+}
+
 $effect(() => {
   if (dockerStatus.isRunning) {
     packagesStore.loadInstalledPackages();
   }
 });
 
-onMount(() => {
+onMount(async () => {
   dockerStatus.startPolling();
+  await loadConfig();
 });
 
 onDestroy(() => {
@@ -109,6 +143,30 @@ onDestroy(() => {
                 {deleteLoading === pkg.name ? "Deleting..." : "Delete"}
             </Button>
         {/if}
+    {/if}
+
+    <br />
+
+    <!-- Configuration -->
+    {#if packagesStore.isInstalled(pkg.name)}
+        <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight my-4">
+            Configuration
+        </h3>
+        <form class="flex flex-col gap-4 max-w-md" onsubmit={(e) => { e.preventDefault(); updateConfig(); }}>            <div class="flex flex-col gap-2">
+                <label for="network" class="font-medium">Network</label>
+                <select
+                    id="network"
+                    bind:value={networkValue}
+                    class="p-2 border rounded-md bg-background"
+                >
+                    <option value="mainnet">Mainnet</option>
+                    <option value="holesky">Holesky</option>
+                </select>
+            </div>
+            <Button type="submit" disabled={configLoading}>
+                {configLoading ? "Updating..." : "Update Configuration"}
+            </Button>
+        </form>
     {/if}
 
     <br />

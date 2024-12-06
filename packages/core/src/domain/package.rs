@@ -9,12 +9,26 @@ pub(crate) trait PackageDefinition {
     fn get_package() -> Result<Package>;
 }
 
+#[derive(Clone, Serialize, Deserialize, Default)]
+pub struct PackageConfig {
+    pub values: HashMap<String, String>,
+}
+
+impl PackageConfig {
+    pub fn new() -> Self {
+        Self {
+            values: HashMap::new(),
+        }
+    }
+}
+
 #[derive(Clone, Serialize, Deserialize)]
 pub struct Package {
     pub(crate) name: String,
     pub(crate) description: String,
     pub(crate) network_name: String,
     pub(crate) containers: Vec<Container>,
+    pub(crate) default_config: PackageConfig,
 }
 
 #[derive(Clone, Serialize, Deserialize)]
