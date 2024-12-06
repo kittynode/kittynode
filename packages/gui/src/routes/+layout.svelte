@@ -21,7 +21,7 @@ onMount(async () => {
   <Splash />
 {:else}
   <div class="flex flex-col h-screen">
-    <main class="flex-1 overflow-y-scroll overflow-x-hidden transform-gpu">
+    <main class="flex-1 overflow-y-auto">
       <div class="container mx-auto pt-8">
         {#if !["ios", "android"].includes(platform())}
           <UpdateBanner />
@@ -30,7 +30,7 @@ onMount(async () => {
         <div class="h-32 md:h-10"></div>
       </div>
     </main>
-    <nav class="sticky bottom-0 left-0 right-0 bg-background border-t">
+    <nav class="sticky bottom-0 left-0 right-0 border-t">
       <div class="container mx-auto py-4">
         <Navigation />
       </div>
@@ -44,5 +44,13 @@ onMount(async () => {
     margin: 0;
     padding: 0;
     overflow: hidden;
+  }
+
+  :global(.scrollbar-stable) {
+    scrollbar-gutter: stable;
+  }
+
+  :global(.scrollbar-stable::-webkit-scrollbar-track) {
+    background-color: hsl(var(--background));
   }
 </style>
