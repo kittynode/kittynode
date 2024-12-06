@@ -65,7 +65,7 @@ function handleScroll(e: Event) {
     <div
         bind:this={logsElement}
         onscroll={handleScroll}
-        class="h-[400px] overflow-y-auto overflow-x-hidden border p-4 font-mono text-sm rounded-md scrollbar-gutter"
+        class="h-[400px] overflow-y-auto overflow-x-hidden border p-4 font-mono text-sm rounded-md"
     >
         {#each logs as log}
             <div class="whitespace-pre-line break-words">
