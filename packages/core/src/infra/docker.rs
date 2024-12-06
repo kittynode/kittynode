@@ -163,10 +163,8 @@ pub async fn get_container_logs(
         ..Default::default()
     };
 
-    let logs = docker.logs(container_name, Some(options));
+    let mut stream = docker.logs(container_name, Some(options));
     let mut log_strings = Vec::new();
-
-    let mut stream = logs;
 
     while let Some(result) = stream.next().await {
         match result {
