@@ -1,7 +1,6 @@
 use bollard::models::PortBinding;
 use eyre::Result;
-use std::collections::HashMap;
-use std::path::PathBuf;
+use std::{collections::HashMap, path::Path};
 
 use crate::{
     domain::package::{Binding, Container, Package, PackageConfig, PackageDefinition},
@@ -36,7 +35,7 @@ impl PackageDefinition for Ethereum {
 }
 
 impl Ethereum {
-    pub(crate) fn get_containers(jwt_path: &PathBuf, network: &str) -> Result<Vec<Container>> {
+    pub(crate) fn get_containers(jwt_path: &Path, network: &str) -> Result<Vec<Container>> {
         let checkpoint_sync_url = if network == "mainnet" {
             "https://mainnet.checkpoint.sigp.io/"
         } else {
