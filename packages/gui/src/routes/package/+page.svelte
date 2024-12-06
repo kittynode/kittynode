@@ -1,65 +1,153 @@
 <script lang="ts">
 import Button from "$lib/components/ui/button/button.svelte";
-import type { Package } from "$lib/types";
-import { serverUrlStore } from "$stores/serverUrl.svelte";
-import { invoke } from "@tauri-apps/api/core";
-import { onMount } from "svelte";
-let installedPackages = $state<Package[]>([]);
-let pkg = $state<Package | null>(null);
-onMount(async () => {
-  installedPackages = await invoke("get_installed_packages", {
-    serverUrl: serverUrlStore.serverUrl,
-  });
-  if (installedPackages.length === 1) {
-    pkg = installedPackages[0];
+import Link from "$lib/components/ui/link/link.svelte";
+import { selectedPackageStore } from "$stores/selectedPackage.svelte";
+import { packagesStore } from "$stores/packages.svelte";
+import { onDestroy, onMount } from "svelte";
+import DockerLogs from "./DockerLogs.svelte";
+import { goto } from "$app/navigation";
+import { dockerStatus } from "$stores/dockerStatus.svelte";
+
+let installLoading: string | null = $state(null);
+let deleteLoading: string | null = $state(null);
+let activeLogType = $state<null | "execution" | "consensus">(null);
+
+function canInstallPackage(packageName: string | undefined): boolean {
+  if (!packageName || !dockerStatus.isRunning) return false;
+  if (installLoading || deleteLoading) return false;
+  return !packagesStore.isInstalled(packageName);
+}
+
+async function installPackage(name: string) {
+  if (!dockerStatus.isRunning) {
+    alert("Docker must be running to install packages.");
+    return;
   }
+
+  installLoading = name;
+  try {
+    await packagesStore.installPackage(name);
+    activeLogType = "execution";
+    console.info(`Successfully installed ${name}.`);
+  } finally {
+    installLoading = null;
+  }
+}
+
+async function deletePackage(name: string) {
+  if (!dockerStatus.isRunning) {
+    alert("Docker must be running to delete packages.");
+    return;
+  }
+
+  deleteLoading = name;
+  try {
+    await packagesStore.deletePackage(name);
+    console.info(`Successfully deleted ${name}.`);
+    activeLogType = null;
+  } finally {
+    deleteLoading = null;
+  }
+}
+
+function toggleLogs(logType: "execution" | "consensus") {
+  activeLogType = activeLogType === logType ? null : logType;
+}
+
+$effect(() => {
+  if (dockerStatus.isRunning) {
+    packagesStore.loadInstalledPackages();
+  }
+});
+
+onMount(() => {
+  dockerStatus.startPolling();
+});
+
+onDestroy(() => {
+  selectedPackageStore.clear();
+  dockerStatus.stopPolling();
 });
 </script>
 
-<a href="/" class="text-primary font-medium underline underline-offset-4">← Back home</a>
+<Link href="/" text="← Back home" />
 
-{#if pkg}
-<div class="mt-4">
-  <p>Name: {pkg.name}</p>
-</div>
-{:else}
-<!-- <div class="mt-4">
-  <p>Package is not installed.</p>
-</div> -->
+{#if selectedPackageStore.package}
+    {@const pkg = selectedPackageStore.package}
 
-<!-- Overview -->
-<h3 class="scroll-m-20 text-2xl font-semibold tracking-tight my-4">
-  Overview
-</h3>
-<p><strong>Name:</strong> Ethereum</p>
-<p><strong>Network:</strong> Holesky</p>
-<p><strong>Latest block hash:</strong> <a href="/" class="text-primary font-medium underline underline-offset-4">0x1234...6789</a></p>
-<Button class="mt-4">View logs</Button>
+    <!-- Overview -->
+    <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight my-4">
+        Overview
+    </h3>
+    <p><strong>Name:</strong> {pkg.name}</p>
+    <p><strong>Network:</strong> Holesky</p>
 
-<!-- Configuration -->
-<h3 class="scroll-m-20 text-2xl font-semibold tracking-tight my-4">
-  Configuration
-</h3>
-<p>Here we will show the entire config and map it into a Svelte form.</p>
-<Button class="mt-4">Update configuration</Button>
+    <!-- Lifecycle -->
+    <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight my-4">
+        Lifecycle
+    </h3>
+    {#if !dockerStatus.isRunning}
+        <p class="font-bold">
+            Turn on Docker to use this package. If you need to install
+            Docker, please follow the installation guide <Link href="https://docs.docker.com/engine/install/" targetBlank text="here" />.
+        </p>
+        <br />
+    {:else}
+        {#if !packagesStore.isInstalled(pkg.name)}
+            <Button
+                onclick={() => installPackage(pkg.name)}
+                disabled={!canInstallPackage(pkg.name)}
+            >
+                {installLoading === pkg.name ? "Installing..." : "Install"}
+            </Button>
+        {:else}
+            <Button
+                variant="destructive"
+                onclick={() => deletePackage(pkg.name)}
+                disabled={deleteLoading === pkg.name}
+            >
+                {deleteLoading === pkg.name ? "Deleting..." : "Delete"}
+            </Button>
+        {/if}
+    {/if}
 
-<!-- Validator setup -->
-<h3 class="scroll-m-20 text-2xl font-semibold tracking-tight my-4">
-  Validator
-</h3>
-<p>Here we will walk through an entire validator setup workflow:</p>
-<ul>
-  <li>&nbsp;&nbsp;&nbsp;&nbsp;- Generating the cryptographic key pair (using the key manager).</li>
-  <li>&nbsp;&nbsp;&nbsp;&nbsp;- Generating and uploading deposit data (including wallet connection and local tx submission).</li>
-  <li>&nbsp;&nbsp;&nbsp;&nbsp;- Displaying monitoring logs and configurability after setup.</li>
-</ul>
-<Button class="mt-4">Set up validator</Button>
+    <br />
 
-<!-- Lifecycle -->
-<h3 class="scroll-m-20 text-2xl font-semibold tracking-tight my-4">
-  Lifecycle
-</h3>
-<Button class="mt-4">Restart node</Button>
-<Button class="mt-4" variant="destructive">Delete</Button>
+    <!-- Logging -->
+    {#if packagesStore.isInstalled(pkg.name)}
+        <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight my-4">
+            Logging
+        </h3>
+        <div class="flex gap-2">
+            <Button
+                variant="default"
+                onclick={() => toggleLogs('execution')}
+            >
+                {activeLogType === 'execution' ? 'Hide execution logs' : 'View execution logs'}
+            </Button>
 
+            <Button
+                variant="default"
+                onclick={() => toggleLogs('consensus')}
+            >
+                {activeLogType === 'consensus' ? 'Hide consensus logs' : 'View consensus logs'}
+            </Button>
+        </div>
+
+        <div class="logs-container">
+            {#if activeLogType === 'execution'}
+                <p class="mt-4">Execution logs:</p>
+                <div class="mt-4">
+                    <DockerLogs containerName="reth-node" tailLines={1000} />
+                </div>
+            {/if}
+
+            {#if activeLogType === 'consensus'}
+                <p class="mt-4">Consensus logs:</p>
+                <div class="mt-4">
+                    <DockerLogs containerName="lighthouse-node" tailLines={1000} />
+                </div>
+            {/if}
+        </div>
+    {/if}
 {/if}

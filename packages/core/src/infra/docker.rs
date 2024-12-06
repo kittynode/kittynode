@@ -45,15 +45,14 @@ pub(crate) async fn create_or_recreate_network(docker: &Docker, network_name: &s
 
 pub(crate) async fn find_container(docker: &Docker, name: &str) -> Result<Vec<ContainerSummary>> {
     let filters = HashMap::from([("name".to_string(), vec![name.to_string()])]);
-    let containers = docker
+
+    Ok(docker
         .list_containers(Some(ListContainersOptions {
             all: true,
             filters,
             ..Default::default()
         }))
-        .await?;
-
-    Ok(containers)
+        .await?)
 }
 
 pub(crate) async fn remove_container(docker: &Docker, name: &str) -> Result<()> {
@@ -144,6 +143,43 @@ pub(crate) async fn pull_and_start_container(
     );
 
     Ok(())
+}
+
+pub async fn get_container_logs(
+    docker: &Docker,
+    container_name: &str,
+    tail_lines: Option<usize>,
+) -> Result<Vec<String>> {
+    let tail = tail_lines
+        .map(|n| n.to_string())
+        .unwrap_or_else(|| "all".to_string());
+
+    let options = bollard::container::LogsOptions::<String> {
+        stdout: true,
+        stderr: true,
+        follow: false,
+        timestamps: true,
+        tail,
+        ..Default::default()
+    };
+
+    let mut stream = docker.logs(container_name, Some(options));
+    let mut log_strings = Vec::new();
+
+    while let Some(result) = stream.next().await {
+        match result {
+            Ok(output) => match output {
+                bollard::container::LogOutput::StdOut { message }
+                | bollard::container::LogOutput::StdErr { message } => {
+                    log_strings.push(String::from_utf8_lossy(&message).to_string());
+                }
+                _ => {}
+            },
+            Err(e) => return Err(e.into()),
+        }
+    }
+
+    Ok(log_strings)
 }
 
 fn create_binding_string(binding: &Binding) -> String {

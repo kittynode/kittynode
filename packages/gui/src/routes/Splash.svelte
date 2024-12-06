@@ -5,6 +5,7 @@ import { platform } from "@tauri-apps/plugin-os";
 import { onMount } from "svelte";
 import { mode } from "mode-watcher";
 import { error } from "$utils/error";
+import { Button } from "$lib/components/ui/button";
 
 let currentPlatform = $state("");
 let canvasElement: HTMLCanvasElement;
@@ -43,8 +44,8 @@ onMount(() => {
   ctx = context;
 
   const nodes: Node[] = [];
-  const maxVelocity = 0.75;
-  const nodeDensity = 0.00005;
+  const maxVelocity = 1.5;
+  const nodeDensity = 0.0001;
 
   function calculateNumNodes() {
     return Math.round(window.innerWidth * window.innerHeight * nodeDensity);
@@ -146,14 +147,10 @@ onMount(() => {
 <canvas bind:this={canvasElement}></canvas>
 
 <main class="flex flex-col justify-center items-center h-full text-center p-4 main-content">
-  <button
-    class="hover:scale-110 transition-transform duration-300"
-    onclick={initKittynode}
-  >
-    <img
-      class="logo w-24"
-      src={`/images/kittynode-logo-circle.png`}
-      alt="Kittynode Logo"
-    />
-  </button>
+  <img
+    class="logo w-24"
+    src={`/images/kittynode-logo-circle.png`}
+    alt="Kittynode Logo"
+  />
+  <Button class="mt-6" onclick={initKittynode}>Get Started</Button>
 </main>

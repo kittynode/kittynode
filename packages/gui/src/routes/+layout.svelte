@@ -30,7 +30,7 @@ onMount(async () => {
         <div class="h-32 md:h-10"></div>
       </div>
     </main>
-    <nav class="sticky bottom-0 left-0 right-0 bg-background border-t">
+    <nav class="sticky bottom-0 left-0 right-0 border-t">
       <div class="container mx-auto py-4">
         <Navigation />
       </div>
@@ -44,6 +44,5 @@ onMount(async () => {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    user-select: none;
   }
 </style>

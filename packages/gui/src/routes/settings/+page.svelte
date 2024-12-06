@@ -53,7 +53,7 @@ async function deleteKittynode() {
   try {
     await invoke("delete_kittynode", { serverUrl: serverUrlStore.serverUrl });
     await initializedStore.uninitialize();
-    alert("Kittynode data has been deleted successfully.");
+    console.info("Kittynode data has been deleted successfully.");
   } catch (e) {
     error(`Failed to delete Kittynode: ${e}`);
   }
