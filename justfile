@@ -92,12 +92,12 @@ test-coverage-all:
   cargo llvm-cov nextest -- --include-ignored
 
 # update all toolchains and dependencies
-update-all:
+update:
   rustup update
   just install-dev-tools
   cargo upgrade
   pnpm self-update
-  pnpm up -r -L
+  pnpm up -r
   just shadcn-update
 
 # start the web server
