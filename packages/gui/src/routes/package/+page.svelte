@@ -54,16 +54,14 @@ function toggleLogs(logType: "execution" | "consensus") {
   activeLogType = activeLogType === logType ? null : logType;
 }
 
-// Navigation effect
 $effect(() => {
-  if (!selectedPackageStore.package) {
-    goto("/");
+  if (dockerStatus.isRunning) {
+    packagesStore.loadInstalledPackages();
   }
 });
 
-onMount(async () => {
+onMount(() => {
   dockerStatus.startPolling();
-  await packagesStore.loadInstalledPackages();
 });
 
 onDestroy(() => {
