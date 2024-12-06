@@ -6,6 +6,7 @@ import { onMount } from "svelte";
 import { mode } from "mode-watcher";
 import { error } from "$utils/error";
 import { Button } from "$lib/components/ui/button";
+import * as Card from "$lib/components/ui/card/index.js";
 
 let currentPlatform = $state("");
 let canvasElement: HTMLCanvasElement;
@@ -147,10 +148,20 @@ onMount(() => {
 <canvas bind:this={canvasElement}></canvas>
 
 <main class="flex flex-col justify-center items-center h-full text-center p-4 main-content">
-  <img
-    class="logo w-24"
-    src={`/images/kittynode-logo-circle.png`}
-    alt="Kittynode Logo"
-  />
-  <Button class="mt-6" onclick={initKittynode}>Get Started</Button>
+  <Card.Root>
+    <Card.Header class="flex flex-col items-center">
+      <img
+      class="logo w-24"
+      src={`/images/kittynode-logo-circle.png`}
+      alt="Kittynode Logo"
+    />
+      <Card.Title>Kittynode</Card.Title>
+      <Card.Description>
+        <div class="mt-3">A control center for node operators.</div>
+      </Card.Description>
+    </Card.Header>
+    <Card.Content>
+      <Button onclick={initKittynode}>Get Started</Button>
+    </Card.Content>
+  </Card.Root>
 </main>
