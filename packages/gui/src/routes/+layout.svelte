@@ -45,12 +45,4 @@ onMount(async () => {
     padding: 0;
     overflow: hidden;
   }
-
-  :global(.scrollbar-stable) {
-    scrollbar-gutter: stable;
-  }
-
-  :global(.scrollbar-stable::-webkit-scrollbar-track) {
-    background-color: hsl(var(--background));
-  }
 </style>
