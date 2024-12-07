@@ -8,6 +8,8 @@ import DockerLogs from "./DockerLogs.svelte";
 import { dockerStatus } from "$stores/dockerStatus.svelte";
 import { packageConfigStore } from "$stores/packageConfig.svelte";
 import * as Select from "$lib/components/ui/select/index.js";
+import * as Alert from "$lib/components/ui/alert/index.js";
+import Terminal from "lucide-svelte/icons/terminal";
 
 let installLoading: string | null = $state(null);
 let deleteLoading: string | null = $state(null);
@@ -136,10 +138,11 @@ onDestroy(() => {
         Lifecycle
     </h3>
     {#if !dockerStatus.isRunning}
-        <p class="font-bold">
-            Turn on Docker to use this package. If you need to install
-            Docker, please follow the installation guide <Link href="https://docs.docker.com/engine/install/" targetBlank text="here" />.
-        </p>
+        <Alert.Root>
+          <Terminal class="size-4" />
+          <Alert.Title>Start Docker to use this package</Alert.Title>
+          <Alert.Description>If you need to install Docker, follow the installation guide <Link href="https://docs.docker.com/engine/install/" targetBlank text="here" />.</Alert.Description>
+        </Alert.Root>
         <br />
     {:else}
         {#if !packagesStore.isInstalled(pkg.name)}
