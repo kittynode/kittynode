@@ -9,7 +9,7 @@ import { dockerStatus } from "$stores/dockerStatus.svelte";
 import { packageConfigStore } from "$stores/packageConfig.svelte";
 import * as Select from "$lib/components/ui/select/index.js";
 import * as Alert from "$lib/components/ui/alert/index.js";
-import Terminal from "lucide-svelte/icons/terminal";
+import { Terminal } from "lucide-svelte";
 
 let installLoading: string | null = $state(null);
 let deleteLoading: string | null = $state(null);
