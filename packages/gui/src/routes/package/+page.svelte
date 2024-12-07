@@ -80,7 +80,7 @@ async function loadConfig() {
     const network = config.values.network || "holesky";
     currentNetwork = selectedNetwork = network;
   } catch (e) {
-    console.error("Failed to load config:", e);
+    console.error(`Failed to load config: ${e}.`);
   }
 }
 
@@ -97,7 +97,7 @@ async function updateConfig() {
     currentNetwork = selectedNetwork;
     console.info("Successfully updated configuration");
   } catch (e) {
-    console.error("Failed to update config:", e);
+    console.error(`Failed to update config: ${e}.`);
   } finally {
     configLoading = false;
   }
