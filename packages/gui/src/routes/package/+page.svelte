@@ -7,8 +7,8 @@ import { onDestroy, onMount } from "svelte";
 import DockerLogs from "./DockerLogs.svelte";
 import { dockerStatus } from "$stores/dockerStatus.svelte";
 import { packageConfigStore } from "$stores/packageConfig.svelte";
-import * as Select from "$lib/components/ui/select/index.js";
-import * as Alert from "$lib/components/ui/alert/index.js";
+import * as Select from "$lib/components/ui/select";
+import * as Alert from "$lib/components/ui/alert";
 import { Terminal } from "lucide-svelte";
 
 let installLoading: string | null = $state(null);
@@ -141,7 +141,7 @@ onDestroy(() => {
         <Alert.Root>
           <Terminal class="size-4" />
           <Alert.Title>Start Docker to use this package</Alert.Title>
-          <Alert.Description>If you need to install Docker, follow the installation guide <Link href="https://docs.docker.com/engine/install/" targetBlank text="here" />.</Alert.Description>
+          <Alert.Description>If you need to install Docker, follow the installation guide <Link href="https://docs.docker.com/engine/install" targetBlank text="here" />.</Alert.Description>
         </Alert.Root>
         <br />
     {:else}

@@ -2,7 +2,7 @@
 import { onMount } from "svelte";
 import type { Package } from "$lib/types";
 import { Button } from "$lib/components/ui/button";
-import * as Card from "$lib/components/ui/card/index.js";
+import * as Card from "$lib/components/ui/card";
 import { platform } from "@tauri-apps/plugin-os";
 import { serverUrlStore } from "$stores/serverUrl.svelte";
 import { systemInfoStore } from "$stores/systemInfo.svelte";
