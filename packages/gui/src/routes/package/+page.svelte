@@ -5,15 +5,24 @@ import { selectedPackageStore } from "$stores/selectedPackage.svelte";
 import { packagesStore } from "$stores/packages.svelte";
 import { onDestroy, onMount } from "svelte";
 import DockerLogs from "./DockerLogs.svelte";
-import { goto } from "$app/navigation";
 import { dockerStatus } from "$stores/dockerStatus.svelte";
 import { packageConfigStore } from "$stores/packageConfig.svelte";
+import * as Select from "$lib/components/ui/select/index.js";
 
 let installLoading: string | null = $state(null);
 let deleteLoading: string | null = $state(null);
 let activeLogType = $state<null | "execution" | "consensus">(null);
 let configLoading = $state(false);
-let networkValue = $state("holesky");
+let networkValue = $state("");
+
+const networks = [
+  { value: "mainnet", label: "Mainnet" },
+  { value: "holesky", label: "Holesky" },
+];
+
+const networkTriggerContent = $derived(
+  networks.find((n) => n.value === networkValue)?.label ?? "Select network",
+);
 
 function canInstallPackage(packageName: string | undefined): boolean {
   if (!packageName || !dockerStatus.isRunning) return false;
@@ -152,16 +161,23 @@ onDestroy(() => {
         <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight my-4">
             Configuration
         </h3>
-        <form class="flex flex-col gap-4 max-w-md" onsubmit={(e) => { e.preventDefault(); updateConfig(); }}>            <div class="flex flex-col gap-2">
-                <label for="network" class="font-medium">Network</label>
-                <select
-                    id="network"
-                    bind:value={networkValue}
-                    class="p-2 border rounded-md bg-background"
-                >
-                    <option value="mainnet">Mainnet</option>
-                    <option value="holesky">Holesky</option>
-                </select>
+        <form class="space-y-4" onsubmit={(e) => { e.preventDefault(); updateConfig(); }}>
+            <div class="space-y-2">
+                <label for="network" class="font-medium text-sm">Network</label>
+                <Select.Root type="single" name="network" bind:value={networkValue}>
+                    <Select.Trigger class="w-[180px]">
+                        {networkTriggerContent}
+                    </Select.Trigger>
+                    <Select.Content>
+                        <Select.Group>
+                            {#each networks as network}
+                                <Select.Item value={network.value} label={network.label}>
+                                    {network.label}
+                                </Select.Item>
+                            {/each}
+                        </Select.Group>
+                    </Select.Content>
+                </Select.Root>
             </div>
             <Button type="submit" disabled={configLoading}>
                 {configLoading ? "Updating..." : "Update Configuration"}
