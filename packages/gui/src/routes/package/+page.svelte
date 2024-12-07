@@ -5,17 +5,33 @@ import { selectedPackageStore } from "$stores/selectedPackage.svelte";
 import { packagesStore } from "$stores/packages.svelte";
 import { onDestroy, onMount } from "svelte";
 import DockerLogs from "./DockerLogs.svelte";
-import { goto } from "$app/navigation";
 import { dockerStatus } from "$stores/dockerStatus.svelte";
+import { packageConfigStore } from "$stores/packageConfig.svelte";
+import * as Select from "$lib/components/ui/select/index.js";
 
 let installLoading: string | null = $state(null);
 let deleteLoading: string | null = $state(null);
 let activeLogType = $state<null | "execution" | "consensus">(null);
+let configLoading = $state(false);
+let selectedNetwork = $state("holesky");
+let currentNetwork = $state("holesky");
 
-function canInstallPackage(packageName: string | undefined): boolean {
-  if (!packageName || !dockerStatus.isRunning) return false;
-  if (installLoading || deleteLoading) return false;
-  return !packagesStore.isInstalled(packageName);
+const networks = [
+  { value: "mainnet", label: "Mainnet" },
+  { value: "holesky", label: "Holesky" },
+];
+
+const networkTriggerContent = $derived(
+  networks.find((n) => n.value === selectedNetwork)?.label || "Holesky",
+);
+
+function canInstallPackage(packageName: string): boolean {
+  return (
+    (dockerStatus.isRunning ?? false) &&
+    !installLoading &&
+    !deleteLoading &&
+    !packagesStore.isInstalled(packageName)
+  );
 }
 
 async function installPackage(name: string) {
@@ -29,6 +45,7 @@ async function installPackage(name: string) {
     await packagesStore.installPackage(name);
     activeLogType = "execution";
     console.info(`Successfully installed ${name}.`);
+    await loadConfig();
   } finally {
     installLoading = null;
   }
@@ -54,14 +71,47 @@ function toggleLogs(logType: "execution" | "consensus") {
   activeLogType = activeLogType === logType ? null : logType;
 }
 
+async function loadConfig() {
+  if (!selectedPackageStore.package) return;
+  try {
+    const config = await packageConfigStore.getConfig(
+      selectedPackageStore.package.name,
+    );
+    const network = config.values.network || "holesky";
+    currentNetwork = selectedNetwork = network;
+  } catch (e) {
+    console.error(`Failed to get package config: ${e}.`);
+  }
+}
+
+async function updateConfig() {
+  if (!selectedPackageStore.package) return;
+
+  configLoading = true;
+  try {
+    await packageConfigStore.updateConfig(selectedPackageStore.package.name, {
+      values: {
+        network: selectedNetwork,
+      },
+    });
+    currentNetwork = selectedNetwork;
+    console.info("Successfully updated configuration");
+  } catch (e) {
+    console.error(`Failed to update package config: ${e}.`);
+  } finally {
+    configLoading = false;
+  }
+}
+
 $effect(() => {
   if (dockerStatus.isRunning) {
     packagesStore.loadInstalledPackages();
   }
 });
 
-onMount(() => {
+onMount(async () => {
   dockerStatus.startPolling();
+  await loadConfig();
 });
 
 onDestroy(() => {
@@ -80,7 +130,6 @@ onDestroy(() => {
         Overview
     </h3>
     <p><strong>Name:</strong> {pkg.name}</p>
-    <p><strong>Network:</strong> Holesky</p>
 
     <!-- Lifecycle -->
     <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight my-4">
@@ -109,6 +158,40 @@ onDestroy(() => {
                 {deleteLoading === pkg.name ? "Deleting..." : "Delete"}
             </Button>
         {/if}
+    {/if}
+
+    <br />
+
+    <!-- Configuration -->
+    {#if packagesStore.isInstalled(pkg.name)}
+        <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight my-4">
+            Configuration
+        </h3>
+        <form class="space-y-4" onsubmit={(e) => { e.preventDefault(); updateConfig(); }}>
+            <div class="space-y-2">
+                <label for="network" class="font-medium text-sm">Network</label>
+                <Select.Root type="single" name="network" bind:value={selectedNetwork}>
+                    <Select.Trigger class="w-[180px]">
+                        {networkTriggerContent}
+                    </Select.Trigger>
+                    <Select.Content>
+                        <Select.Group>
+                            {#each networks as network}
+                                <Select.Item value={network.value} label={network.label}>
+                                    {network.label}
+                                </Select.Item>
+                            {/each}
+                        </Select.Group>
+                    </Select.Content>
+                </Select.Root>
+            </div>
+            <Button
+                type="submit"
+                disabled={configLoading || selectedNetwork === currentNetwork}
+            >
+                {configLoading ? "Updating..." : "Update Configuration"}
+            </Button>
+        </form>
     {/if}
 
     <br />
