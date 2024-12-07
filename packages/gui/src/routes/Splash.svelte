@@ -6,7 +6,7 @@ import { onMount } from "svelte";
 import { mode } from "mode-watcher";
 import { error } from "$utils/error";
 import { Button } from "$lib/components/ui/button";
-import * as Card from "$lib/components/ui/card/index.js";
+import * as Card from "$lib/components/ui/card";
 
 let currentPlatform = $state("");
 let canvasElement: HTMLCanvasElement;

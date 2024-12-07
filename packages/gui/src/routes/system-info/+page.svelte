@@ -2,7 +2,7 @@
 import { onMount } from "svelte";
 import { remoteAccessStore } from "$stores/remoteAccess.svelte";
 import { systemInfoStore } from "$stores/systemInfo.svelte";
-import { Skeleton } from "$lib/components/ui/skeleton/index.js";
+import { Skeleton } from "$lib/components/ui/skeleton";
 
 function fetchSystemInfo() {
   systemInfoStore.fetchSystemInfo();
