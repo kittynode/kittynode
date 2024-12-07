@@ -13,8 +13,8 @@ let installLoading: string | null = $state(null);
 let deleteLoading: string | null = $state(null);
 let activeLogType = $state<null | "execution" | "consensus">(null);
 let configLoading = $state(false);
-let networkValue = $state("");
-let initialNetworkValue = $state("");
+let selectedNetwork = $state("holesky");
+let currentNetwork = $state("holesky");
 
 const networks = [
   { value: "mainnet", label: "Mainnet" },
@@ -22,13 +22,16 @@ const networks = [
 ];
 
 const networkTriggerContent = $derived(
-  networks.find((n) => n.value === networkValue)?.label ?? "Select network",
+  networks.find((n) => n.value === selectedNetwork)?.label || "Holesky",
 );
 
 function canInstallPackage(packageName: string | undefined): boolean {
   if (!packageName || !dockerStatus.isRunning) return false;
   if (installLoading || deleteLoading) return false;
-  return !packagesStore.isInstalled(packageName);
+  const isCurrentlyInstalled = packagesStore.isInstalled(packageName);
+  const otherPackageInstalled =
+    packagesStore.installedPackages.length > 0 && !isCurrentlyInstalled;
+  return !otherPackageInstalled && !isCurrentlyInstalled;
 }
 
 async function installPackage(name: string) {
@@ -74,8 +77,8 @@ async function loadConfig() {
     const config = await packageConfigStore.getConfig(
       selectedPackageStore.package.name,
     );
-    networkValue = config.values.network || "holesky";
-    initialNetworkValue = networkValue;
+    const network = config.values.network || "holesky";
+    currentNetwork = selectedNetwork = network;
   } catch (e) {
     console.error("Failed to load config:", e);
   }
@@ -88,9 +91,10 @@ async function updateConfig() {
   try {
     await packageConfigStore.updateConfig(selectedPackageStore.package.name, {
       values: {
-        network: networkValue,
+        network: selectedNetwork,
       },
     });
+    currentNetwork = selectedNetwork;
     console.info("Successfully updated configuration");
   } catch (e) {
     console.error("Failed to update config:", e);
@@ -166,7 +170,7 @@ onDestroy(() => {
         <form class="space-y-4" onsubmit={(e) => { e.preventDefault(); updateConfig(); }}>
             <div class="space-y-2">
                 <label for="network" class="font-medium text-sm">Network</label>
-                <Select.Root type="single" name="network" bind:value={networkValue}>
+                <Select.Root type="single" name="network" bind:value={selectedNetwork}>
                     <Select.Trigger class="w-[180px]">
                         {networkTriggerContent}
                     </Select.Trigger>
@@ -183,7 +187,7 @@ onDestroy(() => {
             </div>
             <Button
                 type="submit"
-                disabled={configLoading || networkValue === initialNetworkValue}
+                disabled={configLoading || selectedNetwork === currentNetwork}
             >
                 {configLoading ? "Updating..." : "Update Configuration"}
             </Button>
