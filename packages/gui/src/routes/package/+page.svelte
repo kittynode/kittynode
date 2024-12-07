@@ -25,13 +25,13 @@ const networkTriggerContent = $derived(
   networks.find((n) => n.value === selectedNetwork)?.label || "Holesky",
 );
 
-function canInstallPackage(packageName: string | undefined): boolean {
-  if (!packageName || !dockerStatus.isRunning) return false;
-  if (installLoading || deleteLoading) return false;
-  const isCurrentlyInstalled = packagesStore.isInstalled(packageName);
-  const otherPackageInstalled =
-    packagesStore.installedPackages.length > 0 && !isCurrentlyInstalled;
-  return !otherPackageInstalled && !isCurrentlyInstalled;
+function canInstallPackage(packageName: string): boolean {
+  return (
+    (dockerStatus.isRunning ?? false) &&
+    !installLoading &&
+    !deleteLoading &&
+    !packagesStore.isInstalled(packageName)
+  );
 }
 
 async function installPackage(name: string) {
