@@ -10,6 +10,18 @@ docs:
 docs-rs:
   cargo doc -p kittynode-core
 
+# start the desktop app
+gui:
+  cargo tauri dev
+
+# build the tauri app for macOS
+gui-build-apple:
+  cargo tauri build --target aarch64-apple-darwin
+
+# build the tauri app for Linux
+gui-build-linux:
+  cargo tauri build --target x86_64-unknown-linux-gnu
+
 # install icons
 icons:
   cargo tauri icon assets/kittynode-logo-app.png
@@ -62,18 +74,6 @@ shadcn-add *args='':
 # update shadcn components
 shadcn-update:
   cd packages/gui && pnpm dlx shadcn-svelte@next update -a -y && pnpm format-lint:fix
-
-# start the desktop app
-tauri:
-  cargo tauri dev
-
-# build the tauri app for macOS
-tauri-build-apple:
-  cargo tauri build --target aarch64-apple-darwin
-
-# build the tauri app for Linux
-tauri-build-linux:
-  cargo tauri build --target x86_64-unknown-linux-gnu
 
 # run the unit tests
 test:
