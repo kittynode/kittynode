@@ -14,6 +14,7 @@ let deleteLoading: string | null = $state(null);
 let activeLogType = $state<null | "execution" | "consensus">(null);
 let configLoading = $state(false);
 let networkValue = $state("");
+let initialNetworkValue = $state("");
 
 const networks = [
   { value: "mainnet", label: "Mainnet" },
@@ -41,6 +42,7 @@ async function installPackage(name: string) {
     await packagesStore.installPackage(name);
     activeLogType = "execution";
     console.info(`Successfully installed ${name}.`);
+    await loadConfig();
   } finally {
     installLoading = null;
   }
@@ -73,6 +75,7 @@ async function loadConfig() {
       selectedPackageStore.package.name,
     );
     networkValue = config.values.network || "holesky";
+    initialNetworkValue = networkValue;
   } catch (e) {
     console.error("Failed to load config:", e);
   }
@@ -123,7 +126,6 @@ onDestroy(() => {
         Overview
     </h3>
     <p><strong>Name:</strong> {pkg.name}</p>
-    <p><strong>Network:</strong> Holesky</p>
 
     <!-- Lifecycle -->
     <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight my-4">
@@ -179,7 +181,10 @@ onDestroy(() => {
                     </Select.Content>
                 </Select.Root>
             </div>
-            <Button type="submit" disabled={configLoading}>
+            <Button
+                type="submit"
+                disabled={configLoading || networkValue === initialNetworkValue}
+            >
                 {configLoading ? "Updating..." : "Update Configuration"}
             </Button>
         </form>
