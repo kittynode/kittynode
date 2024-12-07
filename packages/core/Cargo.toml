@@ -16,7 +16,7 @@ eyre = { version = "0.6.12", default-features = false, features = [
 serde = { version = "1.0.215", features = ["derive"] }
 toml = "0.8.19"
 tracing = "0.1.41"
-tokio-stream = "0.1.16"
+tokio-stream = "0.1.17"
 home = "0.5.9"
 hex = "0.4.3"
 rand = "0.8.5"
