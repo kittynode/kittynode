@@ -1,7 +1,7 @@
 use crate::{
     infra::{
         docker::{create_or_recreate_network, get_docker_instance, pull_and_start_container},
-        file::{generate_jwt_secret, kittynode_path},
+        file::generate_jwt_secret,
         package::get_packages,
         package_config::PackageConfigStore,
     },
@@ -27,7 +27,7 @@ pub async fn install_package(name: &str) -> Result<()> {
 
     // Get containers with the configured network
     let containers = match name {
-        "Ethereum" => Ethereum::get_containers(&kittynode_path()?.join("jwt.hex"), network)?,
+        "Ethereum" => Ethereum::get_containers(network)?,
         _ => package.containers.clone(),
     };
 

@@ -1,6 +1,6 @@
 use bollard::models::PortBinding;
 use eyre::Result;
-use std::{collections::HashMap, path::Path};
+use std::collections::HashMap;
 
 use crate::{
     domain::package::{Binding, Container, Package, PackageConfig, PackageDefinition},
@@ -15,9 +15,6 @@ impl PackageDefinition for Ethereum {
     const NAME: &'static str = ETHEREUM_NAME;
 
     fn get_package() -> Result<Package> {
-        let kittynode_path = kittynode_path()?;
-        let jwt_path = kittynode_path.join("jwt.hex");
-
         let mut default_config = PackageConfig::new();
         default_config
             .values
@@ -29,13 +26,16 @@ impl PackageDefinition for Ethereum {
                 .to_string(),
             network_name: "ethereum-network".to_string(),
             default_config,
-            containers: Ethereum::get_containers(&jwt_path, "holesky")?,
+            containers: Ethereum::get_containers("holesky")?,
         })
     }
 }
 
 impl Ethereum {
-    pub(crate) fn get_containers(jwt_path: &Path, network: &str) -> Result<Vec<Container>> {
+    pub(crate) fn get_containers(network: &str) -> Result<Vec<Container>> {
+        let kittynode_path = kittynode_path()?;
+        let jwt_path = kittynode_path.join("jwt.hex");
+
         let checkpoint_sync_url = if network == "mainnet" {
             "https://mainnet.checkpoint.sigp.io/"
         } else {
@@ -139,9 +139,7 @@ impl Ethereum {
                 volume_bindings: vec![],
                 file_bindings: vec![
                     Binding {
-                        source: jwt_path
-                            .parent()
-                            .unwrap()
+                        source: kittynode_path
                             .join(".lighthouse")
                             .to_string_lossy()
                             .to_string(),
