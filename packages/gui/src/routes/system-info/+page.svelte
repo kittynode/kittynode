@@ -21,7 +21,7 @@ onMount(() => {
   Capabilities
 </h3>
 
-<ul class="mb-8">
+<ul class="mb-8 list-disc pl-4 space-y-2">
   <li>Remote access: <strong>{remoteAccessStore.remoteAccess ? "Enabled" : "Not enabled"}</strong></li>
 </ul>
 
