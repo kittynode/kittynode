@@ -31,19 +31,21 @@ onMount(() => {
 
 {#if systemInfoStore.systemInfo}
 <div class="space-y-4">
-  <Card.Root>
-    <Card.Header>
-      <Card.Title>Processor</Card.Title>
-    </Card.Header>
-    <Card.Content>{systemInfoStore.systemInfo.processor}</Card.Content>
-  </Card.Root>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <Card.Root>
+      <Card.Header>
+        <Card.Title>Processor</Card.Title>
+      </Card.Header>
+      <Card.Content>{systemInfoStore.systemInfo.processor}</Card.Content>
+    </Card.Root>
 
-  <Card.Root>
-    <Card.Header>
-      <Card.Title>Memory</Card.Title>
-    </Card.Header>
-    <Card.Content>{systemInfoStore.systemInfo.memory}</Card.Content>
-  </Card.Root>
+    <Card.Root>
+      <Card.Header>
+        <Card.Title>Memory</Card.Title>
+      </Card.Header>
+      <Card.Content>{systemInfoStore.systemInfo.memory}</Card.Content>
+    </Card.Root>
+  </div>
 
   <Card.Root>
     <Card.Header>

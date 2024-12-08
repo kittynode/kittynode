@@ -63,6 +63,13 @@ async function handleUpdate() {
   await updates.installUpdate();
 }
 
+async function checkForUpdates() {
+  await updates.getUpdate();
+  if (!updates.hasUpdate) {
+    alert("No update available, you're up to date!");
+  }
+}
+
 function setRemote(serverUrl: string) {
   serverUrlStore.setServerUrl(serverUrl);
   // Refetch store caches
@@ -94,26 +101,26 @@ onMount(async () => {
   {/if}
   {#if serverUrlStore.serverUrl === ""}
     <li>
-      <span>Connect remote kitty</span>
+      <span>Connect to remote</span>
       <Button onclick={connectRemote}>Connect</Button>
     </li>
     <hr />
   {:else}
     <li>
-      <span>Disconnect remote kitty</span>
+      <span>Disconnect from remote</span>
       <Button onclick={disconnectRemote}>Disconnect</Button>
     </li>
     <hr />
   {/if}
   {#if !["ios", "android"].includes(currentPlatform)}
     <li>
-      <span>Update Kittynode</span>
-      <Button disabled={updates.isProcessing || !updates.hasUpdate} onclick={handleUpdate}>
+      <span>{updates.hasUpdate ? "Update Kittynode" : "Check for updates"}</span>
+      <Button disabled={updates.isProcessing} onclick={updates.hasUpdate ? handleUpdate : checkForUpdates}>
         {#if updates.isProcessing}
           <LoaderCircle class="animate-spin" />
           Updating
         {:else if !updates.hasUpdate}
-          No update available
+          Check for updates
         {:else}
           Update
         {/if}
