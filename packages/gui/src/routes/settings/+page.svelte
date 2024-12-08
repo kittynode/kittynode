@@ -3,15 +3,16 @@ import { invoke } from "@tauri-apps/api/core";
 import { initializedStore } from "$stores/initialized.svelte";
 import { Button } from "$lib/components/ui/button";
 import { platform } from "@tauri-apps/plugin-os";
-import { onMount } from "svelte";
 import { remoteAccessStore } from "$stores/remoteAccess.svelte";
 import { serverUrlStore } from "$stores/serverUrl.svelte";
 import { updates } from "$stores/updates.svelte";
 import { LoaderCircle } from "lucide-svelte";
 import { refetchStores } from "$utils/refetchStores";
 import { error } from "$utils/error";
+import { setMode, userPrefersMode } from "mode-watcher";
+import * as Select from "$lib/components/ui/select";
 
-let currentPlatform = $state("");
+let currentTheme = $state<"light" | "dark" | "system">($userPrefersMode);
 
 async function enableRemoteAccess() {
   try {
@@ -75,10 +76,6 @@ function setRemote(serverUrl: string) {
   // Refetch store caches
   refetchStores();
 }
-
-onMount(async () => {
-  currentPlatform = platform();
-});
 </script>
 
 <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight mb-4">Settings</h3>
@@ -89,7 +86,7 @@ onMount(async () => {
   {:else if !remoteAccessStore.remoteAccess}
     <li>
       <span>Enable remote access</span>
-      <Button onclick={enableRemoteAccess} disabled={ ["ios", "android"].includes(currentPlatform) }>Enable</Button>
+      <Button onclick={enableRemoteAccess} disabled={ ["ios", "android"].includes(platform()) }>Enable</Button>
     </li>
     <hr />
   {:else}
@@ -112,7 +109,7 @@ onMount(async () => {
     </li>
     <hr />
   {/if}
-  {#if !["ios", "android"].includes(currentPlatform)}
+  {#if !["ios", "android"].includes(platform())}
     <li>
       <span>{updates.hasUpdate ? "Update Kittynode" : "Check for updates"}</span>
       <Button disabled={updates.isProcessing} onclick={updates.hasUpdate ? handleUpdate : checkForUpdates}>
@@ -128,6 +125,24 @@ onMount(async () => {
     </li>
     <hr />
   {/if}
+  <li>
+    <span>Select theme</span>
+    <Select.Root
+      type="single"
+      bind:value={currentTheme}
+      onValueChange={(value) => setMode(value as "light" | "dark" | "system")}
+    >
+      <Select.Trigger class="w-[180px] capitalize">
+        {currentTheme || "Select theme"}
+      </Select.Trigger>
+      <Select.Content>
+        <Select.Item value="light">Light</Select.Item>
+        <Select.Item value="dark">Dark</Select.Item>
+        <Select.Item value="system">System</Select.Item>
+      </Select.Content>
+    </Select.Root>
+  </li>
+  <hr />
   <li>
     <span>Delete all Kittynode data</span>
     <Button onclick={deleteKittynode} disabled={serverUrlStore.serverUrl !== ""} variant="destructive">Delete data</Button>
