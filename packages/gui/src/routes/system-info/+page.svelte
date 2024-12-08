@@ -53,7 +53,7 @@ onMount(() => {
     </Card.Header>
     <Card.Content>
       <Progress value={systemInfoStore.systemInfo.storage_percentage} max={100} />
-      <div class="flex justify-between mt-2">
+      <div class="flex justify-between text-sm mt-2">
         <span>Used: {systemInfoStore.systemInfo.storage_percentage.toFixed(2)}%</span>
         <span>{systemInfoStore.systemInfo.storage}</span>
       </div>
