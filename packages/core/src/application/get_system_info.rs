@@ -45,24 +45,22 @@ fn get_storage_info() -> Result<StorageInfo> {
     let disks = Disks::new_with_refreshed_list();
     const MIN_DISK_SIZE: u64 = 10 * 1024 * 1024 * 1024; // 10 GiB
 
-    let mut seen_devices = std::collections::HashSet::new();
+    let mut seen_signatures = std::collections::HashSet::new();
     let disk_infos: Vec<DiskInfo> = disks
         .list()
         .iter()
         .filter_map(|disk| {
-            // Skip small filesystems and those with 0 total space
             if disk.total_space() < MIN_DISK_SIZE || disk.total_space() == 0 {
                 return None;
             }
 
-            let device_name = disk.name().to_str()?;
-            // On macOS, avoid duplicate APFS volumes
-            if !seen_devices.insert(device_name.to_string()) {
+            let storage_signature = (disk.total_space(), disk.available_space());
+            if !seen_signatures.insert(storage_signature) {
                 return None;
             }
 
             Some(DiskInfo {
-                name: device_name.to_string(),
+                name: disk.name().to_str()?.to_string(),
                 mount_point: disk.mount_point().to_str()?.to_string(),
                 total_bytes: disk.total_space(),
                 available_bytes: disk.available_space(),
