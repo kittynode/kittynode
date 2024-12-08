@@ -50,29 +50,13 @@ fn get_storage_info() -> Result<StorageInfo> {
         .list()
         .iter()
         .filter_map(|disk| {
-            // Skip virtual and special filesystems
-            let fs_type = disk.file_system().to_str()?;
-            if [
-                "devpts",
-                "tmpfs",
-                "devtmpfs",
-                "squashfs",
-                "overlay",
-                "hugetlbfs",
-                "mqueue",
-            ]
-            .contains(&fs_type)
-            {
-                return None;
-            }
-
             // Skip small filesystems and those with 0 total space
             if disk.total_space() < MIN_DISK_SIZE || disk.total_space() == 0 {
                 return None;
             }
 
-            // On macOS, avoid duplicate APFS volumes
             let device_name = disk.name().to_str()?;
+            // On macOS, avoid duplicate APFS volumes
             if !seen_devices.insert(device_name.to_string()) {
                 return None;
             }
@@ -82,7 +66,7 @@ fn get_storage_info() -> Result<StorageInfo> {
                 mount_point: disk.mount_point().to_str()?.to_string(),
                 total_bytes: disk.total_space(),
                 available_bytes: disk.available_space(),
-                disk_type: fs_type.to_string(),
+                disk_type: disk.file_system().to_str()?.to_string(),
             })
         })
         .collect();

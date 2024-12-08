@@ -5,7 +5,23 @@ import { systemInfoStore } from "$stores/systemInfo.svelte";
 import { Skeleton } from "$lib/components/ui/skeleton";
 import { Progress } from "$lib/components/ui/progress";
 import * as Card from "$lib/components/ui/card";
-import { formatBytes, calculateUsagePercentage } from "$lib/utils/format";
+
+function formatBytes(bytes: number): string {
+  const units = ["B", "KiB", "MiB", "GiB", "TiB"];
+  let value = bytes;
+  let unitIndex = 0;
+
+  while (value >= 1024 && unitIndex < units.length - 1) {
+    value /= 1024;
+    unitIndex++;
+  }
+
+  return `${value.toFixed(2)} ${units[unitIndex]}`;
+}
+
+function calculateUsagePercentage(used: number, total: number): number {
+  return Math.round((used / total) * 100);
+}
 
 function fetchSystemInfo() {
   systemInfoStore.fetchSystemInfo();
