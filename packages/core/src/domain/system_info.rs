@@ -18,7 +18,6 @@ pub struct ProcessorInfo {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct MemoryInfo {
     pub total_bytes: u64,
-    pub used_bytes: u64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

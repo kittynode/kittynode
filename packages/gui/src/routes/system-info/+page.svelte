@@ -50,7 +50,6 @@ onMount(() => {
         <Card.Title>Memory</Card.Title>
       </Card.Header>
       <Card.Content>
-        {formatBytes(systemInfoStore.systemInfo.memory.used_bytes)} used of
         {formatBytes(systemInfoStore.systemInfo.memory.total_bytes)}
       </Card.Content>
     </Card.Root>

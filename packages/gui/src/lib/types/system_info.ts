@@ -13,7 +13,6 @@ export interface ProcessorInfo {
 
 export interface MemoryInfo {
   total_bytes: number;
-  used_bytes: number;
 }
 
 export interface StorageInfo {

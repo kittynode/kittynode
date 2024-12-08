@@ -38,7 +38,6 @@ fn get_processor_info(system: &System) -> Result<ProcessorInfo> {
 fn get_memory_info(system: &System) -> MemoryInfo {
     MemoryInfo {
         total_bytes: system.total_memory(),
-        used_bytes: system.used_memory(),
     }
 }
 
