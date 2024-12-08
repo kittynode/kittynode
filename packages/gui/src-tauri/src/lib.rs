@@ -216,21 +216,27 @@ async fn system_info(server_url: String) -> Result<SystemInfo, String> {
             .map_err(|e| e.to_string())?;
 
         let status = res.status();
-        let error_text = res.text().await.unwrap_or_default();
+        let body = res.text().await.map_err(|e| e.to_string())?;
 
         if !status.is_success() {
-            return Err(format!(
-                "Failed to get system info: {} - {}",
-                status, error_text
-            ));
+            return Err(format!("Failed to get system info: {} - {}", status, body));
         }
 
-        let res = HTTP_CLIENT
-            .get(&url)
-            .send()
-            .await
-            .map_err(|e| e.to_string())?;
-        res.json::<SystemInfo>().await.map_err(|e| e.to_string())
+        let mut system_info: SystemInfo = serde_json::from_str(&body).map_err(|e| e.to_string())?;
+
+        // Calculate storage percentage
+        if let Some(storage_parts) = system_info
+            .storage
+            .split_whitespace()
+            .collect::<Vec<&str>>()
+            .get(2..)
+        {
+            let available: f64 = storage_parts[0].parse().unwrap_or(0.0);
+            let total: f64 = storage_parts[2].parse().unwrap_or(0.0);
+            system_info.storage_percentage = ((total - available) / total * 100.0).round();
+        }
+
+        Ok(system_info)
     } else {
         kittynode_core::application::get_system_info().map_err(|e| e.to_string())
     }
