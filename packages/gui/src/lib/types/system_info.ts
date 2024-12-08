@@ -1,6 +1,29 @@
 export interface SystemInfo {
-  processor: string;
-  memory: string;
-  storage: string;
-  storage_percentage: number;
+  processor: ProcessorInfo;
+  memory: MemoryInfo;
+  storage: StorageInfo;
+}
+
+export interface ProcessorInfo {
+  name: string;
+  cores: number;
+  frequency_ghz: number;
+  architecture: string;
+}
+
+export interface MemoryInfo {
+  total_bytes: number;
+  used_bytes: number;
+}
+
+export interface StorageInfo {
+  disks: DiskInfo[];
+}
+
+export interface DiskInfo {
+  name: string;
+  mount_point: string;
+  total_bytes: number;
+  available_bytes: number;
+  disk_type: string;
 }
