@@ -161,7 +161,12 @@ onMount(() => {
       </Card.Description>
     </Card.Header>
     <Card.Content>
-      <Button onclick={initKittynode}>Get Started</Button>
+      <Button
+        onclick={initKittynode}
+        class="transition-transform hover:scale-105 active:scale-100"
+      >
+        Get Started
+      </Button>
     </Card.Content>
   </Card.Root>
 </main>

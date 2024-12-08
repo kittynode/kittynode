@@ -56,6 +56,9 @@ pub fn get_system_info() -> Result<SystemInfo> {
         .map(|d| d.available_space() as f64 / 1_024_000_000.0)
         .sum::<f64>();
 
+    let storage_percentage =
+        ((total_disk_space - available_disk_space) / total_disk_space * 100.0).round();
+
     let storage = format!(
         "{:.2} GB available / {:.2} GB total",
         available_disk_space, total_disk_space
@@ -65,5 +68,6 @@ pub fn get_system_info() -> Result<SystemInfo> {
         processor,
         memory,
         storage,
+        storage_percentage,
     })
 }
