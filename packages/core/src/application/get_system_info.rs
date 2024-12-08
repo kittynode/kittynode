@@ -44,15 +44,31 @@ fn get_memory_info(system: &System) -> MemoryInfo {
 
 fn get_storage_info() -> Result<StorageInfo> {
     let disks = Disks::new_with_refreshed_list();
+    const MIN_DISK_SIZE: u64 = 10 * 1024 * 1024 * 1024; // 10 GiB
 
     let mut seen_devices = std::collections::HashSet::new();
     let disk_infos: Vec<DiskInfo> = disks
         .list()
         .iter()
         .filter_map(|disk| {
-            // Skip virtual filesystems
+            // Skip virtual and special filesystems
             let fs_type = disk.file_system().to_str()?;
-            if ["tmpfs", "devtmpfs", "squashfs", "overlay"].contains(&fs_type) {
+            if [
+                "devpts",
+                "tmpfs",
+                "devtmpfs",
+                "squashfs",
+                "overlay",
+                "hugetlbfs",
+                "mqueue",
+            ]
+            .contains(&fs_type)
+            {
+                return None;
+            }
+
+            // Skip small filesystems and those with 0 total space
+            if disk.total_space() < MIN_DISK_SIZE || disk.total_space() == 0 {
                 return None;
             }
 
