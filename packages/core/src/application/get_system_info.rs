@@ -1,4 +1,4 @@
-use crate::domain::system_info::SystemInfo;
+use crate::domain::system_info::{DiskInfo, MemoryInfo, ProcessorInfo, StorageInfo, SystemInfo};
 use eyre::Result;
 use sysinfo::{Disks, System};
 
@@ -6,68 +6,74 @@ pub fn get_system_info() -> Result<SystemInfo> {
     let mut system = System::new_all();
     system.refresh_all();
 
-    // Get processor details
-    let cpu_name = system
-        .cpus()
-        .first()
-        .map(|cpu| {
-            if cpu.brand().is_empty() {
-                "Unknown CPU name".to_string()
-            } else {
-                cpu.brand().to_string()
-            }
-        })
-        .ok_or_else(|| eyre::eyre!("Failed to retrieve CPU name"))?;
-
-    let cpu_cores = system.physical_core_count().unwrap_or(1);
-
-    let cpu_frequency = system
-        .cpus()
-        .first()
-        .map(|cpu| cpu.frequency() as f64 / 1000.0)
-        .ok_or_else(|| eyre::eyre!("Failed to retrieve CPU frequency"))?;
-
-    let cpu_architecture = if std::env::consts::ARCH.is_empty() {
-        "Unknown architecture".to_string()
-    } else {
-        std::env::consts::ARCH.to_string()
-    };
-
-    let processor = format!(
-        "{} ({} cores, {:.2} GHz, {})",
-        cpu_name, cpu_cores, cpu_frequency, cpu_architecture
-    );
-
-    // Fetch total RAM in bytes and convert to gigabytes
-    let total_ram = system.total_memory() as f64 / (1024.0 * 1024.0 * 1024.0);
-
-    let memory = format!("{:.2} GB RAM", total_ram);
-
-    // Get total and available disk space and convert to gigabytes
-    let disks = Disks::new_with_refreshed_list();
-
-    let total_disk_space = disks
-        .iter()
-        .map(|d| d.total_space() as f64 / 1_024_000_000.0)
-        .sum::<f64>();
-
-    let available_disk_space = disks
-        .iter()
-        .map(|d| d.available_space() as f64 / 1_024_000_000.0)
-        .sum::<f64>();
-
-    let storage_percentage =
-        ((total_disk_space - available_disk_space) / total_disk_space * 100.0).round();
-
-    let storage = format!(
-        "{:.2} GB available / {:.2} GB total",
-        available_disk_space, total_disk_space
-    );
+    let processor = get_processor_info(&system)?;
+    let memory = get_memory_info(&system);
+    let storage = get_storage_info()?;
 
     Ok(SystemInfo {
         processor,
         memory,
         storage,
-        storage_percentage,
     })
+}
+
+fn get_processor_info(system: &System) -> Result<ProcessorInfo> {
+    let cpu = system
+        .cpus()
+        .first()
+        .ok_or_else(|| eyre::eyre!("No CPU found"))?;
+
+    Ok(ProcessorInfo {
+        name: if cpu.brand().is_empty() {
+            "Unknown CPU".to_string()
+        } else {
+            cpu.brand().to_string()
+        },
+        cores: system.physical_core_count().unwrap_or(1) as u32,
+        frequency_ghz: cpu.frequency() as f64 / 1000.0,
+        architecture: std::env::consts::ARCH.to_string(),
+    })
+}
+
+fn get_memory_info(system: &System) -> MemoryInfo {
+    MemoryInfo {
+        total_bytes: system.total_memory(),
+    }
+}
+
+fn get_storage_info() -> Result<StorageInfo> {
+    let disks = Disks::new_with_refreshed_list();
+    const MIN_DISK_SIZE: u64 = 10 * 1024 * 1024 * 1024; // 10 GiB
+
+    let mut seen_devices = std::collections::HashSet::new();
+    let disk_infos: Vec<DiskInfo> = disks
+        .list()
+        .iter()
+        .filter_map(|disk| {
+            // Skip small filesystems and those with 0 total space
+            if disk.total_space() < MIN_DISK_SIZE || disk.total_space() == 0 {
+                return None;
+            }
+
+            let device_name = disk.name().to_str()?;
+            // On macOS, avoid duplicate APFS volumes
+            if !seen_devices.insert(device_name.to_string()) {
+                return None;
+            }
+
+            Some(DiskInfo {
+                name: device_name.to_string(),
+                mount_point: disk.mount_point().to_str()?.to_string(),
+                total_bytes: disk.total_space(),
+                available_bytes: disk.available_space(),
+                disk_type: disk.file_system().to_str()?.to_string(),
+            })
+        })
+        .collect();
+
+    if disk_infos.is_empty() {
+        return Err(eyre::eyre!("No valid disks found"));
+    }
+
+    Ok(StorageInfo { disks: disk_infos })
 }

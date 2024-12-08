@@ -6,6 +6,23 @@ import { Skeleton } from "$lib/components/ui/skeleton";
 import { Progress } from "$lib/components/ui/progress";
 import * as Card from "$lib/components/ui/card";
 
+function formatBytes(bytes: number): string {
+  const units = ["B", "KiB", "MiB", "GiB", "TiB"];
+  let value = bytes;
+  let unitIndex = 0;
+
+  while (value >= 1024 && unitIndex < units.length - 1) {
+    value /= 1024;
+    unitIndex++;
+  }
+
+  return `${value.toFixed(2)} ${units[unitIndex]}`;
+}
+
+function calculateUsagePercentage(used: number, total: number): number {
+  return Math.round((used / total) * 100);
+}
+
 function fetchSystemInfo() {
   systemInfoStore.fetchSystemInfo();
 }
@@ -36,14 +53,21 @@ onMount(() => {
       <Card.Header>
         <Card.Title>Processor</Card.Title>
       </Card.Header>
-      <Card.Content>{systemInfoStore.systemInfo.processor}</Card.Content>
+      <Card.Content>
+        {systemInfoStore.systemInfo.processor.name}
+        ({systemInfoStore.systemInfo.processor.cores} cores,
+         {systemInfoStore.systemInfo.processor.frequency_ghz.toFixed(2)} GHz,
+         {systemInfoStore.systemInfo.processor.architecture})
+      </Card.Content>
     </Card.Root>
 
     <Card.Root>
       <Card.Header>
         <Card.Title>Memory</Card.Title>
       </Card.Header>
-      <Card.Content>{systemInfoStore.systemInfo.memory}</Card.Content>
+      <Card.Content>
+        {formatBytes(systemInfoStore.systemInfo.memory.total_bytes)}
+      </Card.Content>
     </Card.Root>
   </div>
 
@@ -51,12 +75,33 @@ onMount(() => {
     <Card.Header>
       <Card.Title>Storage</Card.Title>
     </Card.Header>
-    <Card.Content>
-      <Progress value={systemInfoStore.systemInfo.storage_percentage} max={100} />
-      <div class="flex justify-between text-sm mt-2">
-        <span>Used: {systemInfoStore.systemInfo.storage_percentage.toFixed(2)}%</span>
-        <span>{systemInfoStore.systemInfo.storage}</span>
-      </div>
+    <Card.Content class="space-y-4">
+      {#each systemInfoStore.systemInfo.storage.disks as disk}
+        <div>
+          <div class="text-sm font-medium mb-2">
+            {disk.name} ({disk.mount_point})
+          </div>
+          <Progress
+            value={calculateUsagePercentage(
+              disk.total_bytes - disk.available_bytes,
+              disk.total_bytes
+            )}
+            max={100}
+          />
+          <div class="flex justify-between text-sm mt-2">
+            <span>
+              Used: {calculateUsagePercentage(
+                disk.total_bytes - disk.available_bytes,
+                disk.total_bytes
+              )}%
+            </span>
+            <span>
+              {formatBytes(disk.available_bytes)} available /
+              {formatBytes(disk.total_bytes)} total
+            </span>
+          </div>
+        </div>
+      {/each}
     </Card.Content>
   </Card.Root>
 </div>
