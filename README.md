@@ -8,5 +8,9 @@ A control center for node operators.
 
 ## Documentation
 
-- [End-user documentation](https://kittynode.io).
-- [Developer documentation](packages/README.md).
+- End-user documentation: [kittynode.io](https://kittynode.io).
+- Developer documentation: [packages/README.md](packages/README.md).
+
+## Donations
+
+If you like Kittynode, please consider donating to support its development: [kittynode.eth](https://app.ens.domains/kittynode.eth).
