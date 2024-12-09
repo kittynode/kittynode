@@ -13,4 +13,4 @@ A control center for node operators.
 
 ## Donations
 
-If you like Kittynode, please consider donating to support its development: [kittynode.eth](https://etherscan.io/address/0xc0A274674ac86491Af0b3260b6b0aA5812B92F08).
+If you like Kittynode, please consider donating to support its development: [kittynode.eth](https://app.ens.domains/kittynode.eth).
