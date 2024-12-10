@@ -6,7 +6,6 @@
   "permissions": [
     "core:default",
     "core:window:allow-show",
-    "dialog:default",
     "os:default",
     "shell:default"
   ]
