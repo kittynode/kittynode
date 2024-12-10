@@ -5,6 +5,10 @@ description: Questions about Kittynode's design.
 
 This page is a collection of questions we have about Kittynode. We are building and thinking out loud here.
 
+### How do we solve the "pump the gas coordination problem"?
+
+This is a problem we noticed during the "pump the gas" initiative to increase the block gas limit on Ethereum. The general problem is that the Ethereum community cannot necessarily coordinate an increase in the block gas limit, even if a majority of the community votes for it. What we mean is that this is really gatekept by large institutional stakers (like Coinbase), as well as the core devs who decide on the default parameters in their clients. Orbit SSF should be able to democratize votes further, but this still feels like an issue. We should start by doing some more research and quantifying the problem.
+
 ### Should every internet connected device run an Ethereum node?
 
 To have trustless access to the internet, it will be necessary unless they are bootstrapping with weak subjectivity endpoints. The current answer is yes, but it's unknown how many light clients vs stateless clients and we ought to do more research (there was a light clients talk at Devcon Thailand about this).
