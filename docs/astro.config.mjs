@@ -28,7 +28,6 @@ export default defineConfig({
         github: "https://github.com/kittynode",
         discord: "https://discord.kittynode.io",
         "x.com": "https://x.com/kittynode",
-        youtube: "https://youtube.com/@kittynode",
       },
       sidebar: [
         {
