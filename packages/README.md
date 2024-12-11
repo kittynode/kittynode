@@ -1,4 +1,4 @@
-Kittynode is a command center for node operators. This document gives a high level architectural overview.
+Kittynode is a control center for node operators. This document gives a high level architectural overview.
 
 - [kittynode-core](https://github.com/kittynode/kittynode/tree/main/packages/core): Core library for Kittynode written in Rust.
 - [kittynode-cli](https://github.com/kittynode/kittynode/tree/main/packages/cli): A CLI frontend that binds to kittynode-core.
