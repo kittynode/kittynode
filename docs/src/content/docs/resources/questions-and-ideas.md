@@ -51,3 +51,12 @@ But if it were, then all those 95% of validators could easily enact the change t
 This is a classic human problem. The basic idea is that sometimes people don't know what's best for them. How does this play into consensus and voting? What if a large majority of dumb users can be manipulated into voting for something that they seemingly want but is against their interests? This is a valuable attack which can be enacted by an intelligent actor.
 
 A philosopher king likely needs to ossify the important parts. Separation of power will likely help. We still need to research here because we'd think even the base rules should have an override mechanism by the users, even if difficult.
+
+### Rough notes on governance
+
+- Ethereum may need a constitution or manifesto.
+- There may be a plutocracy problem in the validator set (see: [Governance, Part 2: Plutocracy Is Still Bad](https://vitalik.eth.limo/general/2018/03/28/plutocracy.html)).
+- Ethereum may need an overarching identity (EF?) or treaty system for unification.
+- Ethereum may be able to learn from (and currently resembles some) aspects of colonial democracies.
+- Ethereum may need a new forum for constructive communication aside from X.
+- Look into: House of Lords and House of Commons.
