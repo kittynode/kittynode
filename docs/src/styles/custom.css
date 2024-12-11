@@ -27,3 +27,19 @@
   --sl-color-gray-7: #f5f6f8;
   --sl-color-black: #ffffff;
 }
+
+/* For hero section */
+@media (min-width: 50rem) {
+  .hero {
+    grid-template-columns: unset;
+    padding: 0;
+  }
+
+  .copy {
+    align-items: center;
+  }
+
+  .actions {
+    justify-content: center;
+  }
+}
