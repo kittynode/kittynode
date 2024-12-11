@@ -6,7 +6,7 @@ name = "kittynode-tauri"
 publish = false
 readme.workspace = true
 repository.workspace = true
-version = "0.13.0-alpha"
+version = "0.14.0"
 
 [lib]
 crate-type = ["staticlib", "cdylib", "rlib"]
