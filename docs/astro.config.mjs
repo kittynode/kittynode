@@ -47,7 +47,6 @@ export default defineConfig({
               label: "Development guide",
               slug: "development/development-guide",
             },
-            { label: "Project tracking", slug: "development/project-tracking" },
             { label: "Releases", slug: "development/releases" },
           ],
         },
