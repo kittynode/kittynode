@@ -7,10 +7,10 @@ Kittynode is a command center for node operators. This document gives a high lev
 
 ## Technology used
 
-- Core library written in Rust
-- Frontend written in SvelteKit (Svelte 5)
-- CLI is a cross-platform Rust binary
-- GUI is a cross-platform Tauri app that compiles the core library into the binary along with the frontend into a native webview, communicating with the core library over IPC, while being able to tap into native platform APIs
+- Core library written in Rust.
+- Frontend written in Svelte.
+- CLI is a cross-platform Rust binary.
+- GUI is a cross-platform Tauri app that compiles the core library into the binary along with the frontend into a native webview, communicates with the core library over IPC, and is able to tap into native platform APIs.
 
 ## Development guide
 
@@ -20,8 +20,8 @@ See the [development guide](https://kittynode.io/development/development-guide) 
 
 Kittynode has two user facing apps:
 
-- A command line interface (CLI)
-- A graphical user interface (GUI)
+- A command line interface (CLI).
+- A graphical user interface (GUI).
 
 These user facing apps manage a kittynode through the core library.
 
