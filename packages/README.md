@@ -1,4 +1,4 @@
-Kittynode is a command center for node operators. There is a README.md describing each package you'll find here in the monorepo. This document gives a high level architectural overview of Kittynode.
+Kittynode is a command center for node operators. This document gives a high level architectural overview.
 
 - [kittynode-core](https://github.com/kittynode/kittynode/tree/main/packages/core): Core library for Kittynode written in Rust.
 - [kittynode-cli](https://github.com/kittynode/kittynode/tree/main/packages/cli): A CLI frontend that binds to kittynode-core.
@@ -39,3 +39,51 @@ We believe the local HTTPS server over Wireguard is a convenient and secure appr
 ## A diagram
 
 ![Kittynode architecture diagram](../assets/diagrams/diagram.svg)
+
+## Design
+
+### Easy-to-use and secure
+
+The workflow for Kittynode is designed to make it as easy as possible for the user to get started, while making the right recommendations for them along their operator journey. For example, a user may download Kittynode and sync an Ethereum testnet node in just a few clicks to get their feet wet.
+
+However, they may later decide to become an independent staker on Ethereum mainnet, which requires a lot more security checks. Kittynode will guide the user through the necessary steps to get there, while keeping the low initial barrier to entry.
+
+### Modular core library
+
+Kittynode is architected as a backend library in Rust, providing several benefits:
+
+- **Reusable core**: The desktop application is a consumer of this core library, with Tauri used to bind commands to the library.
+- **Cross-platform support**: Kittynode supports a cross-platform desktop and mobile application as a frontend, along with a CLI that reuses the same core library.
+- **Safety and performance**: Rust was chosen for its safety, performance, and cross-platform compatibility, making Kittynode easy to run on Windows, MacOS, and Linux.
+
+### Direct container access
+
+Kittynode doesn't use Docker CLI commands on the user's system directly. Instead it has its own module that directly interacts with the Docker engine with Bollard. This improves Kittynode's portability, security, and testability. It also allows for more flexible networking setups between Kittynode packages.
+
+Kittynode also plans to support other free and open source container runtimes in the future, like containerd and moby.
+
+## Features
+
+### Package ecosystem
+
+Kittynode supports a package ecosystem. Ethereum nodes are simply packages which are executed and managed by Kittynode. Developers can create their own packages easily with Kittynode's package API. Kittynode supports Docker images but also supports direct binary executables. Kittynode may also support other languages and executable scripts in the future.
+
+The design goals of the package ecosystem are to ensure installs are:
+
+- **Secure**: Packages are securely isolated from each other.
+- **Consistent**: Packages behave the same on all systems.
+- **Atomic**: Package installs and uninstalls are atomic, without polluting the system.
+
+### System checker
+
+The system checker is a utility within Kittynode that checks the system prerequisites for running a node, along with other system checks. A short list of some checks are:
+
+- **System resources**: Checking the available storage, CPU, and RAM.
+- **Network settings**: Checking the firewall and internet connectivity.
+- **Security settings**: Checking file permissions and other system security settings.
+
+The system checker is important in several areas of Kittynode. For example, when creating a validator key it is important to ensure WiFi is disabled, and file permissions are properly set on the key file.
+
+### Remote access
+
+Kittynode supports remote access. This means you can setup and monitor your node from a phone or desktop. This is done via secure connections with Wireguard, which allows users to monitor their node from trusted devices. This is also important so that users can easily upgrade their nodes, which is effectively voting.
