@@ -27,6 +27,28 @@ Current answer: We think that self-operation of a node is a must for maintaining
 
 Current answer: Seemingly yes, with some caveats. This has credible neutrality implications, which is always difficult to be completely credibly neutral. However most chains seek to be credibly neutral while minimizing bad things for all the users (like toxic MEV).
 
+### Is there an overreliance on altruism?
+
+It seems that there is some dependence on altruism for example in serving light clients, and also choosing to do home staking over LSTs, ETFs, etc. Some altruism seems to be important, and we have evidence of it working in societies. For example, there does exist altruistic volunteers in various domains. If we make the job of "picking up trash" really easy (make it really easy to help), then we can get more helpers.
+
+### Orbit SSF questions
+
+Why is 1 ETH the minimum? Can we do 0.01 ETH? Can we remove the minimum entirely?
+
+### Restaking
+
+How do we feel about restaking risks? Is there anything we can do to disincentivize [overloading Ethereum's consensus](https://vitalik.eth.limo/general/2023/05/21/dont_overload.html) aside from saying it? How big of an issue is it for our goals?
+
+### The 100% ETH staked problem
+
+This doesn't seem like an actual problem but will list it out anyways for completeness. [Near 100% ETH staked has economic risks](https://youtu.be/WTwZsCKFPao?feature=shared&t=433).
+
+> You don't want the entire population of your country to be soldiers; you also don't want every ETH to be staked.
+
+### Is running a node voting?
+
+This is a bit of a loaded question, adding here for completeness. We should formalize an answer on this both in theory, but more importantly in practice.
+
 ## Ideas
 
 ### The internet stack of the future

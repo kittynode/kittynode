@@ -28,6 +28,7 @@ export default defineConfig({
         github: "https://github.com/kittynode",
         discord: "https://discord.kittynode.io",
         "x.com": "https://x.com/kittynode",
+        youtube: "https://www.youtube.com/@kittynode",
       },
       sidebar: [
         {
@@ -57,6 +58,10 @@ export default defineConfig({
             {
               label: "Questions and ideas",
               slug: "resources/questions-and-ideas",
+            },
+            {
+              label: "Educational materials",
+              slug: "resources/educational-materials",
             },
           ],
         },
