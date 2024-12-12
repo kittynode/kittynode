@@ -52,6 +52,8 @@ This is a classic human problem. The basic idea is that sometimes people don't k
 
 A philosopher king likely needs to ossify the important parts. Separation of power will likely help. We still need to research here because we'd think even the base rules should have an override mechanism by the users, even if difficult.
 
+A futarchy is useful for educating the populace. Think about walking into a polling booth and you are able to view data on the candidates.
+
 ### Rough notes on governance
 
 - Ethereum may need a constitution or manifesto.
