@@ -32,7 +32,6 @@
 @media (min-width: 50rem) {
   .hero {
     grid-template-columns: unset;
-    padding: 0;
   }
 
   .copy {
