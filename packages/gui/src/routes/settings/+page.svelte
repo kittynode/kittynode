@@ -144,6 +144,18 @@ function setRemote(serverUrl: string) {
   </li>
   <hr />
   <li>
+    <span>Feedback</span>
+    <div class="flex gap-2">
+      <a href="https://github.com/kittynode/kittynode/discussions/new?category=feedback" target="_blank">
+        <Button>GitHub</Button>
+      </a>
+      <a href="https://discord.kittynode.io" target="_blank">
+        <Button>Discord</Button>
+      </a>
+    </div>
+  </li>
+  <hr />
+  <li>
     <span>Delete all Kittynode data</span>
     <Button onclick={deleteKittynode} disabled={serverUrlStore.serverUrl !== ""} variant="destructive">Delete data</Button>
   </li>
