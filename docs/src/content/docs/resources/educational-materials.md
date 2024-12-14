@@ -7,6 +7,7 @@ A catalog of educational materials about decentralized networks.
 
 |                                                                                                                        |                   |            |
 | ---------------------------------------------------------------------------------------------------------------------- | ----------------- | ---------- |
+| [The Real Voice of Adam Smith](https://www.columbia.edu/~hauben/CS/adamsmith.txt)                                      | Michael Hauben    |            |
 | [Single Slot Finality and the future of staking](https://youtu.be/6VEEAemYaeI)                                         | Francesco D'Amato | 2024-11-14 |
 | [The Future of Ethereum Staking](https://youtu.be/WTwZsCKFPao)                                                         | Vitalik Buterin   | 2024-11-08 |
 | [Plurality philosophy in an incredibly oversized nutshell](https://vitalik.eth.limo/general/2024/08/21/plurality.html) | Vitalik Buterin   | 2024-08-21 |
