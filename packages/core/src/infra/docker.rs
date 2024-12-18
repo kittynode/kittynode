@@ -12,6 +12,23 @@ use tokio_stream::StreamExt;
 use tracing::{error, info};
 
 pub(crate) fn get_docker_instance() -> Result<Docker> {
+    // Try default connection
+    if let Ok(docker) = Docker::connect_with_local_defaults() {
+        return Ok(docker);
+    }
+
+    // Try rootless Docker socket on Linux
+    #[cfg(target_os = "linux")]
+    {
+        let socket_path = format!("unix:///run/user/{}/docker.sock", users::get_current_uid());
+        if let Ok(docker) =
+            Docker::connect_with_unix(&socket_path, 120, bollard::API_DEFAULT_VERSION)
+        {
+            return Ok(docker);
+        }
+    }
+
+    // If all attempts fail, return the original error
     Docker::connect_with_local_defaults().map_err(Report::from)
 }
 
