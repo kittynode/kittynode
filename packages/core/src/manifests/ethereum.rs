@@ -111,7 +111,7 @@ impl Ethereum {
                     "--checkpoint-sync-url".to_string(),
                     checkpoint_sync_url.to_string(),
                     "--execution-jwt".to_string(),
-                    format!("/home/user/.lighthouse/{}/jwt.hex", network).to_string(),
+                    format!("/data/.lighthouse/{}/jwt.hex", network).to_string(),
                     "--execution-endpoint".to_string(),
                     "http://reth-node:8551".to_string(),
                 ],
@@ -152,12 +152,12 @@ impl Ethereum {
                             .join(".lighthouse")
                             .to_string_lossy()
                             .to_string(),
-                        destination: "/home/user/.lighthouse".to_string(),
-                        options: None,
+                        destination: "/data/.lighthouse".to_string(),
+                        options: Some("rw".to_string()),
                     },
                     Binding {
                         source: jwt_path.to_string_lossy().to_string(),
-                        destination: format!("/home/user/.lighthouse/{}/jwt.hex", network),
+                        destination: format!("/data/.lighthouse/{}/jwt.hex", network),
                         options: Some("ro".to_string()),
                     },
                 ],
