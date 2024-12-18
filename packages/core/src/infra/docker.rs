@@ -21,6 +21,7 @@ pub(crate) fn get_docker_instance() -> Result<Docker> {
     #[cfg(target_os = "linux")]
     {
         let socket_path = format!("unix:///run/user/{}/docker.sock", users::get_current_uid());
+        info!("Trying to connect to Docker socket at {}", socket_path);
         if let Ok(docker) =
             Docker::connect_with_unix(&socket_path, 120, bollard::API_DEFAULT_VERSION)
         {
