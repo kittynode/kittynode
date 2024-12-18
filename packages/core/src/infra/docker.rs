@@ -12,6 +12,7 @@ use tokio_stream::StreamExt;
 use tracing::{error, info};
 
 pub(crate) fn get_docker_instance() -> Result<Docker> {
+    info!("Getting Docker instance");
     // Try default connection
     if let Ok(docker) = Docker::connect_with_local_defaults() {
         return Ok(docker);
