@@ -39,6 +39,7 @@ pub struct Container {
     pub(crate) port_bindings: HashMap<String, Vec<PortBinding>>,
     pub(crate) volume_bindings: Vec<Binding>,
     pub(crate) file_bindings: Vec<Binding>,
+    pub(crate) user: Option<String>,
 }
 
 #[derive(Clone, Serialize, Deserialize)]
