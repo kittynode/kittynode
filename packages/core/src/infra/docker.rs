@@ -128,6 +128,7 @@ pub(crate) async fn pull_and_start_container(
         image: Some(container.image.to_string()),
         cmd: Some(container.cmd.clone()),
         host_config: Some(host_config),
+        user: container.user.clone(),
         ..Default::default()
     };
 
