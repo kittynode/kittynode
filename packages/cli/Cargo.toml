@@ -23,4 +23,4 @@ tracing-subscriber = "0.3.19"
 
 [dev-dependencies]
 assert_cmd = "2.0.16"
-predicates = "3.1.2"
+predicates = "3.1.3"
