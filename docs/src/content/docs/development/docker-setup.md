@@ -3,9 +3,7 @@ title: Docker setup
 description: Docker setup guide.
 ---
 
-# Clean Rootless Docker Installation Guide
-
-## Uninstall Existing Docker (if any)
+## Uninstall existing Docker (if any)
 
 ```bash
 # Stop all Docker services
@@ -40,7 +38,7 @@ sudo groupdel docker
 sudo apt-get autoremove -y
 ```
 
-## Install Rootless Docker
+## Install rootless Docker
 
 ```bash
 # Install prerequisites
@@ -73,7 +71,7 @@ set -x DOCKER_HOST unix:///run/user/(id -u)/docker.sock
 source ~/.config/fish/config.fish
 ```
 
-## Start Docker Service
+## Start Docker service
 
 ```bash
 # Start Docker service
@@ -81,7 +79,7 @@ systemctl --user start docker
 systemctl --user enable docker
 ```
 
-## Verify Installation
+## Verify installation
 
 ```bash
 # Check if Docker is running
@@ -94,7 +92,7 @@ docker run hello-world
 docker info | grep -i rootless
 ```
 
-## Service Management
+## Service management
 
 ```bash
 # Start Docker

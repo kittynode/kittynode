@@ -36,10 +36,7 @@ impl Ethereum {
         let kittynode_path = kittynode_path()?;
         let jwt_path = kittynode_path.join("jwt.hex");
 
-        let uid = users::get_current_uid();
-        let gid = users::get_current_gid();
-
-        let user = format!("{}:{}", uid, gid);
+        let user = format!("{}:{}", users::get_current_uid(), users::get_current_gid());
 
         let checkpoint_sync_url = if network == "mainnet" {
             "https://mainnet.checkpoint.sigp.io/"
