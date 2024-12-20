@@ -49,6 +49,7 @@ export default defineConfig({
               label: "Development guide",
               slug: "development/development-guide",
             },
+            { label: "Docker setup", slug: "development/docker-setup" },
             { label: "Releases", slug: "development/releases" },
           ],
         },

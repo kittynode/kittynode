@@ -35,7 +35,7 @@ impl Ethereum {
     pub(crate) fn get_containers(network: &str) -> Result<Vec<Container>> {
         let kittynode_path = kittynode_path()?;
         let jwt_path = kittynode_path.join("jwt.hex");
-
+        let user = format!("{}:{}", users::get_current_uid(), users::get_current_gid());
         let checkpoint_sync_url = if network == "mainnet" {
             "https://mainnet.checkpoint.sigp.io/"
         } else {
@@ -82,14 +82,15 @@ impl Ethereum {
                 ]),
                 volume_bindings: vec![Binding {
                     source: "rethdata".to_string(),
-                    destination: format!("/root/.local/share/reth/{}", network),
+                    destination: format!("/home/user/.local/share/reth/{}", network),
                     options: None,
                 }],
                 file_bindings: vec![Binding {
                     source: jwt_path.display().to_string(),
-                    destination: format!("/root/.local/share/reth/{}/jwt.hex", network),
+                    destination: format!("/home/user/.local/share/reth/{}/jwt.hex", network),
                     options: Some("ro".to_string()),
                 }],
+                user: Some(user.clone()),
             },
             Container {
                 name: "lighthouse-node".to_string(),
@@ -105,7 +106,7 @@ impl Ethereum {
                     "--checkpoint-sync-url".to_string(),
                     checkpoint_sync_url.to_string(),
                     "--execution-jwt".to_string(),
-                    format!("/root/.lighthouse/{}/jwt.hex", network).to_string(),
+                    format!("/data/.lighthouse/{}/jwt.hex", network).to_string(),
                     "--execution-endpoint".to_string(),
                     "http://reth-node:8551".to_string(),
                 ],
@@ -146,15 +147,16 @@ impl Ethereum {
                             .join(".lighthouse")
                             .to_string_lossy()
                             .to_string(),
-                        destination: "/root/.lighthouse".to_string(),
-                        options: None,
+                        destination: "/data/.lighthouse".to_string(),
+                        options: Some("rw".to_string()),
                     },
                     Binding {
                         source: jwt_path.to_string_lossy().to_string(),
-                        destination: format!("/root/.lighthouse/{}/jwt.hex", network),
+                        destination: format!("/data/.lighthouse/{}/jwt.hex", network),
                         options: Some("ro".to_string()),
                     },
                 ],
+                user: Some(user),
             },
         ])
     }
