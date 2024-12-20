@@ -35,9 +35,7 @@ impl Ethereum {
     pub(crate) fn get_containers(network: &str) -> Result<Vec<Container>> {
         let kittynode_path = kittynode_path()?;
         let jwt_path = kittynode_path.join("jwt.hex");
-
         let user = format!("{}:{}", users::get_current_uid(), users::get_current_gid());
-
         let checkpoint_sync_url = if network == "mainnet" {
             "https://mainnet.checkpoint.sigp.io/"
         } else {
