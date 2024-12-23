@@ -3,7 +3,7 @@ title: Docker setup
 description: Docker setup guide.
 ---
 
-## Uninstall existing Docker (if any)
+## Uninstall existing Docker
 
 ```bash
 # Stop all Docker services
@@ -52,22 +52,32 @@ curl -fsSL https://get.docker.com/rootless | sh
 ```
 
 ### For bash/zsh users
+
 Add to `~/.bashrc` or `~/.zshrc`:
+
 ```bash
 export PATH=/home/$USER/bin:$PATH
 export DOCKER_HOST=unix:///run/user/$UID/docker.sock
+```
 
-# Apply changes
+Apply changes:
+
+```bash
 source ~/.bashrc  # or source ~/.zshrc
 ```
 
 ### For fish users
+
 Add to `~/.config/fish/config.fish`:
+
 ```fish
 set -x PATH /home/$USER/bin $PATH
 set -x DOCKER_HOST unix:///run/user/(id -u)/docker.sock
+```
 
-# Apply changes
+Apply changes:
+
+```bash
 source ~/.config/fish/config.fish
 ```
 
