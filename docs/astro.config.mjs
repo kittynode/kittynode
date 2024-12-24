@@ -29,7 +29,6 @@ export default defineConfig({
         discord: "https://discord.kittynode.io",
         "x.com": "https://x.com/kittynode",
         farcaster: "https://warpcast.com/kittynode",
-        youtube: "https://www.youtube.com/@kittynode",
       },
       sidebar: [
         {
@@ -55,14 +54,13 @@ export default defineConfig({
         {
           label: "Resources",
           items: [
-            { label: "Hardware guide", slug: "resources/hardware-guide" },
-            {
-              label: "Questions and ideas",
-              slug: "resources/questions-and-ideas",
-            },
             {
               label: "Educational materials",
               slug: "resources/educational-materials",
+            },
+            {
+              label: "Hardware resources",
+              slug: "resources/hardware-resources",
             },
           ],
         },

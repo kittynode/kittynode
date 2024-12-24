@@ -1,16 +1,20 @@
-Kittynode is a control center for node operators. This document gives a high level architectural overview.
+This document gives a high level architectural overview for Kittynode.
 
-- [kittynode-core](https://github.com/kittynode/kittynode/tree/main/packages/core): Core library for Kittynode written in Rust.
-- [kittynode-cli](https://github.com/kittynode/kittynode/tree/main/packages/cli): A CLI frontend that binds to kittynode-core.
-- [kittynode-gui](https://github.com/kittynode/kittynode/tree/main/packages/gui): A GUI frontend that binds to kittynode-core.
-- [kittynode-web](https://github.com/kittynode/kittynode/tree/main/packages/web): An authenticated local web server that binds routes to kittynode-core.
+## Packages
+
+| Package | Description |
+| --- | --- |
+| [kittynode-cli](https://github.com/kittynode/kittynode/tree/main/packages/cli) | A CLI frontend that binds to kittynode-core. |
+| [kittynode-core](https://github.com/kittynode/kittynode/tree/main/packages/core) | Core library powering the Kittynode apps. |
+| [kittynode-gui](https://github.com/kittynode/kittynode/tree/main/packages/gui) | A GUI frontend that binds to kittynode-core. |
+| [kittynode-web](https://github.com/kittynode/kittynode/tree/main/packages/web) | A web server that binds to kittynode-core. |
 
 ## Technology used
 
 - Core library written in Rust.
 - Frontend written in Svelte.
 - CLI is a cross-platform Rust binary.
-- GUI is a cross-platform Tauri app that compiles the core library into the binary along with the frontend into a native webview, communicates with the core library over IPC, and is able to tap into native platform APIs.
+- GUI is a cross-platform Tauri app.
 
 ## Development guide
 
@@ -23,20 +27,24 @@ Kittynode has two user facing apps:
 - A command line interface (CLI).
 - A graphical user interface (GUI).
 
-These user facing apps manage a kittynode through the core library.
+These user facing apps manage your Kittynode through the core library.
 
 ## Capabilities
 
-There are several capabilities you can add to your Kittynode which augment the threat model.
+There are several capabilities you can add to your Kittynode which augment the threat model. We default to minimizing the capabilities of the Kittynode, while giving enough features to get started.
+
+Here are a few example capabilities related to remote access:
 
 - **Read only (default)**: Kittynode is a read-only monitoring application.
 - **Local only**: Kittynode can update local node infrastructure from the host machine.
 - **Private onchain requests**: Kittynode can update local node infrastructure via listening to private requests submitted onchain.
 - **Local HTTPS server**: Kittynode can update local node infrastructure via requests that come from the same Wireguard network (but a different machine, such as a phone); these requests are authenticated by a passkey or JWT token.
 
-We believe the local HTTPS server over Wireguard is a convenient and secure approach. But the choice is up to you.
-
 ## A diagram
+
+:::note
+This diagram is not fully up to date.
+:::
 
 ![Kittynode architecture diagram](../assets/diagrams/diagram.svg)
 
@@ -54,13 +62,13 @@ Kittynode is architected as a backend library in Rust, providing several benefit
 
 - **Reusable core**: The desktop application is a consumer of this core library, with Tauri used to bind commands to the library.
 - **Cross-platform support**: Kittynode supports a cross-platform desktop and mobile application as a frontend, along with a CLI that reuses the same core library.
-- **Safety and performance**: Rust was chosen for its safety, performance, and cross-platform compatibility, making Kittynode easy to run on Windows, MacOS, and Linux.
+- **Safety and performance**: Rust was chosen for its safety, performance, and cross-platform compatibility, making Kittynode easy to run on macOS, Windows, and Linux.
 
 ### Direct container access
 
 Kittynode doesn't use Docker CLI commands on the user's system directly. Instead it has its own module that directly interacts with the Docker engine with Bollard. This improves Kittynode's portability, security, and testability. It also allows for more flexible networking setups between Kittynode packages.
 
-Kittynode also plans to support other free and open source container runtimes in the future, like containerd and moby.
+Kittynode also plans to support other environments (eg. Kubernetes) in the future.
 
 ## Features
 
@@ -86,4 +94,4 @@ The system checker is important in several areas of Kittynode. For example, when
 
 ### Remote access
 
-Kittynode supports remote access. This means you can setup and monitor your node from a phone or desktop. This is done via secure connections with Wireguard, which allows users to monitor their node from trusted devices. This is also important so that users can easily upgrade their nodes, which is effectively voting.
+Kittynode supports remote access. This means you can setup and monitor your node from a phone or desktop. This is currently done via a secure connection over Wireguard, which allows users to monitor their node from trusted devices. This also allows users to easily upgrade their nodes from anywhere, which is important for voting. There are plans to support another mechanism for remote management as well, which doesn't even require a direct connection.

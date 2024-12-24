@@ -84,3 +84,22 @@ A futarchy is useful for educating the populace. Think about walking into a poll
 - Ethereum may be able to learn from (and currently resembles some) aspects of colonial democracies.
 - Ethereum may need a new forum for constructive communication aside from X.
 - Look into: House of Lords and House of Commons.
+
+### Grand vision
+
+Kittynode has a grand vision:
+
+- The world should reflect the virtues of its people.
+
+There are many work streams that support this vision:
+
+1. Making it easier to be a validator by reducing the financial burden (eg. Orbit SSF).
+2. Making it easier to be a validator by reducing the technical burden (eg. Kittynode).
+3. Initiatives that make the validator set more representative of its users (eg. Kittynode).
+4. Initiatives that safeguard features of the world that are in the best interest of its users (eg. ossification, constitution).
+5. Initiatives that empower users to shape the world to the best of their ability (eg. futarchy, education).
+6. Initiatives that give control over property to the property owners (eg. wallets).
+
+Today, Kittynode is focused on delivering a control center for node operators.
+
+However, we don't try to fit the current solution into the problem, so to speak. We always try to think of what the problem is, and what is the best way to solve it. We're willing to abandon any solution for another one that serves the grand vision better.
