@@ -1,4 +1,4 @@
-use crate::domain::package::{Binding, Container};
+use crate::domain::container::{Binding, Container};
 use bollard::{
     container::{Config, CreateContainerOptions, ListContainersOptions, StartContainerOptions},
     image::CreateImageOptions,

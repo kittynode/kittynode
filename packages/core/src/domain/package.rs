@@ -1,4 +1,4 @@
-use bollard::models::PortBinding;
+use crate::domain::container::Container;
 use eyre::Result;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -31,27 +31,13 @@ pub struct Package {
     pub(crate) default_config: PackageConfig,
 }
 
-#[derive(Clone, Serialize, Deserialize)]
-pub struct Container {
-    pub(crate) name: String,
-    pub(crate) image: String,
-    pub(crate) cmd: Vec<String>,
-    pub(crate) port_bindings: HashMap<String, Vec<PortBinding>>,
-    pub(crate) volume_bindings: Vec<Binding>,
-    pub(crate) file_bindings: Vec<Binding>,
-}
-
-#[derive(Clone, Serialize, Deserialize)]
-pub struct Binding {
-    pub(crate) source: String,
-    pub(crate) destination: String,
-    pub(crate) options: Option<String>,
-}
-
 impl fmt::Display for Package {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        writeln!(f, "Package: {}", self.name)?;
+        writeln!(f, "Description: {}", self.description)?;
+        writeln!(f, "Containers:")?;
         for container in &self.containers {
-            writeln!(f, "Container Image: {}", container.image)?;
+            write!(f, "{}", container)?;
         }
         Ok(())
     }
