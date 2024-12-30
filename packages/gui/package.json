@@ -29,7 +29,7 @@
     "bits-ui": "1.0.0-next.74",
     "clsx": "^2.1.1",
     "lucide-svelte": "^0.469.0",
-    "svelte": "^5.15.0",
+    "svelte": "^5.16.0",
     "svelte-check": "^4.1.1",
     "tailwind-merge": "^2.5.5",
     "tailwind-variants": "^0.3.0",
