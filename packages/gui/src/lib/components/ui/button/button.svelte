@@ -60,7 +60,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 {#if href}
 	<a
 		bind:this={ref}
-		class={cn(buttonVariants({ variant, size, className }))}
+		class={cn(buttonVariants({ variant, size }), className)}
 		{href}
 		{...restProps}
 	>
@@ -69,7 +69,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 {:else}
 	<button
 		bind:this={ref}
-		class={cn(buttonVariants({ variant, size, className }))}
+		class={cn(buttonVariants({ variant, size }), className)}
 		{type}
 		{...restProps}
 	>
