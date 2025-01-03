@@ -8,5 +8,9 @@ A control center for node operators.
 
 ## Documentation
 
-- End-user documentation: [kittynode.io](https://kittynode.io).
-- Developer documentation: [packages/README.md](packages/README.md).
+- [End-user documentation](https://kittynode.io).
+- [Developer documentation](packages/README.md).
+
+## License
+
+Kittynode is free and open source software released under the [MIT License](LICENSE).
