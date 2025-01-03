@@ -6,19 +6,6 @@ import { Skeleton } from "$lib/components/ui/skeleton";
 import { Progress } from "$lib/components/ui/progress";
 import * as Card from "$lib/components/ui/card";
 
-function formatBytes(bytes: number): string {
-  const units = ["B", "KiB", "MiB", "GiB", "TiB"];
-  let value = bytes;
-  let unitIndex = 0;
-
-  while (value >= 1024 && unitIndex < units.length - 1) {
-    value /= 1024;
-    unitIndex++;
-  }
-
-  return `${value.toFixed(2)} ${units[unitIndex]}`;
-}
-
 function calculateUsagePercentage(used: number, total: number): number {
   return Math.round((used / total) * 100);
 }
@@ -66,7 +53,7 @@ onMount(() => {
         <Card.Title>Memory</Card.Title>
       </Card.Header>
       <Card.Content>
-        {formatBytes(systemInfoStore.systemInfo.memory.total_bytes)}
+        {systemInfoStore.systemInfo.memory.total_display}
       </Card.Content>
     </Card.Root>
   </div>
@@ -96,8 +83,7 @@ onMount(() => {
               )}%
             </span>
             <span>
-              {formatBytes(disk.available_bytes)} available /
-              {formatBytes(disk.total_bytes)} total
+              {disk.available_display} available / {disk.total_display} total
             </span>
           </div>
         </div>

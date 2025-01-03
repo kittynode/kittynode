@@ -2,6 +2,24 @@ use crate::domain::system_info::{DiskInfo, MemoryInfo, ProcessorInfo, StorageInf
 use eyre::Result;
 use sysinfo::{Disks, System};
 
+fn format_bytes(bytes: u64) -> String {
+    let units = ["B", "KB", "MB", "GB", "TB"];
+    let mut value = bytes as f64;
+    let mut unit_index = 0;
+
+    let binary_to_decimal = |bytes: f64, power: i32| -> f64 {
+        bytes * (1024.0_f64.powi(power) / 1000.0_f64.powi(power))
+    };
+
+    while value >= 1024.0 && unit_index < units.len() - 1 {
+        value = binary_to_decimal(value, 1);
+        value /= 1000.0;
+        unit_index += 1;
+    }
+
+    format!("{:.2} {}", value, units[unit_index])
+}
+
 pub fn get_system_info() -> Result<SystemInfo> {
     let mut system = System::new_all();
     system.refresh_all();
@@ -36,8 +54,10 @@ fn get_processor_info(system: &System) -> Result<ProcessorInfo> {
 }
 
 fn get_memory_info(system: &System) -> MemoryInfo {
+    let total = system.total_memory();
     MemoryInfo {
-        total_bytes: system.total_memory(),
+        total_bytes: total,
+        total_display: format_bytes(total),
     }
 }
 
@@ -64,6 +84,8 @@ fn get_storage_info() -> Result<StorageInfo> {
                 mount_point: disk.mount_point().to_str()?.to_string(),
                 total_bytes: disk.total_space(),
                 available_bytes: disk.available_space(),
+                total_display: format_bytes(disk.total_space()),
+                available_display: format_bytes(disk.available_space()),
                 disk_type: disk.file_system().to_str()?.to_string(),
             })
         })

@@ -18,6 +18,7 @@ pub struct ProcessorInfo {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct MemoryInfo {
     pub total_bytes: u64,
+    pub total_display: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -31,5 +32,7 @@ pub struct DiskInfo {
     pub mount_point: String,
     pub total_bytes: u64,
     pub available_bytes: u64,
+    pub total_display: String,
+    pub available_display: String,
     pub disk_type: String,
 }

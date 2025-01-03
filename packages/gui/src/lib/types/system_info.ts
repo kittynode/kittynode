@@ -13,6 +13,7 @@ export interface ProcessorInfo {
 
 export interface MemoryInfo {
   total_bytes: number;
+  total_display: string;
 }
 
 export interface StorageInfo {
@@ -24,5 +25,7 @@ export interface DiskInfo {
   mount_point: string;
   total_bytes: number;
   available_bytes: number;
+  total_display: string;
+  available_display: string;
   disk_type: string;
 }
