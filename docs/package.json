@@ -19,6 +19,6 @@
     "sharp": "^0.33.5",
     "starlight-image-zoom": "^0.10.1",
     "starlight-links-validator": "^0.14.1",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   }
 }
