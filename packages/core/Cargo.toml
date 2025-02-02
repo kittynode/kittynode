@@ -23,4 +23,4 @@ rand = "0.8.5"
 sysinfo = "0.33.1"
 
 [dev-dependencies]
-tempfile = "3.15.0"
+tempfile = "3.16.0"
