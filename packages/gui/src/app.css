@@ -1,13 +1,32 @@
+@import "tailwindcss";
+
+@config '../tailwind.config.ts';
+
 /*
-- Generate with default / red theme: https://next.shadcn-svelte.com/themes
-- And then override with the purple:
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+/*
+Steps to create the below values:
+1. Generate with default + red theme: https://next.shadcn-svelte.com/themes
+2. Override values with this purple:
   - :root: --primary: 282 45% 58%;
   - .dark: --primary: 282 50% 48%;
 */
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 @layer base {
   :root {
