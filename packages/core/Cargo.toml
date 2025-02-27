@@ -13,8 +13,8 @@ eyre = { version = "0.6.12", default-features = false, features = [
   "auto-install",
   "track-caller",
 ] }
-serde = { version = "1.0.217", features = ["derive"] }
-toml = "0.8.19"
+serde = { version = "1.0.218", features = ["derive"] }
+toml = "0.8.20"
 tracing = "0.1.41"
 tokio-stream = "0.1.17"
 home = "0.5.11"
@@ -23,4 +23,4 @@ rand = "0.8.5"
 sysinfo = "0.33.1"
 
 [dev-dependencies]
-tempfile = "3.16.0"
+tempfile = "3.17.1"
