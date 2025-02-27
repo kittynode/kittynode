@@ -11,7 +11,7 @@ use std::{
 };
 use tracing::info;
 
-/// Retrieves a HashMap of all available packages.
+/// Retrieves a `HashMap` of all available packages.
 pub fn get_packages() -> Result<HashMap<String, Package>> {
     let mut packages = HashMap::new();
     packages.insert(Ethereum::NAME.to_string(), Ethereum::get_package()?);

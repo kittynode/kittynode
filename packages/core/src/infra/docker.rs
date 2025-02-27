@@ -1,10 +1,11 @@
 use crate::domain::container::{Binding, Container};
 use bollard::{
+    Docker,
     container::{Config, CreateContainerOptions, ListContainersOptions, StartContainerOptions},
     image::CreateImageOptions,
+    models::EndpointSettings,
     network::{ConnectNetworkOptions, CreateNetworkOptions},
     secret::{ContainerSummary, HostConfig},
-    Docker,
 };
 use eyre::{Report, Result};
 use std::collections::HashMap;
@@ -133,7 +134,7 @@ pub(crate) async fn pull_and_start_container(
             network_name,
             ConnectNetworkOptions {
                 container: container.name.to_string(),
-                endpoint_config: Default::default(),
+                endpoint_config: EndpointSettings::default(),
             },
         )
         .await?;
@@ -150,9 +151,7 @@ pub async fn get_container_logs(
     container_name: &str,
     tail_lines: Option<usize>,
 ) -> Result<Vec<String>> {
-    let tail = tail_lines
-        .map(|n| n.to_string())
-        .unwrap_or_else(|| "all".to_string());
+    let tail = tail_lines.map_or_else(|| "all".to_string(), |n| n.to_string());
 
     let options = bollard::container::LogsOptions::<String> {
         stdout: true,

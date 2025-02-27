@@ -15,6 +15,7 @@ pub struct PackageConfig {
 }
 
 impl PackageConfig {
+    #[must_use]
     pub fn new() -> Self {
         Self {
             values: HashMap::new(),
@@ -37,7 +38,7 @@ impl fmt::Display for Package {
         writeln!(f, "Description: {}", self.description)?;
         writeln!(f, "Containers:")?;
         for container in &self.containers {
-            write!(f, "{}", container)?;
+            write!(f, "{container}")?;
         }
         Ok(())
     }

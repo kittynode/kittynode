@@ -62,8 +62,9 @@ fn get_memory_info(system: &System) -> MemoryInfo {
 }
 
 fn get_storage_info() -> Result<StorageInfo> {
-    let disks = Disks::new_with_refreshed_list();
     const MIN_DISK_SIZE: u64 = 10 * 1024 * 1024 * 1024; // 10 GiB
+
+    let disks = Disks::new_with_refreshed_list();
 
     let mut seen_signatures = std::collections::HashSet::new();
     let disk_infos: Vec<DiskInfo> = disks

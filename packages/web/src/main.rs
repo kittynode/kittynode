@@ -1,9 +1,9 @@
 use axum::{
+    Router,
     extract::{Path, Query},
     http::StatusCode,
     response::Json,
     routing::{get, post},
-    Router,
 };
 use kittynode_core::domain::logs::LogsQuery;
 use kittynode_core::domain::package::Package;

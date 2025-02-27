@@ -10,6 +10,6 @@ resolver = "2"
 [workspace.package]
 description = "A control center for node operators."
 license = "MIT"
-edition = "2021"
+edition = "2024"
 repository = "https://github.com/kittynode/kittynode"
 readme = "README.md"
