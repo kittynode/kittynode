@@ -15,11 +15,11 @@ pub(crate) fn generate_jwt_secret_with_path(path: &PathBuf) -> Result<String> {
         fs::create_dir_all(path).wrap_err("Failed to create directory")?;
     }
 
-    info!("Generating JWT secret using OS random number generator");
+    info!("Generating JWT secret using a random number generator");
 
     // Generate 32 random bytes
     let mut buf = [0u8; 32];
-    rand::rngs::OsRng.fill_bytes(&mut buf);
+    rand::rng().fill_bytes(&mut buf);
 
     // Convert the random bytes to hex
     let secret = hex::encode(buf);
