@@ -9,12 +9,10 @@ pub(crate) fn kittynode_path() -> Result<PathBuf> {
         .ok_or_else(|| eyre::eyre!("Failed to determine the .kittynode path"))
 }
 
-pub(crate) fn generate_jwt_secret() -> Result<String> {
-    let path = kittynode_path()?;
-
+pub(crate) fn generate_jwt_secret_with_path(path: &PathBuf) -> Result<String> {
     if !path.exists() {
-        info!("Creating .kittynode directory at {:?}", path);
-        fs::create_dir_all(&path).wrap_err("Failed to create .kittynode directory")?;
+        info!("Creating directory at {:?}", path);
+        fs::create_dir_all(path).wrap_err("Failed to create directory")?;
     }
 
     info!("Generating JWT secret using OS random number generator");
@@ -37,22 +35,25 @@ pub(crate) fn generate_jwt_secret() -> Result<String> {
     Ok(secret)
 }
 
+pub(crate) fn generate_jwt_secret() -> Result<String> {
+    let path = kittynode_path()?;
+    generate_jwt_secret_with_path(&path)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::env;
     use tempfile::tempdir;
 
     #[test]
     fn test_generate_jwt_secret() {
         let temp_dir = tempdir().unwrap();
-        // TODO: Audit that the environment access only happens in single-threaded code.
-        unsafe { env::set_var("HOME", temp_dir.path().to_str().unwrap()) };
+        let temp_path = temp_dir.path().to_path_buf();
 
-        let result = generate_jwt_secret();
+        let result = generate_jwt_secret_with_path(&temp_path);
         assert!(result.is_ok(), "Expected OK, got {:?}", result);
 
-        let jwt_file_path = temp_dir.path().join(".kittynode").join("jwt.hex");
+        let jwt_file_path = temp_path.join("jwt.hex");
         assert!(jwt_file_path.exists(), "JWT secret file not found");
 
         let secret = fs::read_to_string(jwt_file_path).unwrap();
