@@ -1,10 +1,10 @@
 use crate::domain::container::{Binding, Container};
 use bollard::{
+    Docker,
     container::{Config, CreateContainerOptions, ListContainersOptions, StartContainerOptions},
     image::CreateImageOptions,
     network::{ConnectNetworkOptions, CreateNetworkOptions},
     secret::{ContainerSummary, HostConfig},
-    Docker,
 };
 use eyre::{Report, Result};
 use std::collections::HashMap;
