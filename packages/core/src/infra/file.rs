@@ -46,7 +46,8 @@ mod tests {
     #[test]
     fn test_generate_jwt_secret() {
         let temp_dir = tempdir().unwrap();
-        env::set_var("HOME", temp_dir.path().to_str().unwrap());
+        // TODO: Audit that the environment access only happens in single-threaded code.
+        unsafe { env::set_var("HOME", temp_dir.path().to_str().unwrap()) };
 
         let result = generate_jwt_secret();
         assert!(result.is_ok(), "Expected OK, got {:?}", result);
