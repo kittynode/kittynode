@@ -51,7 +51,7 @@ mod tests {
         let temp_path = temp_dir.path().to_path_buf();
 
         let result = generate_jwt_secret_with_path(&temp_path);
-        assert!(result.is_ok(), "Expected OK, got {:?}", result);
+        assert!(result.is_ok(), "Expected OK, got {result:?}");
 
         let jwt_file_path = temp_path.join("jwt.hex");
         assert!(jwt_file_path.exists(), "JWT secret file not found");

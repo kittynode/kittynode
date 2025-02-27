@@ -83,12 +83,12 @@ impl Ethereum {
                 ]),
                 volume_bindings: vec![Binding {
                     source: "rethdata".to_string(),
-                    destination: format!("/root/.local/share/reth/{}", network),
+                    destination: format!("/root/.local/share/reth/{network}"),
                     options: None,
                 }],
                 file_bindings: vec![Binding {
                     source: jwt_path.display().to_string(),
-                    destination: format!("/root/.local/share/reth/{}/jwt.hex", network),
+                    destination: format!("/root/.local/share/reth/{network}/jwt.hex"),
                     options: Some("ro".to_string()),
                 }],
             },
@@ -106,7 +106,7 @@ impl Ethereum {
                     "--checkpoint-sync-url".to_string(),
                     checkpoint_sync_url.to_string(),
                     "--execution-jwt".to_string(),
-                    format!("/root/.lighthouse/{}/jwt.hex", network).to_string(),
+                    format!("/root/.lighthouse/{network}/jwt.hex").to_string(),
                     "--execution-endpoint".to_string(),
                     "http://reth-node:8551".to_string(),
                 ],
@@ -152,7 +152,7 @@ impl Ethereum {
                     },
                     Binding {
                         source: jwt_path.to_string_lossy().to_string(),
-                        destination: format!("/root/.lighthouse/{}/jwt.hex", network),
+                        destination: format!("/root/.lighthouse/{network}/jwt.hex"),
                         options: Some("ro".to_string()),
                     },
                 ],

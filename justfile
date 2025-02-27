@@ -67,6 +67,10 @@ lint-js-fix:
 lint-rs:
   cargo clippy --all-targets --all-features -- -D warnings && cargo fmt --all -- --check
 
+# lint the rust code with pedantic rules
+lint-rs-pedantic:
+  cargo clippy --all-targets --all-features -- -D warnings -W clippy::pedantic -A clippy::missing_errors_doc -A clippy::too_many_lines && cargo fmt --all -- --check
+
 # add a shadcn component
 shadcn-add *args='':
   cd packages/gui && pnpm dlx shadcn-svelte@next add {{args}} && pnpm format-lint:fix
