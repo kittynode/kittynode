@@ -27,7 +27,6 @@ export default defineConfig({
       social: {
         github: "https://github.com/kittynode",
         discord: "https://discord.kittynode.io",
-        "x.com": "https://x.com/kittynode",
         farcaster: "https://warpcast.com/kittynode",
       },
       sidebar: [
