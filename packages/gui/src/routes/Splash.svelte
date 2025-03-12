@@ -157,7 +157,7 @@ onMount(() => {
     />
       <Card.Title>Kittynode</Card.Title>
       <Card.Description>
-        <div class="mt-3">A control center for node operators.</div>
+        <div class="mt-3">A control center for world computer operators.</div>
       </Card.Description>
     </Card.Header>
     <Card.Content>

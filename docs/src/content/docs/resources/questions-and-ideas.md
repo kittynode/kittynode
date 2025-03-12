@@ -100,6 +100,6 @@ There are many work streams that support this vision:
 5. Initiatives that empower users to shape the world to the best of their ability (eg. futarchy, education).
 6. Initiatives that give control over property to the property owners (eg. wallets).
 
-Today, Kittynode is focused on delivering a control center for node operators.
+Today, Kittynode is focused on delivering a control center for world computer operators.
 
 However, we don't try to fit the current solution into the problem, so to speak. We always try to think of what the problem is, and what is the best way to solve it. We're willing to abandon any solution for another one that serves the grand vision better.

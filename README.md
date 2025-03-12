@@ -4,7 +4,7 @@
 
 # Kittynode
 
-A control center for node operators.
+A control center for world computer operators.
 
 ## Documentation
 
