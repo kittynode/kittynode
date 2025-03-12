@@ -1,7 +1,7 @@
-# KittyNode Development Guide
+# Kittynode Development Guide
 
 ## Project Overview
-KittyNode is a control center for node operators with these main components:
+Kittynode is a control center for world computer operators with these main components:
 - `kittynode-core`: Core Rust library powering all applications
 - `kittynode-cli`: Command-line interface built on the core library
 - `kittynode-gui`: Cross-platform Tauri app with Svelte frontend
@@ -67,3 +67,7 @@ This file consolidates information previously located in:
 - `./packages/README.md` - Architecture overview
 
 For end-user documentation, visit https://kittynode.io
+
+## Git Style Guidelines
+- We use merge commits for PRs
+- We don't use conventional commits
