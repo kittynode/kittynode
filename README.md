@@ -2,15 +2,6 @@
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/kittynode/kittynode/ci-rust.yaml?branch=main&logo=GitHub%20Actions&label=build-rs)](https://github.com/kittynode/kittynode/actions/workflows/ci-rust.yaml?query=branch:main)
 [![codecov](https://codecov.io/github/kittynode/kittynode/graph/badge.svg?token=TJAUBD8RPT)](https://codecov.io/github/kittynode/kittynode)
 
-# Kittynode
+## Introduction
 
-A control center for world computer operators.
-
-## Documentation
-
-- [End-user documentation](https://kittynode.io).
-- [Developer documentation](packages/README.md).
-
-## License
-
-Kittynode is free and open source software released under the [MIT License](LICENSE).
+Welcome to the codebase of the Kittynode project. Please see the [CLAUDE.md](CLAUDE.md) file for all information.
