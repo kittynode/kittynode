@@ -12,13 +12,13 @@ name = "kittynode"
 path = "src/main.rs"
 
 [dependencies]
-clap = { version = "4.5.31", features = ["derive"] }
+clap = { version = "4.5.32", features = ["derive"] }
 eyre = { version = "0.6.12", default-features = false, features = [
   "auto-install",
   "track-caller",
 ] }
 kittynode-core = { version = "0.4.0", path = "../core" }
-tokio = { version = "1.43.0", features = ["macros", "rt-multi-thread"] }
+tokio = { version = "1.44.0", features = ["macros", "rt-multi-thread"] }
 tracing-subscriber = "0.3.19"
 
 [dev-dependencies]
