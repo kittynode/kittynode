@@ -38,6 +38,6 @@
     "tailwindcss": "^4.0.13",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.8.2",
-    "vite": "^6.2.1"
+    "vite": "^6.2.2"
   }
 }
