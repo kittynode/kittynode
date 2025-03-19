@@ -5,7 +5,7 @@ description: Kittynode latest releases.
 
 ## Desktop
 
-Download the latest desktop release (macOS, Windows, Linux) from the [releases page](https://github.com/kittynode/kittynode/releases).
+Download the latest desktop release (macOS, Windows, Linux) from the [releases page](https://github.com/blackkittylabs/kittynode/releases).
 
 ## Mobile
 

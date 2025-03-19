@@ -4,10 +4,10 @@ This document gives a high level architectural overview for Kittynode.
 
 | Package | Description |
 | --- | --- |
-| [kittynode-cli](https://github.com/kittynode/kittynode/tree/main/packages/cli) | A CLI frontend that binds to kittynode-core. |
-| [kittynode-core](https://github.com/kittynode/kittynode/tree/main/packages/core) | Core library powering the Kittynode apps. |
-| [kittynode-gui](https://github.com/kittynode/kittynode/tree/main/packages/gui) | A GUI frontend that binds to kittynode-core. |
-| [kittynode-web](https://github.com/kittynode/kittynode/tree/main/packages/web) | A web server that binds to kittynode-core. |
+| [kittynode-cli](https://github.com/blackkittylabs/kittynode/tree/main/packages/cli) | A CLI frontend that binds to kittynode-core. |
+| [kittynode-core](https://github.com/blackkittylabs/kittynode/tree/main/packages/core) | Core library powering the Kittynode apps. |
+| [kittynode-gui](https://github.com/blackkittylabs/kittynode/tree/main/packages/gui) | A GUI frontend that binds to kittynode-core. |
+| [kittynode-web](https://github.com/blackkittylabs/kittynode/tree/main/packages/web) | A web server that binds to kittynode-core. |
 
 ## Technology used
 

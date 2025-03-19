@@ -146,7 +146,7 @@ function setRemote(serverUrl: string) {
   <li>
     <span>Feedback</span>
     <div class="flex gap-2">
-      <a href="https://github.com/kittynode/kittynode/discussions/new?category=feedback" target="_blank">
+      <a href="https://github.com/blackkittylabs/kittynode/discussions/new?category=feedback" target="_blank">
         <Button>GitHub</Button>
       </a>
       <a href="https://discord.kittynode.io" target="_blank">

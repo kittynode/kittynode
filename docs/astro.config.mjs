@@ -17,7 +17,7 @@ export default defineConfig({
         replacesTitle: true,
       },
       editLink: {
-        baseUrl: "https://github.com/kittynode/kittynode/edit/main/docs/",
+        baseUrl: "https://github.com/blackkittylabs/kittynode/edit/main/docs/",
       },
       components: {
         Footer: "./src/components/overrides/Footer.astro",
@@ -25,7 +25,7 @@ export default defineConfig({
       customCss: ["./src/styles/custom.css"],
       favicon: "/images/favicon.ico",
       social: {
-        github: "https://github.com/kittynode",
+        github: "https://github.com/blackkittylabs",
         discord: "https://discord.kittynode.io",
         farcaster: "https://warpcast.com/kittynode",
       },
